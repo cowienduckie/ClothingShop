@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using ClothingShop.Entity.Data;
+using ClothingShop.BusinessLogic.Repositories;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace ClothingShop
 {
@@ -23,7 +25,14 @@ namespace ClothingShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ShopContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ClothingShopConnectionString")));
+
+            services.AddScoped<IShopRepository, ShopRepository>();
+
             services.AddControllersWithViews();
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +61,10 @@ namespace ClothingShop
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<ShopContext>();
+            context.Database.EnsureCreated();
         }
     }
 }

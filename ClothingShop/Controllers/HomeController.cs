@@ -1,4 +1,5 @@
-﻿using ClothingShop.Models;
+﻿using ClothingShop;
+using ClothingShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
