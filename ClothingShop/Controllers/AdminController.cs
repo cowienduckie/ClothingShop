@@ -18,9 +18,11 @@ namespace ClothingShop.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+
+        // GET: Movies
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _context.Product.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
