@@ -7,9 +7,6 @@ namespace ClothingShop.Entity.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Sample");
-
             migrationBuilder.CreateTable(
                 name: "Product",
                 columns: table => new
@@ -19,7 +16,7 @@ namespace ClothingShop.Entity.Migrations
                     Name_Product = table.Column<string>(nullable: true),
                     DateCreated_Product = table.Column<DateTime>(nullable: false),
                     Type_Product = table.Column<string>(nullable: true),
-                    Price_Product = table.Column<decimal>(nullable: false)
+                    Price_Product = table.Column<decimal>(type: "decimal(18, 2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -236,18 +233,6 @@ namespace ClothingShop.Entity.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.CreateTable(
-                name: "Sample",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sample", x => x.ID);
-                });
         }
     }
 }

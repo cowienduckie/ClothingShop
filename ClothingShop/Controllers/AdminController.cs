@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
+using ClothingShop.Models;
 
 namespace ClothingShop.Controllers
 {
@@ -19,10 +20,16 @@ namespace ClothingShop.Controllers
             _context = context;
         }
 
-        // GET: Movies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Product.ToListAsync());
+            var product = from m in _context.Product select m;
+
+            var productViewModel = new ProductViewModel
+            {
+                 Name_Product = await product.ToListAsync()
+            };
+
+            return View(productViewModel);
         }
 
         public async Task<IActionResult> Details(int? id)

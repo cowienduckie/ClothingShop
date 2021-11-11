@@ -125,7 +125,7 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price_Product")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Type_Product")
                         .HasColumnType("nvarchar(max)");

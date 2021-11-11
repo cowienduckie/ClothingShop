@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClothingShop.Entity.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20211111144505_InitialCreate")]
+    [Migration("20211111163231_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,7 +127,7 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price_Product")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Type_Product")
                         .HasColumnType("nvarchar(max)");
