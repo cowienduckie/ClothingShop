@@ -72,3 +72,55 @@ body {
     white-space: nowrap;
     line-height: 60px; /* Vertically center the text there */
 }
+
+.backtotop {
+    height: 60px;
+    width: 60px;
+    background-color: salmon;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 60px;
+    right: 50px;
+    cursor: pointer;
+}
+
+.grid {
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.grid_row{
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.footer_heading {
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-item__link{
+    margin-top: -20px;
+    margin-bottom: -20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.footer-item {
+    margin-top: -20px;
+    margin-bottom: -20px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.search {
+    margin-top: 3px;
+    width: 700px;
+}
