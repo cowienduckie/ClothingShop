@@ -1,0 +1,35 @@
+﻿@model ClothingShop.Entity.Models.Product
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Movie</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name_Product)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateCreated_Product)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price_Product)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Type_Product)
+        </dd>
+        </dl>
+</div>
+<div>
+    
+</div>
