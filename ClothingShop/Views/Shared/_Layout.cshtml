@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+
+
 <body>
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ClothingShop</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -24,25 +23,97 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="search">
+                            <input class="search" type="search" name="Search" placeholder="Tìm kiếm" />
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index1">Log out</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <div id="backtop" class="backtotop">
+        Back
+    </div>
+
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - ClothingShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="grid">
+            <div class="grid_row">
+                <div class="col-4">
+                    <h5 class="footer_heading">Thông tin shop</h5>
+                    <ul>
+                        <li class="footer-item">
+                            Số 1, Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội.
+                        </li>
+                        <li class="footer-item">
+                            Giờ mở cửa: 7-23h tất cả các ngày trong tuần.
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <h5 class="footer_heading">Danh mục sản phẩm</h5>
+                    <ul>
+                        <li class="footer-item__link">
+                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index1">Phụ kiện</a>
+                        </li>
+                        <li class="footer-item__link">
+                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index">Quần áo</a>
+                        </li>
+                        <li class="footer-item__link">
+                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index">Giày dép</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <h5 class="footer_heading">Liên hệ</h5>
+                    <ul>
+                        <li class="footer-item__link">
+                            <a href="">Facebook</a>
+                        </li>
+                        <li class="footer-item__link">
+                            <a href="">Số điện thoại</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function() {
+        $(window).scroll(function () {
+            if ($(this).scrollTop()) {
+                $('#backtop').fadeIn();
+            }
+            else {
+                $('#backtop').fadeOut();
+            }
+        });
+
+        $("#backtop").click(function () {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000);
+        });
+    })
+</script>
+
 </html>
