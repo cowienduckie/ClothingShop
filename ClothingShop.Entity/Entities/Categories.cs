@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Products : IdentityRole
+    public class Categories : IdentityRole
     {
         public int CategoryId { get; set; }
 
