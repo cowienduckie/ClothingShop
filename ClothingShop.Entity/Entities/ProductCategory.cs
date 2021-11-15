@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Product_Category
+    public class ProductCategory
     {
         [Required]
         public int ProductId { get; set; }

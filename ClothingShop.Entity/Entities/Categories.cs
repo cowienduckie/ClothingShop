@@ -4,20 +4,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Categories 
+    public class Categories
     {
         [Required]
         public int CategoryId { get; set; }
 
-        public int? ParentId { get; set; } 
+        public int? ParentId { get; set; }
 
         [Required, StringLength(50)]
         public string Name { get; set; }
 
         [StringLength(100)]
-        #nullable enable
         public string? Discription { get; set; }
-        #nullable disable
+
+#nullable disable
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
@@ -25,7 +25,7 @@ namespace ClothingShop.Entity.Entities
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "LastModified Date"), DataType(DataType.Date)]
+        [Display(Name = "Last Modified Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
     }
