@@ -14,19 +14,17 @@ namespace ClothingShop.Entity.Entities
         public string Name { get; set; }
 
         [Required]
-        public int Image { get; set; }
+        public string Image { get; set; }
 
         [Required, DataType(DataType.Currency)]
-        public int Price { get; set; }
+        public long Price { get; set; }
 
         [Range(1, 100)]
         [Column(TypeName = "decimal(4, 2)")]
         public decimal? Discount { get; set; }
 
         [StringLength(500)]
-        public string? Discription { get; set; }
-
-#nullable disable
+        public string Discription { get; set; }
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
