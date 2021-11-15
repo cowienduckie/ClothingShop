@@ -1,4 +1,4 @@
-using ClothingShop.BusinessLogic.Repositories;
+﻿using ClothingShop.BusinessLogic.Repositories;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.BusinessLogic.Services;
 using ClothingShop.BusinessLogic.Services.Interfaces;
@@ -7,6 +7,7 @@ using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -123,13 +124,6 @@ namespace ClothingShop
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<ShopContext>();
