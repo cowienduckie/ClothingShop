@@ -44,7 +44,7 @@ namespace ClothingShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailModels product)
+        public IActionResult Create([Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailModels product)
         {
             if (ModelState.IsValid)
             {

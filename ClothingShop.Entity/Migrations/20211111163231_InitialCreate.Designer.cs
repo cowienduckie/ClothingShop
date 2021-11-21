@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClothingShop.Entity.Migrations
 {
-    [DbContext(typeof(IShopRepository))]
+    [DbContext(typeof(ShopContext))]
     [Migration("20211111163231_InitialCreate")]
     partial class InitialCreate
     {
