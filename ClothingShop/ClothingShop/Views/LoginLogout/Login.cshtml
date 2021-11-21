@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+<link href="~/css/login.css" rel="stylesheet" />
+
+<div class="login">
+    <span class="loginTitle">Login</span>
+    <form class="loginForm">
+        <label>Email</label>
+        <input class="loginInput"
+               type="text"
+               placeholder="Enter your email..." />
+        <label>Password</label>
+        <input class="loginInput"
+               type="password"
+               placeholder="Enter your password..." />
+        <div class="loginOption">
+            <div class="checkboxInput">
+                <input type="checkbox" id="checkbox" />
+                <label for="checkbox">Remember Me</label>
+            </div>
+            <a>Forget Password?</a>
+        </div>
+
+        <button class="loginButton" type="submit">Login</button>
+
+        <hr class="divide"/>
+
+        <p>Create an account to check out faster in the future and receive emails about your orders, new products, events and special offers!</p>
+
+        <a class="loginRegisterButton" asp-area="" asp-controller="LoginLogout" asp-action="CreateAccount">
+            Register
+        </a>
+    </form>
+</div>
