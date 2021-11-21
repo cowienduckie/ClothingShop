@@ -23,14 +23,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="search">
-                            <input class="search" type="search" name="Search" placeholder="Tìm kiếm" />
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index1">Log out</a>
+                        <li class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm">
                         </li>
                     </ul>
                 </div>
+                <button type="button" class="btn btn-outline-primary">Đăng xuất</button>
             </div>
         </nav>
     </header>
@@ -46,41 +44,44 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="grid">
-            <div class="grid_row">
-                <div class="col-4">
-                    <h5 class="footer_heading">Thông tin shop</h5>
-                    <ul>
-                        <li class="footer-item">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h5 class="card-title">Thông tin shop</h5>
+                    <ul class="list-group">
+                        <li class="text-dark">
                             Số 1, Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội.
                         </li>
-                        <li class="footer-item">
+                        <li class="text-dark">
                             Giờ mở cửa: 7-23h tất cả các ngày trong tuần.
                         </li>
                     </ul>
                 </div>
-                <div class="col-4">
-                    <h5 class="footer_heading">Danh mục sản phẩm</h5>
-                    <ul>
-                        <li class="footer-item__link">
-                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index1">Phụ kiện</a>
+                <div class="col">
+                    <h5 class="card-title">Danh mục sản phẩm</h5>
+                    <ul class="list-group">
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index1">Phụ kiện</a>
                         </li>
-                        <li class="footer-item__link">
-                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index">Quần áo</a>
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Quần áo</a>
                         </li>
-                        <li class="footer-item__link">
-                            <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Index">Giày dép</a>
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Giày dép</a>
                         </li>
                     </ul>
                 </div>
-                <div class="col-4">
-                    <h5 class="footer_heading">Liên hệ</h5>
-                    <ul>
-                        <li class="footer-item__link">
-                            <a href="">Facebook</a>
+                <div class="col">
+                    <h5 class="card-title">Liên hệ</h5>
+                    <ul class="list-group">
+                        <li>
+                            <a class="page-link">Facebook</a>
                         </li>
-                        <li class="footer-item__link">
-                            <a href="">Số điện thoại</a>
+                        <li>
+                            <a class="page-link">Số điện thoại</a>
+                        </li>
+                        <li>
+                            <a class="page-link">Email</a>
                         </li>
                     </ul>
                 </div>
