@@ -2,7 +2,7 @@
 
 namespace ClothingShop.Entity.Models
 {
-    public class ProductDetailViewModels
+    public class ProductViewModels
     {
         [Required]
         public int ProductId { get; set; }

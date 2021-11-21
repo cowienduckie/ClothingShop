@@ -2,6 +2,7 @@
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,12 +26,12 @@ namespace ClothingShop.BusinessLogic.Repositories
             var product = await _db.Product.ToListAsync();
 
             var allProductModels = new AllProductModels {
-                ProductList = new List<ProductDetailViewModels>()
+                ProductList = new List<ProductViewModels>()
             };
 
             product.ForEach(m =>
             {
-                var productViewModels = new ProductDetailViewModels
+                var productViewModels = new ProductViewModels
                 {
                     ProductId = m.ProductId,
                     Name = m.Name,
@@ -72,6 +73,33 @@ namespace ClothingShop.BusinessLogic.Repositories
             var product = await _db.Product.FirstOrDefaultAsync(s => s.ProductId == id);
 
             _db.Product.Remove(product);
+            await _db.SaveChangesAsync();
+        }
+
+        private bool ProductExists(int id)
+        {
+            return _db.Product.Any(e => e.ProductId == id);
+        }
+
+        public async Task EditProduct(ProductDetailModels product)
+        {
+            try
+            {
+                _db.Update(product);
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(product.ProductId))
+                {
+                    Console.WriteLine("Error DBupdate");
+                }
+            }
+        }
+
+        public async Task CreateProduct(ProductDetailModels product)
+        {
+            _db.Add(product);
             await _db.SaveChangesAsync();
         }
 

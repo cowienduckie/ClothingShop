@@ -11,9 +11,9 @@ namespace ClothingShop.Controllers
     public class AdminController : Controller 
     {
 
-        private readonly ShopContext _context;
+        private readonly IShopRepository _context;
 
-        public AdminController(ShopContext context)
+        public AdminController(IShopRepository context)
         {
             _context = context;
         }
@@ -27,7 +27,7 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            var product = await _context.GetDetail(id);
+            var product = await _context.GetDetails(id);
 
             if (product == null)
             {
@@ -44,12 +44,11 @@ namespace ClothingShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailViewModels product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailModels product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                _ = _context.CreateProduct(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -57,7 +56,7 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            var product = _context.GetDetail(id);
+            var product = _context.GetDetails(id);
 
             if (product == null) return NotFound();
 
@@ -66,7 +65,7 @@ namespace ClothingShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailViewModels product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailModels product)
         {
             if (id != product.ProductId)
             {
@@ -75,22 +74,7 @@ namespace ClothingShop.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.ProductId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _ =_context.EditProduct(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -105,11 +89,5 @@ namespace ClothingShop.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Product.Any(e => e.ProductId == id);
-        }
-
     }
 }

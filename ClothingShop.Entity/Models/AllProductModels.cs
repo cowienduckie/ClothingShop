@@ -7,6 +7,6 @@ namespace ClothingShop.Entity.Models
 {
     public class AllProductModels
     {
-        public List<ProductDetailViewModels> ProductList { get; set; }
+        public List<ProductViewModels> ProductList { get; set; }
     }
 }

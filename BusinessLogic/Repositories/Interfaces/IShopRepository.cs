@@ -10,7 +10,10 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         public Task<ProductDetailModels> GetDetails(int? id);
 
-        public Task DeleteProduct(int id);
+        public Task CreateProduct(ProductDetailModels product);
 
+        public Task EditProduct(ProductDetailModels product);
+
+        public Task DeleteProduct(int id);
     }
 }
