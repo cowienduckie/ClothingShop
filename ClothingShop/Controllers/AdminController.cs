@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
-using ClothingShop.Models;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 
 namespace ClothingShop.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : Controller 
     {
 
         private readonly ShopContext _context;
@@ -22,31 +20,21 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var product = from m in _context.Product select m;
+            var model = await _context.GetAllProduct();
 
-            var productViewModel = new ProductViewModel
-            {
-                 Name_Product = await product.ToListAsync()
-            };
-
-            return View(productViewModel);
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            var product = await _context.GetDetail(id);
+
+            if (product == null)
             {
                 return NotFound();
             }
-
-            var movie = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            
+            return View(product);
         }
 
         public IActionResult Create()
@@ -56,7 +44,7 @@ namespace ClothingShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name_Product,DateCreated_Product,Type_Product,Price_Product")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailViewModels product)
         {
             if (ModelState.IsValid)
             {
@@ -69,24 +57,18 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var product = _context.GetDetail(id);
 
-            var movie = await _context.Product.FindAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            return View(movie);
+            if (product == null) return NotFound();
+
+            return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name_Product,DateCreated_Product,Type_Product,Price_Product")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,image,Price,Discount,Dicription,CreateTime")] ProductDetailViewModels product)
         {
-            if (id != product.Id)
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
@@ -100,7 +82,7 @@ namespace ClothingShop.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MovieExists(product.Id))
+                    if (!ProductExists(product.ProductId))
                     {
                         return NotFound();
                     }
@@ -113,37 +95,20 @@ namespace ClothingShop.Controllers
             }
             return View(product);
         }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
-        }
+       
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Product.FindAsync(id);
-            _context.Product.Remove(movie);
-            await _context.SaveChangesAsync();
+            var product = _context.DeleteProduct(id);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Product.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.ProductId == id);
         }
 
     }
