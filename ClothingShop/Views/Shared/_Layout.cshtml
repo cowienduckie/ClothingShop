@@ -6,10 +6,11 @@
     <title>@ViewData["Title"] - ClothingShop</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400;500;700&family=Lora:ital,wght@1,400;1,500;1,600&family=Varela+Round&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ClothingShop</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,13 +27,14 @@
                         </li>
                     </ul>
                 </div>
+                <a  asp-area="" asp-controller="LoginLogout" asp-action="Login">Sign In</a>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="container-app">
+        <div>
             @RenderBody()
-        </main>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">
