@@ -1,150 +1,96 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
-using ClothingShop.Models;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 
 namespace ClothingShop.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly IShopRepository _shopRepository;
 
-        private readonly ShopContext _context;
-
-        public AdminController(ShopContext context)
+        public AdminController(IShopRepository shopRepository)
         {
-            _context = context;
+            _shopRepository = shopRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var product = from m in _context.Product select m;
+            var model = await _shopRepository.GetAllProduct();
 
-            var productViewModel = new ProductViewModel
-            {
-                 Name_Product = await product.ToListAsync()
-            };
-
-            return View(productViewModel);
+            return View(model);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            var product = await _shopRepository.GetDetails(id);
+
+            if (product == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            return View(product);
         }
 
         public IActionResult Create()
         {
-            return View();
+            var model = new ProductDetailModels();
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name_Product,DateCreated_Product,Type_Product,Price_Product")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Image,Price,Discount,Description")] ProductDetailModels product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                await _shopRepository.CreateProduct(product);
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(product);
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var product = await _shopRepository.GetDetails(id);
 
-            var movie = await _context.Product.FindAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            return View(movie);
+            if (product == null) return NotFound();
+
+            return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name_Product,DateCreated_Product,Type_Product,Price_Product")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,image,Price,Discount,Description,CreateTime")] ProductDetailModels product)
         {
-            if (id != product.Id)
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _shopRepository.EditProduct(product);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Product.FindAsync(id);
-            _context.Product.Remove(movie);
-            await _context.SaveChangesAsync();
+            await _shopRepository.DeleteProduct(id);
+
             return RedirectToAction(nameof(Index));
         }
-
-        private bool MovieExists(int id)
-        {
-            return _context.Product.Any(e => e.Id == id);
-        }
-
     }
 }

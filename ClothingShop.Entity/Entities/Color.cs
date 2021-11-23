@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
@@ -9,8 +10,10 @@ namespace ClothingShop.Entity.Entities
         [Required]
         public int ColorId { get; set; }
 
-        //Each color has a unique code 
+        //Each color has a unique code
         [Required]
         public int Value { get; set; }
+
+        public IList<ProductEntry> ProductEntries { get; set; }
     }
 }
