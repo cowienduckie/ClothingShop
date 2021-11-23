@@ -1,9 +1,13 @@
-using ClothingShop.BusinessLogic.Repositories;
+﻿using ClothingShop.BusinessLogic.Repositories;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.BusinessLogic.Services;
+using ClothingShop.BusinessLogic.Services.Interfaces;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +95,12 @@ namespace ClothingShop
                     policy.RequireRole("Customer");
                 });
             });
+
+            //Send email service register
+            services.AddOptions();
+            var mailSettings = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailSettings);
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

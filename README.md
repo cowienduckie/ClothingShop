@@ -1,1 +1,10 @@
 # ClothingShop
+Cửa hàng thời trang thiết kế sẵn Eva de Eva muốn phát triển một trang web để quảng bá sản phẩm và thu hút khách hàng cũng như tham gia thị trường online. Các mẫu thiết kế của Eva de Eva hướng tới khách hàng nữ bao gồm các hạng mục quần áo. Các chức năng chính của ứng dụng như sau:
+- Quản lý các sản phẩm và hạng mục sản phẩm. Mỗi loại sản phẩm có kích cỡ S M L XL và màu sắc để khách hàng có thể lựa chọn. Khi sản phẩm không sẵn có trong kho của cửa hàng chủ cửa hàng có thể disable kích thước hoặc màu sắc tương ứng.
+- Khách hàng có thể đăng ký tài khoản và trở thành khách hàng thân thiết để nhận được các voucher (ngày sinh nhật) hoặc được hưởng các ưu đãi dành riêng cho khách hàng thân thiết(một số mặt hàng giảm giá chỉ dành riêng cho khách hàng thân thiết).
+- Khách hàng có thể mua hàng tại cửa hàng, hoặc có thể đặt hàng online. Hệ thống cho phép quản lý lịch sử mua hàng của từng khách hàng và quản lý đơn hàng trên hệ thống.
+- Hệ thống  cho  phép  chủ cửa  hàng  dễ dàng  tạo  ra  các sự kiện  khuyến  mãi,  mã khuyến mãi hoặc các voucher để tặng riêng cho khách hàng hoặc sự kiện chung áp dụng cho tất cả các khách hàng trong hệ thống.
+- Khách hàng có thể nhìn thấy tình trạng đơn hàng trên hệ thống của mình. Cửa hàng sẽ thay đổi trạng thái đơn hàng và khách hàng sẽ nhận được thông báo mỗi khi đơn hàng thay đổi.
+- Khách hàng cũng nhận được các mã giảm giá, voucher từ cửa hàng và thấy các mã đó trong không gian tài khoản của mình. Có thểsử dụng các mã đó để thực hiện đơn hàng online, cũng có thể sử dụng mã đó tại cửa hàng khi thanh toán để được hưởng ưu đãi. Một số mã khuyến mãi chỉ áp dụng mua online, một số mã chỉ áp dụng tại cửa hàng. 
+- Khách hàng khi mua hàng sẽ được tích điểm vào thẻ khách hàng thân thiết để thăng hạng. Khi thăng hạng sẽ được hưởng nhiều ưu đãi hơn từ cửa hàng. 
+- Khách hàng cũng có thể nhận được thông báo từ cửa  hàng  trong  tài  khoản  cá nhân của mình về các sự kiện khuyến mãi, về mã ưu đãi hoặc nhắc khách hàng sử dụng mã ưu đãi của riêng mình trước khi mã ưu đãi hết hạn.
