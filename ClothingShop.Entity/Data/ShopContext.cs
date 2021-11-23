@@ -1,4 +1,5 @@
 ﻿using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace ClothingShop.Entity.Data
             : base(options)
         {
         }
+        public DbSet<Product> Product { get; set; }
 
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductCategory> ProductCategory { get; set; }

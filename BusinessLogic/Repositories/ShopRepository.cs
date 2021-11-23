@@ -1,5 +1,6 @@
 ﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Data;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.BusinessLogic.Repositories
 {

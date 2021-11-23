@@ -1,0 +1,57 @@
+﻿@model ClothingShop.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name_Product[0].Name_Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name_Product[0].DateCreated_Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name_Product[0].Type_Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name_Product[0].Price_Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Name_Product)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name_Product)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated_Product)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type_Product)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price_Product)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
