@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClothingShop.Entity.Models
 {
-    public class Login
+    public class LoginModel
     {
         [Required]
         public string UserName { get; set; }

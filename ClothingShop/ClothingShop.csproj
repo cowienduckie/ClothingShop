@@ -27,4 +27,8 @@
     <ProjectReference Include="..\ClothingShop.Entity\ClothingShop.Entity.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Account\" />
+  </ItemGroup>
+
 </Project>

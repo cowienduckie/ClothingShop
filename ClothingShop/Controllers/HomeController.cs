@@ -1,4 +1,4 @@
-﻿using ClothingShop.Models;
+﻿using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
