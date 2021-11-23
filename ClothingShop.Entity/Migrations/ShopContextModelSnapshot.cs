@@ -161,7 +161,9 @@ namespace ClothingShop.Entity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Id");
+                });
+                
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.Category", b =>
                 {
@@ -595,7 +597,6 @@ namespace ClothingShop.Entity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
-#pragma warning restore 612, 618
         }
     }
 }

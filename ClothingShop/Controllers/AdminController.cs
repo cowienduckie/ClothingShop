@@ -15,6 +15,8 @@ namespace ClothingShop.Controllers
         public IActionResult CreateItem()
         {
             return View();
+        }
+
 
         private readonly IShopRepository _shopRepository;
 
