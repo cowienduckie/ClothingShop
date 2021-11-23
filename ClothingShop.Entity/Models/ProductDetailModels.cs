@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
 
-
-namespace ClothingShop.Entity.Entities
+namespace ClothingShop.Entity.Models
 {
-    public class Product
+    public class ProductDetailModels
     {
         [Required]
         public int ProductId { get; set; }
@@ -38,10 +34,5 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "LastModified Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
-
-        //
-        public IList<ProductEntry> ProductEntries { get; set; }
-
-        public IList<ProductCategory> ProductCategories { get; set; }
     }
 }
