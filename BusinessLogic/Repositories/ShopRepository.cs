@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace ClothingShop.BusinessLogic.Repositories
 {
     public class ShopRepository : IShopRepository
@@ -19,30 +18,20 @@ namespace ClothingShop.BusinessLogic.Repositories
             _db = db;
         }
 
-
-
         public async Task<AllProductModels> GetAllProduct()
         {
-            var product = await _db.Product.ToListAsync();
-
-            var allProductModels = new AllProductModels {
-                ProductList = new List<ProductViewModels>()
-            };
-
-            product.ForEach(m =>
+            var product = await _db.Product.Select(m => new ProductViewModels
             {
-                var productViewModels = new ProductViewModels
-                {
-                    ProductId = m.ProductId,
-                    Name = m.Name,
-                    Image = m.Image,
-                    Price = m.Price
-                };
+                ProductId = m.ProductId,
+                Name = m.Name,
+                Image = m.Image,
+                Price = m.Price
+            }).ToListAsync();
 
-                allProductModels.ProductList.Add(productViewModels);
-            });
-
-            return allProductModels;
+            return new AllProductModels
+            {
+                ProductList = product
+            };
         }
 
         public async Task<ProductDetailModels> GetDetails(int? id)
@@ -60,7 +49,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 Image = product.Image,
                 Price = product.Price,
                 Discount = product.Discount,
-                Discription = product.Discription,
+                Description = product.Description,
                 CreateTime = product.CreateTime,
                 LastModified = product.LastModified
             };
@@ -72,11 +61,15 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             var product = await _db.Product.FirstOrDefaultAsync(s => s.ProductId == id);
 
-            _db.Product.Remove(product);
-            await _db.SaveChangesAsync();
+            if (product != null)
+            {
+                _db.Product.Remove(product);
+
+                await _db.SaveChangesAsync();
+            }
         }
 
-        private bool ProductExists(int id)
+        private bool HasProductId(int id)
         {
             return _db.Product.Any(e => e.ProductId == id);
         }
@@ -90,7 +83,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(product.ProductId))
+                if (!HasProductId(product.ProductId))
                 {
                     Console.WriteLine("Error DBupdate");
                 }
@@ -102,6 +95,5 @@ namespace ClothingShop.BusinessLogic.Repositories
             _db.Add(product);
             await _db.SaveChangesAsync();
         }
-
     }
 }

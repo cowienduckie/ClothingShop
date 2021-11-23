@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -24,7 +26,7 @@ namespace ClothingShop.Entity.Entities
         public decimal? Discount { get; set; }
 
         [StringLength(500)]
-        public string Discription { get; set; }
+        public string Description { get; set; }
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
@@ -35,5 +37,10 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "LastModified Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
+
+        //
+        public IList<ProductEntry> ProductEntries { get; set; }
+
+        public IList<ProductCategory> ProductCategories { get; set; }
     }
 }

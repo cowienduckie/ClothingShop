@@ -23,7 +23,7 @@ namespace ClothingShop.Entity.Models
         public decimal? Discount { get; set; }
 
         [StringLength(500)]
-        public string Discription { get; set; }
+        public string Description { get; set; }
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
@@ -27,5 +28,8 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Last Modified Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
+
+        //
+        public IList<ProductCategory> ProductCategories { get; set; }
     }
 }
