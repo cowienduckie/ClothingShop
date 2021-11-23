@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClothingShop.BusinessLogic.Repositories;
-using ClothingShop.Entity.Models;
 using System.Security.Cryptography;
 using System.Text;
 using ClothingShop.Entity.Data;
-using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.Entity.Models;
 using ClothingShop.Entity.Entities;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 
 namespace ClothingShop.Controllers
 {

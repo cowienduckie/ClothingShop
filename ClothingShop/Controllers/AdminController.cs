@@ -10,6 +10,11 @@ namespace ClothingShop.Controllers
 {
     public class AdminController : Controller
     {
+        public IActionResult CreateItem()
+        {
+            return View();
+        }
+
         private readonly IShopRepository _shopRepository;
 
         public AdminController(IShopRepository shopRepository)
