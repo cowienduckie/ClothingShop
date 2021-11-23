@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+
+
 <body>
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ClothingShop</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -24,22 +23,72 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm">
+                        </li>
                     </ul>
                 </div>
+                <button type="button" class="btn btn-outline-primary">Đăng xuất</button>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <div id="backtop" class="backtotop">
+        Back
+    </div>
+
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - ClothingShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col">
+                    <h5 class="card-title">Thông tin shop</h5>
+                    <ul class="list-group">
+                        <li class="text-dark">
+                            Số 1, Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội.
+                        </li>
+                        <li class="text-dark">
+                            Giờ mở cửa: 7-23h tất cả các ngày trong tuần.
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5 class="card-title">Danh mục sản phẩm</h5>
+                    <ul class="list-group">
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index1">Phụ kiện</a>
+                        </li>
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Quần áo</a>
+                        </li>
+                        <li>
+                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Giày dép</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h5 class="card-title">Liên hệ</h5>
+                    <ul class="list-group">
+                        <li>
+                            <a class="page-link">Facebook</a>
+                        </li>
+                        <li>
+                            <a class="page-link">Số điện thoại</a>
+                        </li>
+                        <li>
+                            <a class="page-link">Email</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
