@@ -1,0 +1,29 @@
+﻿
+.create-container{
+    margin-top:80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-create {
+    width: 40%;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    font-weight:600;
+    margin-bottom: 10%;
+}
+
+.create-title {
+    font-size: 60px;
+    font-family: 'Varela Round', sans-serif;
+    color: #000000;
+    text-shadow: 2px 2px 0 #bcbcbc, 4px 4px 0 #9c9c9c;
+}
+
+.btn-create {
+    width: 30%;
+    margin-left: 35%;
+}

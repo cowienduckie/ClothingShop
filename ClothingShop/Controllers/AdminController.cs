@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
+
 
 namespace ClothingShop.Controllers
 {
@@ -14,6 +16,7 @@ namespace ClothingShop.Controllers
         {
             return View();
         }
+
 
         private readonly IShopRepository _shopRepository;
 
