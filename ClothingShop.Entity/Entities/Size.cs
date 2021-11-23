@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+
 using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
@@ -12,7 +13,7 @@ namespace ClothingShop.Entity.Entities
 
         [Required]
         public int Value { get; set; }
-
+      
         public IList<ProductEntry> ProductEntries { get; set; }
     }
 }

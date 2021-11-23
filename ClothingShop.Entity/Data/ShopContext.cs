@@ -18,6 +18,13 @@ namespace ClothingShop.Entity.Data
         public DbSet<Color> Color { get; set; }
         public DbSet<Size> Size { get; set; }
 
+        public DbSet<Product> Product { get; set; }
+        public DbSet<ProductCategory> ProductCategory { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<ProductEntry> ProductEntry { get; set; }
+        public DbSet<Color> Color { get; set; }
+        public DbSet<Size> Size { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

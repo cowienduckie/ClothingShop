@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ClothingShop.Entity.Entities;
 
+
 namespace ClothingShop.Entity.Entities
 {
     public class Product
