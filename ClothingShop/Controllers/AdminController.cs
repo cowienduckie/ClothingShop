@@ -53,7 +53,6 @@ namespace ClothingShop.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine("test");
                 Console.WriteLine(e.ToString());
                 return View();
             }

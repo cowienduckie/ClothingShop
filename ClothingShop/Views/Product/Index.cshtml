@@ -1,22 +1,20 @@
 ﻿@model ClothingShop.Entity.Models.PaginationModel<ProductViewModel>
 
-@{
-    ViewData["Title"] = "Quản lý sản phẩm";
-    int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
-    int FirstPage = 1;
-    int CurrPage = Model.PageNumber;
-    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+@{ ViewData["Title"] = "Danh mục sản phẩm";
+                int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
+                int FirstPage = 1;
+                int CurrPage = Model.PageNumber;
+                int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
 
-    var Name = ViewBag.Name;
-    var Sort = ViewBag.Sort;
+                var Name = ViewBag.Name;
+                var Sort = ViewBag.Sort;
 
-    var SortType = new List<(string sort, string text)> {
+                var SortType = new List<(string sort, string text)> {
         ("name", "Tên sản phẩm"),
         ("-name", "Tên sản phẩm"),
         ("price", "Giá sản phẩm"),
         ("-price", "Giá sản phẩm"),
-    };
-}
+    }; }
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="search-icon" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -44,9 +42,9 @@
     </symbol>
 </svg>
 
-<h1>QUẢN LÝ SẢN PHẨM</h1>
+<h1>DANH MỤC SẢN PHẨM</h1>
 <br />
-<form asp-controller="Admin" asp-action="ProductList" method="get">
+<form asp-controller="Product" asp-action="Index" method="get">
     <div class="row">
         <div class="col-sm-7">
             <input class="form-control input-sm w-100" type="text" name="name" placeholder="Tên sản phẩm" value="@Name" />
@@ -56,74 +54,33 @@
                 <svg class="bi" width="16" height="16"><use xlink:href="#search-icon" /></svg>
             </button>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle btn-block" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <svg class="bi" width="16" height="16"><use xlink:href="#sort-icon" /></svg>
+                <button class="btn btn-outline-success dropdown-toggle btn-block" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg class="bi" width="16" height="16"><use xlink:href="#sort-icon" /></svg> Bộ lọc sản phẩm
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <div class="dropdown-menu w-100" aria-labelledby="dropdownMenu2">
                     @foreach (var item in SortType)
                     {
-                        <button class="@("dropdown-item " + (item.sort == Sort ? "active" : ""))"
+                        <button class="@("w-100 dropdown-item " + (item.sort == Sort ? "active" : ""))"
                                 type="submit" name="sort" value="@item.sort">
                             @item.text
                             <i class="@("fa fa-long-arrow-" +(item.sort[0] == '-' ? "down" : "up"))" aria-hidden="true"></i>
-                        </button>   
+                        </button>
                     }
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center text-success" asp-action="ProductList">Xóa bộ lọc</a>
+                    <a class="w-100 dropdown-item text-center text-success" asp-action="Index">Xóa bộ lọc</a>
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
-            <a class="btn btn-outline-danger btn-block w-100" asp-action="CreateProdutct" data-toggle="tooltip" data-placement="bottom" title="Thêm sản phẩm">
-                <svg class="bi" width="16" height="16"><use xlink:href="#plus-icon" /></svg>
-            </a>
-        </div>
     </div>
 </form>
-
 <br />
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th scope="col" style="text-align:center">STT</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].ProductId)</th>
-            <th scope="col">@Html.DisplayNameFor(model => model.ItemList[0].Name)</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Price)</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Stock)</th>
-            <th scope="col" style="text-align:center"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.ItemList.Count; ++i)
-        {
-            <tr>
-                <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
-                <td class="align-middle" align="center">@Model.ItemList[i].ProductId</td>
-                <td class="align-middle">@Model.ItemList[i].Name</td>
-                <td class="align-middle" align="center">@Model.ItemList[i].Price</td>
-                <td class="align-middle" align="center">@Model.ItemList[i].Stock</td>
-                <td class="align-middle" align="center">
-                    <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#edit-icon" /></svg>
-                    </a>
-                    <a class="btn btn-sm btn-primary" asp-controller="Admin" asp-action="ProductDetails" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Chi tiết">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#details-icon" /></svg>
-                    </a>
-                    <a class="btn btn-sm btn-secondary" asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Xóa">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#delete-icon" /></svg>
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div>
 
-<form asp-controller="Admin" asp-action="Product" method="get">
+</div>
+
+<form asp-controller="Product" asp-action="Index" method="get">
     <ul class="pagination justify-content-center">
         <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
             <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
@@ -138,22 +95,19 @@
             </button>
         </li>
 
-        @{
-            var TotalShowPage = 10;//Change this value to adjust code below
-            var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
-                                FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
-            var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
-                              LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
+        @{ var TotalShowPage = 10;//Change this value to adjust code below
+                        var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                            FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                        var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                          LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
 
-            for (var i = StartShowPage; i <= EndShowPage; ++i)
-            {
-                <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
-                    <button class="page-link" type="submit" name="pageNumber" value="@i">
-                        @i
-                    </button>
-                </li>
-            }
-        }
+                        for (var i = StartShowPage; i <= EndShowPage; ++i)
+                        {
+            <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@i">
+                    @i
+                </button>
+            </li> } }
 
         <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
             <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"

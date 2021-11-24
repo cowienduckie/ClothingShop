@@ -76,6 +76,8 @@ namespace ClothingShop.BusinessLogic.Repositories
             {
                 if (sort == "name") products = products.OrderBy(p => p.Name);
                 else if (sort == "-name") products = products.OrderByDescending(p => p.Name);
+                else if (sort == "price") products = products.OrderBy(p => p.Price);
+                else if (sort == "-price") products = products.OrderByDescending(p => p.Price);
             }
 
             return products;

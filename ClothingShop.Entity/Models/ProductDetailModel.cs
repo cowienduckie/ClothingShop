@@ -33,7 +33,7 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Mô tả")]
         public string Description { get; set; }
 
-        [Display(Name = "Tồn kho")]
+        [Display(Name = "Số lượng")]
         public int Stock { get; set; }
 
         [DataType(DataType.Date)]
