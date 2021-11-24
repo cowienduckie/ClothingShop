@@ -6,14 +6,18 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 {
     public interface IShopRepository
     {
-        public Task<AllProductModels> GetAllProduct();
+        Task<AllProductModels> GetAllProduct();
 
-        public Task<ProductDetailModels> GetDetails(int? id);
+        PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? pageNumber, int? pageSize);
 
-        public Task CreateProduct(ProductDetailModels product);
+        Task<ProductDetailModel> GetProductDetails(int? id);
 
-        public Task EditProduct(ProductDetailModels product);
+        Task<ProductDetailModel> GetBlankProductDetailModel();
 
-        public Task DeleteProduct(int id);
+        Task CreateProduct(ProductDetailModel product);
+
+        Task<ProductDetailModel> EditProduct(ProductDetailModel product);
+
+        Task DeleteProduct(int id);
     }
 }

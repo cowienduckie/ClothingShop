@@ -10,9 +10,10 @@ namespace ClothingShop.Entity.Entities
         [Required]
         public int ColorId { get; set; }
 
-        //Each color has a unique code
         [Required]
-        public int Value { get; set; }
+        public string Value { get; set; }
+
+        public string ColorHexCode { get; set; }
 
         public IList<ProductEntry> ProductEntries { get; set; }
     }

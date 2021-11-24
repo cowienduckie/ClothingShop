@@ -5,6 +5,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Migrations\20211124093949_Update.cs" />
+	  <Compile Remove="Migrations\20211124093949_Update.Designer.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="MailKit" Version="2.15.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.20" />

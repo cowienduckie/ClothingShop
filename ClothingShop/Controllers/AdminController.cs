@@ -5,16 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using System;
 
 namespace ClothingShop.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult CreateItem()
-        {
-            return View();
-        }
-
         private readonly IShopRepository _shopRepository;
 
         public AdminController(IShopRepository shopRepository)
@@ -22,80 +18,142 @@ namespace ClothingShop.Controllers
             _shopRepository = shopRepository;
         }
 
+        //GET: Admin/Index
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var model = await _shopRepository.GetAllProduct();
-
-            return View(model);
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            var product = await _shopRepository.GetDetails(id);
-
-            if (product == null)
+            try
             {
-                return NotFound();
+                var model = await _shopRepository.GetAllProduct();
+
+                return View(model);
             }
-
-            return View(product);
-        }
-
-        public IActionResult Create()
-        {
-            var model = new ProductDetailModels();
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Image,Price,Discount,Description")] ProductDetailModels product)
-        {
-            if (ModelState.IsValid)
+            catch (Exception e)
             {
-                await _shopRepository.CreateProduct(product);
-
-                return RedirectToAction(nameof(Index));
+                Console.WriteLine(e.ToString());
+                return View();
             }
-
-            return View(product);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        //GET: Admin/ProductList
+        [HttpGet]
+        [Route("Admin/ProductList")]
+        public IActionResult ProductList(string name, string sort, int? pageNumber, int? pageSize)
         {
-            var product = await _shopRepository.GetDetails(id);
+            try
+            {
+                var model = _shopRepository.GetProductList(name, sort, pageNumber, pageSize);
 
+                //View bag
+                if (name != null) ViewBag.Name = name;
+                if (sort != null) ViewBag.Sort = sort;
+
+                return View(model);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("test");
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
+
+        //GET: Admin/ProductDetails
+        [HttpGet]
+        public async Task<IActionResult> ProductDetails(int? id)
+        {
+            if (id == null) return NotFound();
+            var product = await _shopRepository.GetProductDetails(id);
             if (product == null) return NotFound();
 
             return View(product);
         }
 
+        //GET: Admin/CreateProduct
+        [HttpGet]
+        public async Task<IActionResult> CreateProduct()
+        {
+            var model = await _shopRepository.GetBlankProductDetailModel();
+
+            return View(model);
+        }
+
+        //POST: Admin/CreateProduct
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,image,Price,Discount,Description,CreateTime")] ProductDetailModels product)
+        public async Task<IActionResult> CreateProduct(ProductDetailModel model)
         {
-            if (id != product.ProductId)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid) return View(model);
 
-            if (ModelState.IsValid)
+            try
             {
-                await _shopRepository.EditProduct(product);
-
-                return RedirectToAction(nameof(Index));
+                await _shopRepository.CreateProduct(model);
+                return RedirectToAction(nameof(ProductList));
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/EditProduct
+        [HttpGet]
+        public async Task<IActionResult> EditProduct(int? id)
+        {
+            if (id == null) return NotFound();
+            var product = await _shopRepository.GetProductDetails(id);
+            if (product == null) return NotFound();
+
             return View(product);
         }
 
-        [HttpPost, ActionName("Delete")]
+        //POST: Admin/ProductEdit
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> EditProduct(ProductDetailModel model)
         {
-            await _shopRepository.DeleteProduct(id);
+            if (!ModelState.IsValid) return View(model);
 
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _shopRepository.EditProduct(model);
+                return RedirectToAction(nameof(ProductList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/DeleteProduct
+        [HttpGet]
+        public async Task<IActionResult> DeleteProduct(int? id)
+        {
+            if (id == null) return NotFound();
+            var product = await _shopRepository.GetProductDetails(id);
+            if (product == null) return NotFound();
+
+            return View(product);
+        }
+
+        //POST: Admin/DeleteProduct
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                await _shopRepository.DeleteProduct(id);
+                return RedirectToAction(nameof(ProductList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
         }
     }
 }

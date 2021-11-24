@@ -17,7 +17,7 @@ namespace ClothingShop.Entity.Entities
         public string Name { get; set; }
 
         [StringLength(100)]
-        public string Discription { get; set; }
+        public string Description { get; set; }
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]

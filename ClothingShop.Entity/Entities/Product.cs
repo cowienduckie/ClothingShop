@@ -20,7 +20,7 @@ namespace ClothingShop.Entity.Entities
         public string Image { get; set; }
 
         [Required, DataType(DataType.Currency)]
-        public long Price { get; set; }
+        public int Price { get; set; }
 
         [Range(1, 100)]
         [Column(TypeName = "decimal(4, 2)")]

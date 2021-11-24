@@ -2,7 +2,7 @@
 
 namespace ClothingShop.Entity.Models
 {
-    public class ProductViewModels
+    public class ProductViewModel
     {
         [Required]
         public int ProductId { get; set; }
@@ -14,6 +14,8 @@ namespace ClothingShop.Entity.Models
         public string Image { get; set; }
 
         [Required, DataType(DataType.Currency)]
-        public long Price { get; set; }
+        public int Price { get; set; }
+
+        public int Stock { get; set; }
     }
 }

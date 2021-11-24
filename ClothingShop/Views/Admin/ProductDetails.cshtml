@@ -1,0 +1,51 @@
+﻿@model ClothingShop.Entity.Models.ProductDetailModel
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+
+}
+
+<h4>Details</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        @foreach (var item in Model.Items)
+        {
+            <dt class="col-sm-2">
+                @item.SizeValue - @item.ColorValue
+            </dt>
+            <dd class="col-sm-10">
+                @item.Quantity
+            </dd>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="EditProduct" asp-route-id="@Model.ProductId">Edit</a> |
+    <a asp-action="ProductList">Back to List</a>
+</div>

@@ -12,7 +12,7 @@ namespace ClothingShop.Entity.Entities
         public int SizeId { get; set; }
 
         [Required]
-        public int Value { get; set; }
+        public string Value { get; set; }
       
         public IList<ProductEntry> ProductEntries { get; set; }
     }

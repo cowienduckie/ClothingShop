@@ -1,0 +1,53 @@
+﻿@model ClothingShop.Entity.Models.PaginationModel<ProductViewModel>
+@{ ViewData["Title"] = "Index"; }
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="CreateProduct">Create New</a>
+</p>
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemList[0].ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemList[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemList[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemList[0].Stock)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ItemList)
+        {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.ProductId)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Price)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Stock)
+    </td>
+    <td>
+        <a class="btn btn-success" asp-action="EditProduct" asp-route-id="@item.ProductId">Edit</a>
+        <a class="btn btn-info" asp-action="ProductDetails" asp-route-id="@item.ProductId">Details</a>
+        <a class="btn btn-danger" asp-action="DeleteProduct" asp-route-id="@item.ProductId">Delete</a>
+    </td>
+</tr>}
+    </tbody>
+</table>
