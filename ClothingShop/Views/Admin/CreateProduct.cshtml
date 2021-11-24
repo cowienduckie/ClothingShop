@@ -1,13 +1,16 @@
 ﻿@model ClothingShop.Entity.Models.ProductDetailModel
 
-@{ ViewData["Title"] = "Create Product"; }
+@{ ViewData["Title"] = "Thêm sản phẩm"; }
 
-<h4>Create Product</h4>
+<h1>THÊM SẢN PHẨM</h1>
 <hr />
+<br />
 <form asp-action="CreateProduct" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
+            <h5><strong>THÔNG SỐ</strong></h5>
+            <hr />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -25,11 +28,22 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-block btn-danger" asp-action="ProductList">Quay lại</a>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block">Thêm</button>
+                </div>
+            </div>
+            
         </div>
         <div class="col-md-8">
+            <h5><strong>MÀU SẮC - KÍCH THƯỚC</strong></h5>
+            <hr />
             <div class="row">
                @Html.HiddenFor(m => m.Image)
                @for (int i = 0; i < Model.Items.Count; ++i)
@@ -48,15 +62,9 @@
                
             </div>
         </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" />
-        </div>
+        
     </div>
 </form>
-
-<div>
-    <a asp-action="ProductList">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
