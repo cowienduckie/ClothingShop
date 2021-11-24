@@ -117,7 +117,11 @@ namespace ClothingShop.Controllers
 
             try
             {
-                await _shopRepository.EditProduct(model);
+                var returnModel = await _shopRepository.EditProduct(model);
+
+                if (returnModel == null)    
+                    return View(model);
+
                 return RedirectToAction(nameof(ProductList));
             }
             catch (Exception e)

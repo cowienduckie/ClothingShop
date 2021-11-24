@@ -24,8 +24,7 @@ namespace ClothingShop.Entity.Models
         public int Price { get; set; }
 
         [Column(TypeName = "decimal(4, 2)")]
-        [DisplayFormat(DataFormatString = "{0:P2}", ApplyFormatInEditMode = true)]
-        [Display(Name="Chiết khấu")]
+        [Display(Name="Chiết khấu(%)")]
         [Range(0, 100, ErrorMessage = "Chiết khấu chỉ nằm trong khoảng 0 - 100%")]
         public decimal? Discount { get; set; }
 

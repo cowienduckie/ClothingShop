@@ -180,6 +180,10 @@ namespace ClothingShop.BusinessLogic.Repositories
                 product.Description = model.Description;
                 product.Discount = model.Discount;
 
+                product.LastModified = DateTime.Now;
+
+                _db.Product.Update(product);
+
                 await _db.SaveChangesAsync();
 
                 return model;

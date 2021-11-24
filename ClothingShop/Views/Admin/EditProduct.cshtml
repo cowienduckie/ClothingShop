@@ -8,7 +8,7 @@
 <h4>Chỉnh sửa sản phẩm</h4>
 <hr />
 <br />
-<form asp-action="CreateProduct" method="post">
+<form asp-action="EditProduct" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
@@ -39,29 +39,12 @@
                     <a class="btn btn-block btn-danger" asp-action="ProductList">Quay lại</a>
                 </div>
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-success btn-block">Thêm</button>
+                    <button type="submit" class="btn btn-success btn-block">Chỉnh sửa</button>
                 </div>
             </div>
-
-        </div>
-        <div class="col-md-8">
-            <h5><strong>MÀU SẮC - KÍCH THƯỚC</strong></h5>
-            <hr />
-            <div class="row">
-                @Html.HiddenFor(m => m.Image)
-                @for (int i = 0; i < Model.Items.Count; ++i)
-                {
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label asp-for="@Model.Items[i].Quantity" class="control-label">@Model.Items[i].ColorValue - @Model.Items[i].SizeValue</label>
-                            <input asp-for="@Model.Items[i].Quantity" class="form-control" />
-                            <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
-                        </div>
-                    </div>
-                    @Html.HiddenFor(m => Model.Items[i].ColorId)
-                    @Html.HiddenFor(m => Model.Items[i].SizeId)
-                }
-            </div>
+            @Html.HiddenFor(m => m.ProductId)
+            @Html.HiddenFor(m => m.LastModified)
+            @Html.HiddenFor(m => m.Image)
         </div>
     </div>
 </form>
