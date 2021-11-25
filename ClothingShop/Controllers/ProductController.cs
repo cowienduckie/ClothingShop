@@ -26,6 +26,7 @@ namespace ClothingShop.Controllers
         {
             try
             {
+                pageSize ??= 9; //9 items per page
                 var model = _shopRepository.GetProductList(name, sort, pageNumber, pageSize);
 
                 //View bag

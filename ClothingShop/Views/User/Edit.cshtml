@@ -7,7 +7,7 @@
 <br />
 
 <form asp-action="Edit" method="post">
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -21,7 +21,10 @@
                 </select>
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
-            @Html.HiddenFor(m => m.Roles)
+            @Html.HiddenFor(m => m.UserName)
+            @Html.HiddenFor(m => m.Password)
+            @Html.HiddenFor(m => m.ConfirmPassword)
+            @Html.HiddenFor(m => m.Id)
             <div class="row justify-content-center">
                 <div class="col-md-4">
                     <a class="btn btn-danger btn-block" asp-action="Index">Quay lại</a>

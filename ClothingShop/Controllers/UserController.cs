@@ -149,7 +149,12 @@ namespace ClothingShop.Controllers
         [Route("User/Edit")]
         public async Task<IActionResult> Edit(UserDetailModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            model.Roles = roleManager.Roles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Id
+            }).ToList();
+            
             try
             {
                 Users user = await userManager.FindByIdAsync(model.Id).ConfigureAwait(false);
@@ -161,22 +166,19 @@ namespace ClothingShop.Controllers
                     string existingRoleId = roleManager.Roles.Single(r => r.Name == existingRole).Id;
                     IdentityResult result = await userManager.UpdateAsync(user).ConfigureAwait(false);
 
-                    if (result.Succeeded)
+                    if (existingRoleId != model.RoleId)
                     {
-                        if (existingRoleId != model.RoleId)
+                        IdentityResult roleResult = await userManager.RemoveFromRoleAsync(user, existingRole).ConfigureAwait(false);
+                        if (roleResult.Succeeded)
                         {
-                            IdentityResult roleResult = await userManager.RemoveFromRoleAsync(user, existingRole).ConfigureAwait(false);
-                            if (roleResult.Succeeded)
+                            Roles applicationRole = await roleManager.FindByIdAsync(model.RoleId).ConfigureAwait(false);
+                            if (applicationRole != null)
                             {
-                                Roles applicationRole = await roleManager.FindByIdAsync(model.RoleId).ConfigureAwait(false);
-                                if (applicationRole != null)
-                                {
-                                    IdentityResult newRoleResult = await userManager.AddToRoleAsync(user, applicationRole.Name).ConfigureAwait(false);
-                                }
+                                IdentityResult newRoleResult = await userManager.AddToRoleAsync(user, applicationRole.Name).ConfigureAwait(false);
                             }
                         }
-                        return RedirectToAction(nameof(Index));
                     }
+                    return RedirectToAction(nameof(Index));
                 }
                 return View(model);
             }
