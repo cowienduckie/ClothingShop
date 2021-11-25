@@ -15,7 +15,7 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Ảnh đại diện")]
         public string Image { get; set; }
 
-        [Required, DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:#,#VND}")]
         [Display(Name = "Giá")]
         public int Price { get; set; }
 

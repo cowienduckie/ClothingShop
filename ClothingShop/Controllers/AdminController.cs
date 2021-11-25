@@ -62,7 +62,7 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetails(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction(nameof(ProductList));
             var product = await _shopRepository.GetProductDetails(id);
             if (product == null) return NotFound();
 
@@ -101,7 +101,7 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProduct(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction(nameof(ProductList));
             var product = await _shopRepository.GetProductDetails(id);
             if (product == null) return NotFound();
 
@@ -135,7 +135,7 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteProduct(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return RedirectToAction(nameof(ProductList));
             var product = await _shopRepository.GetProductDetails(id);
             if (product == null) return NotFound();
 

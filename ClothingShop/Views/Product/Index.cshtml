@@ -76,8 +76,21 @@
     </div>
 </form>
 <br />
-<div>
-
+<div class="row">
+    @foreach (var item in Model.ItemList)
+    {
+        <div class="col-md-3" style="margin-top: 15px; margin-bottom: 15px">
+            <div class="card">
+                <img src="@item.Image" class="card-img-top" alt="@item.Name">
+                <div class="card-body">
+                    <h5 class="card-title"><strong>@item.Name</strong></h5>
+                    <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
+                    <hr />
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductId">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 <form asp-controller="Product" asp-action="Index" method="get">

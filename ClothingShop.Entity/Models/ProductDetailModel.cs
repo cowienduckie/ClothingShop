@@ -19,8 +19,9 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Ảnh đại diện")]
         public string Image { get; set; }
 
-        [Required, DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:#,#VND}")]
         [Display(Name = "Giá")]
+        [Required]
         public int Price { get; set; }
 
         [Column(TypeName = "decimal(4, 2)")]
@@ -50,7 +51,7 @@ namespace ClothingShop.Entity.Models
         public ProductDetailModel()
         {
             this.Discount = 0;
-            this.Image = "https://imgur.com/a/tZDUgE8";
+            this.Image = "https://i.imgur.com/iQeIsmz.jpg";
             this.Items = new List<ItemModel>();
             this.Description = "Đây là một mô tả mẫu để thử nghiệm cho sản phẩm của cửa hàng thời trang Eva de Eva. Các thành viên phụ trách sản phẩm phải update lại mô tả này. Độ dài của mô tả này là 180 ký tự.";
         }

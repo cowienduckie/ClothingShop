@@ -41,5 +41,25 @@ namespace ClothingShop.Controllers
                 return View();
             }
         }
+
+        //GET: Product/Details/id
+        [HttpGet]
+        [Route("Product/Details")]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(Index));
+
+            try
+            {
+                var model = await _shopRepository.GetProductDetails(id);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
     }
 }
