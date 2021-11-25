@@ -17,14 +17,20 @@ namespace ClothingShop.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<Users> signInManager;
-        private readonly UserManager<Users> userManager;
+        private readonly SignInManager<Users> _signInManager;
+        private readonly UserManager<Users> _userManager;
+        private readonly RoleManager<Roles> _roleManager;
+        private readonly IShopRepository _shopRepository;
 
         public AccountController(SignInManager<Users> signInManager,
-                                 UserManager<Users> userManager)
+                                 UserManager<Users> userManager,
+                                 RoleManager<Roles> roleManager,
+                                 IShopRepository shopRepository)
         {
-            this.signInManager = signInManager;
-            this.userManager = userManager;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _shopRepository = shopRepository;
+            _roleManager = roleManager;
         }
 
         public IActionResult AccessDenied()
@@ -32,6 +38,7 @@ namespace ClothingShop.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return RedirectToAction("Login");
@@ -39,6 +46,7 @@ namespace ClothingShop.Controllers
 
         //Login
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -53,7 +61,7 @@ namespace ClothingShop.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
                     return RedirectToLocal(returnUrl);
@@ -69,44 +77,59 @@ namespace ClothingShop.Controllers
 
         //Register
         [HttpGet]
-        public IActionResult CreateAccount()
+        [AllowAnonymous]
+        public IActionResult Register()
         {
-            return View();
-        }
+            var model = new RegisterModel();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAccount(LoginModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new Users
-                {
-                    UserName = model.UserName,
-                    Email = model.UserName
-                };
-                var hash_pass = GetMD5(model.Password);
-                var result = await userManager.CreateAsync(user, hash_pass);
-                if (result.Succeeded)
-                {
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("index", "home");
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-            }
             return View(model);
         }
 
-        //SignOff
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                Users user = new Users
+                {
+                    UserName = model.UserName,
+                    Email = model.Email
+                };
+
+                IdentityResult result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
+                if (result.Succeeded)
+                {
+                    Roles role = await _roleManager.FindByNameAsync("User").ConfigureAwait(false);
+
+                    if (role != null)
+                    {
+                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
+                        if (roleResult.Succeeded)
+                        {
+                            return RedirectToAction(nameof(Login));
+                        }
+                    }
+                }
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View(model);
+            }
+        }
+
+        //SignOff
+        [HttpGet]
+        [Route("Account/SignOff")]
         public async Task<IActionResult> SignOff()
         {
-            await signInManager.SignOutAsync().ConfigureAwait(false);
-            return RedirectToAction("Login");
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
@@ -119,22 +142,6 @@ namespace ClothingShop.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-        }
-
-        //!!! MOVE TO REPOSITORY
-        //Create a string MD5
-        public static string GetMD5(string str)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] fromData = Encoding.UTF8.GetBytes(str);
-            byte[] targetData = md5.ComputeHash(fromData);
-            string byte2String = null;
-
-            for (int i = 0; i < targetData.Length; i++)
-            {
-                byte2String += targetData[i].ToString("x2");
-            }
-            return byte2String;
         }
     }
 }

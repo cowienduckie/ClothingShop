@@ -6,9 +6,11 @@ using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingShop.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly IShopRepository _shopRepository;

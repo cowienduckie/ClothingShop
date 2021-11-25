@@ -1,10 +1,20 @@
-﻿@{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+﻿@using Microsoft.AspNetCore.Identity
+@using ClothingShop.Entity.Entities
+@using Microsoft.AspNetCore.Authorization
+
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
+
+@{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
     var actionName = this.ViewContext.RouteData.Values["action"].ToString();
     var controllers = new List<(string name, string text)>{
         ("Home", "Trang chủ"),
         ("Product", "Sản phẩm"),
         ("Admin", "Quản trị viên"),
         ("Account", "Quản lý tài khoản"),
+        ("Role", "Quản lý vai trò"),
+        ("User", "Quản lý tài khoản"),
    };
     var actions = new List<(string name, string text)>
 {
@@ -12,9 +22,14 @@
         ("CreateProduct", "Thêm sản phẩm"),
         ("DeleteProduct", "Xóa sản phẩm"),
         ("ProductDetails", "Chi tiết sản phẩm"),
-        ("Details", "Chi tiết"),
         ("EditProduct", "Chỉnh sửa sản phẩm"),
+        ("Create", "Thêm mới"),
+        ("Edit", "Chỉnh sửa"),
+        ("Delete", "Xóa"),
+        ("CreateEdit", "Thêm/Sửa"),
+        ("Details", "Chi tiết"),
         ("Login", "Đăng nhập"),
+        ("Register", "Đăng ký"),
         ("AccessDenied", "Không có quyền truy cập"),
    };
 }
@@ -59,28 +74,41 @@
                         <a class="@("nav-item nav-link "+(controllerName == "Home" ? "active" : ""))"
                            asp-controller="Home" asp-action="Index">Trang chủ</a>
                         <a class="@("nav-item nav-link "+(controllerName == "Product" ? "active" : ""))"
-                        asp-controller="Product" asp-action="Index">Danh Mục Sản phẩm</a>
+                           asp-controller="Product" asp-action="Index">Danh Mục Sản phẩm</a>
                     </div>
-
-                    <div class="navbar-nav d-sm-inline-flex justify-content-end">
-                        <a class="nav-item nav-link" asp-controller="Account" asp-action="Register">Đăng ký</a>
-                    </div>
-                    <div class="navbar-nav d-sm-inline-flex justify-content-end">
-                        <a class="nav-item nav-link" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                    </div>
-                    <div class="navbar-nav d-sm-inline-flex justify-content-end">
-                        <a class="nav-link nav-item" asp-controller="Account" asp-action="SignOff">Đăng xuất</a>
-                    </div>
-                    <div class="navbar-nav dropdown">
-                        <a class="nav-item nav-link dropdown-toggle mr-md-2 btn-lg" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Quản trị viên</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" asp-controller="Admin" asp-action="ProductList">Quản lý sản phẩm</a>
-                            <div class="dropdown-divider"></div>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="navbar-nav d-sm-inline-flex justify-content-end">
+                            <a class="nav-link nav-item">Xin chào @UserManager.GetUserName(User)!</a>
+                            <a class="nav-link nav-item"
+                               asp-controller="Account" asp-action="SignOff">
+                                Đăng xuất
+                            </a>
                         </div>
-                    </div>
+                        @if (authorizationService.AuthorizeAsync(User, "Admin").Result.Succeeded)
+                        {
+                            <div class="navbar-nav dropdown">
+                                <a class="nav-item nav-link dropdown-toggle mr-md-2 btn-lg" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Quản trị viên</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="ProductList">Quản lý sản phẩm</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="User" asp-action="Index">Quản lý tài khoản</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Role" asp-action="Index">Quản lý vai trò</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="navbar-nav flex-grow-1 justify-content-end">
+                            <a class="nav-item nav-link" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                            <a class="nav-item nav-link" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                        </div>
+                    }
                 </div>
             </div>
         </nav>

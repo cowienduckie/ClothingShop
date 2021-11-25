@@ -90,9 +90,9 @@ namespace ClothingShop
                 {
                     policy.RequireRole("Admin");
                 });
-                options.AddPolicy("Customer", policy =>
+                options.AddPolicy("User", policy =>
                 {
-                    policy.RequireRole("Customer");
+                    policy.RequireRole("User");
                 });
             });
 
