@@ -1,0 +1,115 @@
+﻿@model ClothingShop.Entity.Models.ProductDetailModel
+
+@{ ViewData["Title"] = "Xóa sản phẩm"; }
+
+<h1>@Model.Name.ToUpper()</h1>
+<h4>Bạn có chắc chắn muốn xóa sản phẩm này?</h4>
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-3 justify-content-center">
+        <img src="@Url.Content(Model.Image)" class="img-fluid border" />
+        <hr />
+    </div>
+    <div class="col-md-5">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ProductId)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ProductId)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Stock)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Stock)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-8 text-justify">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.CreateTime)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.LastModified)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.LastModified)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <table class=" table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.Items[0].ColorValue)</th>
+                    <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.Items[0].SizeValue)</th>
+                    <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.Items[0].Quantity)</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td class="align-middle" align="center">@item.ColorValue</td>
+                        <td class="align-middle" align="center">@item.SizeValue</td>
+                        <td class="align-middle" align="center">@item.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr />
+<div class="row justify-content-center">
+    <div class="col-sm-2">
+        <a class="btn btn-secondary w-100" asp-action="ProductList">Quay lại</a>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#delete">
+            Xóa
+        </button>
+        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteLabel">Xác nhận</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bạn có chắc chắn xóa sản phẩm này?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <form asp-action="DeleteProduct">
+                            <input type="hidden" asp-for="ProductId" />
+                            <input type="submit" value="Xác nhận" class="btn btn-danger btn-block" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

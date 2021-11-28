@@ -1,0 +1,59 @@
+﻿@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">ĐĂNG KÝ</div><br />
+            <div class="panel-body">
+                <section>
+                    <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                        <h4>Đăng ký tài khoản để có nhiều lợi ích hơn</h4>
+                        <hr />
+                        <div class="form-group">
+                            <label asp-for="UserName" class="col-md-10 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="UserName" class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="col-md-10 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="col-md-10 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="col-md-10 control-label"></label>
+                            <div class="col-md-10">
+                                <input asp-for="ConfirmPassword" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">Đăng ký</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="dropdown-divider"></div>
+                    <p>Đã có tài khoản? <a asp-action="Login">Đăng nhập</a></p>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

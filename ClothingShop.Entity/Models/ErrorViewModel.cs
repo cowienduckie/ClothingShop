@@ -1,5 +1,3 @@
-using System;
-
 namespace ClothingShop.Entity.Models
 {
     public class ErrorViewModel

@@ -1,94 +1,185 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using ClothingShop.Entity.Entities
+@using Microsoft.AspNetCore.Authorization
+
+@inject SignInManager<Users> SignInManager
+@inject UserManager<Users> UserManager
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
+
+@{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    var controllers = new List<(string name, string text)>{
+        ("Home", "Trang chủ"),
+        ("Product", "Sản phẩm"),
+        ("Admin", "Quản trị viên"),
+        ("Account", "Quản lý tài khoản"),
+        ("Role", "Quản lý vai trò"),
+        ("User", "Quản lý tài khoản"),
+   };
+    var actions = new List<(string name, string text)>
+{
+        ("ProductList", "Quản lý sản phẩm"),
+        ("CreateProduct", "Thêm sản phẩm"),
+        ("DeleteProduct", "Xóa sản phẩm"),
+        ("ProductDetails", "Chi tiết sản phẩm"),
+        ("EditProduct", "Chỉnh sửa sản phẩm"),
+        ("Create", "Thêm mới"),
+        ("Edit", "Chỉnh sửa"),
+        ("Delete", "Xóa"),
+        ("CreateEdit", "Thêm/Sửa"),
+        ("Details", "Chi tiết"),
+        ("Login", "Đăng nhập"),
+        ("Register", "Đăng ký"),
+        ("AccessDenied", "Không có quyền truy cập"),
+   };
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ClothingShop</title>
+    <title>@ViewData["Title"] - Eva de Eva</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+    </style>
 </head>
-
-
 <body>
-
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="github" viewBox="0 0 16 16">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+        </symbol>
+        <symbol id="arrow-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z" />
+        </symbol>
+    </svg>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ClothingShop</a>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Tìm kiếm">
-                        </li>
-                    </ul>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Eva de Eva</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-end">
+                    <div class="navbar-nav flex-grow-1">
+                        <a class="@("nav-item nav-link "+(controllerName == "Home" ? "active" : ""))"
+                           asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        <a class="@("nav-item nav-link "+(controllerName == "Product" ? "active" : ""))"
+                           asp-controller="Product" asp-action="Index">Danh Mục Sản phẩm</a>
+                    </div>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="navbar-nav d-sm-inline-flex justify-content-end">
+                            <a class="nav-link nav-item">Xin chào @UserManager.GetUserName(User)!</a>
+                            <a class="nav-link nav-item"
+                               asp-controller="Account" asp-action="SignOff">
+                                Đăng xuất
+                            </a>
+                        </div>
+                        @if (authorizationService.AuthorizeAsync(User, "Admin").Result.Succeeded)
+                        {
+                            <div class="navbar-nav dropdown">
+                                <a class="nav-item nav-link dropdown-toggle mr-md-2 btn-lg" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Quản trị viên</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Admin" asp-action="ProductList">Quản lý sản phẩm</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="User" asp-action="Index">Quản lý tài khoản</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Role" asp-action="Index">Quản lý vai trò</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="navbar-nav flex-grow-1 justify-content-end">
+                            <a class="nav-item nav-link" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                            <a class="nav-item nav-link" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                        </div>
+                    }
                 </div>
-                <button type="button" class="btn btn-outline-primary">Đăng xuất</button>
             </div>
         </nav>
     </header>
 
+    <button type="button" class="btn btn-outline-danger btn-circle btn-floating btn-lg" id="btn-back-to-top">
+        <svg class="bi" width="20" height="20"><use xlink:href="#arrow-up" /></svg>
+    </button>
+
     <div class="container">
+        @if (actionName == "Index")
+        {
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">
+                        @foreach (var item in controllers)
+                        {
+                            if (item.name == controllerName)
+                            {
+                                @(item.text);
+                                break;
+                            }
+                        }
+                    </li>
+                </ol>
+            </nav> }
+        else
+        {
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">
+                            @foreach (var item in controllers)
+                            {
+                                if (item.name == controllerName)
+                                {
+                                    @(item.text);
+                                    break;
+                                }
+                            }
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        @foreach (var item in actions)
+                        {
+                            if (item.name == actionName)
+                            {
+                                @(item.text);
+                                break;
+                            }
+                        }
+                    </li>
+                </ol>
+            </nav>}
+        <hr />
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <div id="backtop" class="backtotop">
-        Back
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h5 class="card-title">Thông tin shop</h5>
-                    <ul class="list-group">
-                        <li class="text-dark">
-                            Số 1, Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội.
-                        </li>
-                        <li class="text-dark">
-                            Giờ mở cửa: 7-23h tất cả các ngày trong tuần.
-                        </li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h5 class="card-title">Danh mục sản phẩm</h5>
-                    <ul class="list-group">
-                        <li>
-                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index1">Phụ kiện</a>
-                        </li>
-                        <li>
-                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Quần áo</a>
-                        </li>
-                        <li>
-                            <a class="page-link" asp-area="" asp-controller="Home" asp-action="Index">Giày dép</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col">
-                    <h5 class="card-title">Liên hệ</h5>
-                    <ul class="list-group">
-                        <li>
-                            <a class="page-link">Facebook</a>
-                        </li>
-                        <li>
-                            <a class="page-link">Số điện thoại</a>
-                        </li>
-                        <li>
-                            <a class="page-link">Email</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <p class="text-muted">© 2021 - Eva de Eva - Clothing Shop </p>
             </div>
-        </div>
-    </footer>
 
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3"><a class="text-muted" target="_blank" href="https://github.com/Software-Engineering-Team-13-20211/ClothingShop"><svg class="bi" width="30" height="30"><use xlink:href="#github" /></svg></a></li>
+            </ul>
+        </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
