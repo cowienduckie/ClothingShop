@@ -1,7 +1,11 @@
 ﻿using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
@@ -20,6 +24,11 @@ namespace ClothingShop.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Index1()
         {
             return View();
         }
