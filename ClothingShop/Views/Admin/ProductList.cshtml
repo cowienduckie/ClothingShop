@@ -123,7 +123,7 @@
     </tbody>
 </table>
 
-<form asp-controller="Admin" asp-action="Product" method="get">
+<form asp-controller="Admin" asp-action="ProductList" method="get">
     <ul class="pagination justify-content-center">
         <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
             <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
