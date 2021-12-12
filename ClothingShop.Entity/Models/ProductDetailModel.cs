@@ -48,11 +48,14 @@ namespace ClothingShop.Entity.Models
 
         public List<ItemModel> Items { get; set; }
 
+        public List<CategoryModel> Categories { get; set; }
+
         public ProductDetailModel()
         {
             this.Discount = 0;
             this.Image = "https://i.imgur.com/iQeIsmz.jpg";
             this.Items = new List<ItemModel>();
+            this.Categories = new List<CategoryModel>();
             this.Description = "Đây là một mô tả mẫu để thử nghiệm cho sản phẩm của cửa hàng thời trang Eva de Eva. Các thành viên phụ trách sản phẩm phải update lại mô tả này. Độ dài của mô tả này là 180 ký tự.";
         }
     }

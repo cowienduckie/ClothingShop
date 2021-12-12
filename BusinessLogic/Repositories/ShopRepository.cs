@@ -88,12 +88,13 @@ namespace ClothingShop.BusinessLogic.Repositories
             var model = new ProductDetailModel();
             var colors = await _db.Color.ToListAsync();
             var sizes = await _db.Size.ToListAsync();
+            var categories = await _db.Category.ToListAsync();
 
             for (int i = 0; i < colors.Count; ++i)
             {
                 for (int j = 0; j < sizes.Count; ++j)
                 {
-                    model.Items.Add(new ItemModel()
+                    model.Items.Add(new ItemModel
                     {
                         ColorId = colors[i].ColorId,
                         ColorValue = colors[i].Value,
@@ -103,6 +104,16 @@ namespace ClothingShop.BusinessLogic.Repositories
                         Quantity = 0
                     });
                 }
+            }
+
+            for (int i = 0; i <  categories.Count; ++i)
+            {
+                model.Categories.Add(new CategoryModel
+                {
+                    CategoryId = categories[i].CategoryId,
+                    Name = categories[i].Name,
+                    Description = categories[i].Description
+                });
             }
 
             return model;
@@ -133,7 +144,13 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                                             SizeValue = pe.Size.Value,
                                                                             SKU = pe.SKU,
                                                                             Quantity = pe.Quantity
-                                                                        }).ToList()
+                                                                        }).ToList(),
+                                        Categories = p.ProductCategories.Select(pc => new CategoryModel
+                                        {
+                                            CategoryId = pc.Category.CategoryId,
+                                            Name = pc.Category.Name,
+                                            Description = pc.Category.Description
+                                        }).ToList()
                                     }).FirstOrDefaultAsync();
         }
 
