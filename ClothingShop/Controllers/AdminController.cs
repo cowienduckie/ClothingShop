@@ -49,6 +49,7 @@ namespace ClothingShop.Controllers
                 //View bag
                 if (name != null) ViewBag.Name = name;
                 if (sort != null) ViewBag.Sort = sort;
+                ViewBag.Categories = _shopRepository.GetAllCategories();
 
                 return View(model);
 
@@ -153,6 +154,101 @@ namespace ClothingShop.Controllers
             {
                 await _shopRepository.DeleteProduct(id);
                 return RedirectToAction(nameof(ProductList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
+
+        //GET: Admin/CategoryList
+        [HttpGet]
+        public IActionResult CategoryList(int? pageNumber, int? pageSize)
+        {
+            try
+            {
+                var model = _shopRepository.GetCategoryList(pageNumber, pageSize);
+
+                return View(model);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
+
+        //GET: Admin/CreateCategory
+        [HttpGet]
+        public IActionResult CreateCategory()
+        {
+            return View(new CategoryModel());
+        }
+
+        //POST: Admin/CreateCategory
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory(CategoryModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            try
+            {
+                await _shopRepository.CreateCategory(model);
+                return RedirectToAction(nameof(CategoryList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/EditCategory
+        [HttpGet]
+        public async Task<IActionResult> EditCategory(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(CategoryList));
+            var category = await _shopRepository.GetCategoryDetails(id);
+            if (category == null) return NotFound();
+
+            return View(category);
+        }
+
+        //POST: Admin/EditCategory
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditCategory(CategoryModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            try
+            {
+                var returnModel = await _shopRepository.EditCategory(model);
+
+                if (returnModel == null)
+                    return View(model);
+
+                return RedirectToAction(nameof(CategoryList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/DeleteCategory
+        [HttpGet]
+        public async Task<IActionResult> DeleteCategory(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(ProductList));
+            try
+            {
+                await _shopRepository.DeleteCategory(id.Value);
+                return RedirectToAction(nameof(CategoryList));
             }
             catch (Exception e)
             {

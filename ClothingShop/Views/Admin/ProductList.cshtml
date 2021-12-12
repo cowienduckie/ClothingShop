@@ -9,6 +9,8 @@
 
     var Name = ViewBag.Name;
     var Sort = ViewBag.Sort;
+    var Category = ViewBag.Category;
+    var Categories = ViewBag.Categories;
 
     var SortType = new List<(string sort, string text)> {
         ("name", "Tên sản phẩm"),
@@ -48,7 +50,22 @@
 <br />
 <form asp-controller="Admin" asp-action="ProductList" method="get">
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle btn-block" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Danh mục
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    @foreach (var item in Categories)
+                    {
+                        @item.Name
+                        <div class="dropdown-divider"></div>
+                    }
+                    <a class="dropdown-item text-center text-success" asp-action="ProductList">Xóa bộ lọc</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
             <input class="form-control input-sm w-100" type="text" name="name" placeholder="Tên sản phẩm" value="@Name" />
         </div>
         <div class="col-sm-1">
@@ -68,7 +85,7 @@
                                 type="submit" name="sort" value="@item.sort">
                             @item.text
                             <i class="@("fa fa-long-arrow-" +(item.sort[0] == '-' ? "down" : "up"))" aria-hidden="true"></i>
-                        </button>   
+                        </button>
                     }
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-center text-success" asp-action="ProductList">Xóa bộ lọc</a>
@@ -84,91 +101,100 @@
 </form>
 
 <br />
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th scope="col" style="text-align:center">STT</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].ProductId)</th>
-            <th scope="col">@Html.DisplayNameFor(model => model.ItemList[0].Name)</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Price)</th>
-            <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Stock)</th>
-            <th scope="col" style="text-align:center"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.ItemList.Count; ++i)
-        {
+@if (Model.ItemList.Count == 0)
+{
+    <h5 class="text-center">HIỆN TẠI KHÔNG CÓ SẢN PHẨM NÀO PHÙ HỢP. <a asp-controller="Home" asp-action="Index">QUAY LẠI TRANG CHỦ</a></h5>
+}
+else
+{
+
+    <table class="table table-hover table-bordered">
+        <thead>
             <tr>
-                <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
-                <td class="align-middle" align="center">@Model.ItemList[i].ProductId</td>
-                <td class="align-middle">@Model.ItemList[i].Name</td>
-                <td class="align-middle" align="center">@Model.ItemList[i].Price</td>
-                <td class="align-middle" align="center">@Model.ItemList[i].Stock</td>
-                <td class="align-middle" align="center">
-                    <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#edit-icon" /></svg>
-                    </a>
-                    <a class="btn btn-sm btn-primary" asp-controller="Admin" asp-action="ProductDetails" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Chi tiết">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#details-icon" /></svg>
-                    </a>
-                    <a class="btn btn-sm btn-secondary" asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@Model.ItemList[i].ProductId"
-                       data-toggle="tooltip" data-placement="bottom" title="Xóa">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#delete-icon" /></svg>
-                    </a>
-                </td>
+                <th scope="col" style="text-align:center">STT</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].ProductId)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.ItemList[0].Name)</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Price)</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Stock)</th>
+                <th scope="col" style="text-align:center"></th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<form asp-controller="Admin" asp-action="ProductList" method="get">
-    <ul class="pagination justify-content-center">
-        <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
-                &laquo;
-            </button>
-        </li>
-        <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang trước">
-                &#8249;
-            </button>
-        </li>
-
-        @{
-            var TotalShowPage = 10;//Change this value to adjust code below
-            var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
-                                FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
-            var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
-                              LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
-
-            for (var i = StartShowPage; i <= EndShowPage; ++i)
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ItemList.Count; ++i)
             {
-                <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
-                    <button class="page-link" type="submit" name="pageNumber" value="@i">
-                        @i
-                    </button>
-                </li>
+                <tr>
+                    <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
+                    <td class="align-middle" align="center">@Model.ItemList[i].ProductId</td>
+                    <td class="align-middle">@Model.ItemList[i].Name</td>
+                    <td class="align-middle" align="center">@Model.ItemList[i].Price</td>
+                    <td class="align-middle" align="center">@Model.ItemList[i].Stock</td>
+                    <td class="align-middle" align="center">
+                        <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="EditProduct" asp-route-id="@Model.ItemList[i].ProductId"
+                           data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa">
+                            <svg class="bi" width="16" height="16"><use xlink:href="#edit-icon" /></svg>
+                        </a>
+                        <a class="btn btn-sm btn-primary" asp-controller="Admin" asp-action="ProductDetails" asp-route-id="@Model.ItemList[i].ProductId"
+                           data-toggle="tooltip" data-placement="bottom" title="Chi tiết">
+                            <svg class="bi" width="16" height="16"><use xlink:href="#details-icon" /></svg>
+                        </a>
+                        <a class="btn btn-sm btn-secondary" asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@Model.ItemList[i].ProductId"
+                           data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                            <svg class="bi" width="16" height="16"><use xlink:href="#delete-icon" /></svg>
+                        </a>
+                    </td>
+                </tr>
             }
-        }
+        </tbody>
+    </table>
 
-        <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang sau">
-                &#8250;
-            </button>
-        </li>
-        <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
-                &raquo;
-            </button>
-        </li>
-    </ul>
+    <form asp-controller="Admin" asp-action="ProductList" method="get">
+        <ul class="pagination justify-content-center">
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
+                    &laquo;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang trước">
+                    &#8249;
+                </button>
+            </li>
 
-    <input type="hidden" name="name" value="@Name">
-    <input type="hidden" name="sort" value="@Sort">
-</form>
+            @{
+                var TotalShowPage = 10;//Change this value to adjust code below
+                var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                    FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                  LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
+
+                for (var i = StartShowPage; i <= EndShowPage; ++i)
+                {
+                    <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                        <button class="page-link" type="submit" name="pageNumber" value="@i">
+                            @i
+                        </button>
+                    </li>
+                }
+            }
+
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang sau">
+                    &#8250;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
+                    &raquo;
+                </button>
+            </li>
+        </ul>
+
+        <input type="hidden" name="name" value="@Name">
+        <input type="hidden" name="sort" value="@Sort">
+        <input type="hidden" name="sort" value="@Category">
+    </form>
+}

@@ -32,6 +32,7 @@ namespace ClothingShop.Controllers
                 //View bag
                 if (name != null) ViewBag.Name = name;
                 if (sort != null) ViewBag.Sort = sort;
+                ViewBag.Categories = _shopRepository.GetAllCategories();
 
                 return View(model);
 

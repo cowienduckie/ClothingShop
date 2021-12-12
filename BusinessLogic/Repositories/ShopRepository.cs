@@ -169,13 +169,19 @@ namespace ClothingShop.BusinessLogic.Repositories
                 CreateTime = now,
                 LastModified = now,
                 ProductEntries = model.Items.Where(i => i.Quantity != 0)
-                                            .Select(i => new ProductEntry()
+                                            .Select(i => new ProductEntry
                                             {
                                                 ColorId = i.ColorId,
                                                 SizeId = i.SizeId,
                                                 Quantity = i.Quantity
                                             })
-                                            .ToList()
+                                            .ToList(),
+                ProductCategories = model.Categories.Where(c => c.IsSelected)
+                                                    .Select(c => new ProductCategory
+                                                    {
+                                                        CategoryId = c.CategoryId
+                                                    })
+                                                    .ToList()
             };
             
             await _db.Product.AddAsync(product);
@@ -232,6 +238,118 @@ namespace ClothingShop.BusinessLogic.Repositories
         private bool HasProductId(int id)
         {
             return _db.Product.Any(p => p.ProductId == id);
+        }
+
+        public List<CategoryModel> GetAllCategories()
+        {
+            return _db.Category.Select(c => new CategoryModel
+                                {
+                                    CategoryId = c.CategoryId,
+                                    Name = c.Name
+                                })
+                                .ToList();
+        }
+
+        public PaginationModel<CategoryModel> GetCategoryList(int? pageNumber, int? pageSize)
+        {
+            var querryCategories = _db.Category.AsQueryable();
+            var total = querryCategories.Count();
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var categories= querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
+            {
+                CategoryId = c.CategoryId,
+                Name = c.Name,
+                Description = c.Description,
+            }).ToList();
+
+            return new PaginationModel<CategoryModel>()
+            {
+                ItemList = categories,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
+        }
+
+        public async Task<CategoryModel> GetCategoryDetails(int? id)
+        {
+            if (id == null) return null;
+
+            return await _db.Category.Where(c => c.CategoryId == id)
+                                    .Select(c => new CategoryModel
+                                    {
+                                        CategoryId = c.CategoryId,
+                                        Name = c.Name,
+                                        Description = c.Description
+                                    }).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateCategory(CategoryModel model)
+        {
+            var now = DateTime.Now;
+
+            var category = new Category
+            {
+                Name = model.Name,
+                Description = model.Description,
+                CreateTime = now,
+                LastModified = now,
+            };
+
+            await _db.Category.AddAsync(category);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<CategoryModel> EditCategory(CategoryModel model)
+        {
+            try
+            {
+                var category= await _db.Category.Where(c => c.CategoryId == model.CategoryId)
+                                               .Select(c => c)
+                                               .FirstOrDefaultAsync();
+                if (category == null) return null;
+
+                //Available fields for editing
+                category.Name = model.Name;
+                category.Description = model.Description;
+
+                category.LastModified = DateTime.Now;
+
+                _db.Category.Update(category);
+
+                await _db.SaveChangesAsync();
+
+                return model;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HasCategoryId(model.CategoryId))
+                {
+                    Console.WriteLine("Error DBupdate");
+                }
+                return null;
+            }
+        }
+
+        public async Task DeleteCategory(int id)
+        {
+            var category = await _db.Category.Where(c => c.CategoryId == id)
+                                               .Select(c => c)
+                                               .FirstOrDefaultAsync();
+
+            if (category != null)
+            {
+                _db.Category.Remove(category);
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        private bool HasCategoryId(int id)
+        {
+            return _db.Category.Any(c => c.CategoryId == id);
         }
     }
 }

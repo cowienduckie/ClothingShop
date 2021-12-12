@@ -42,24 +42,42 @@
             
         </div>
         <div class="col-md-8">
+            <h5><strong>DANH MỤC PHÂN LOẠI</strong></h5>
+            <hr />
+            <div class="row">
+                @for (int i = 0; i < Model.Categories.Count; ++i)
+                {
+                    <div class="col-md-4">
+                        <div class="form-group form-check">
+                            <input type="checkbox" asp-for="@Model.Categories[i].IsSelected" class="form-check-input">
+                            <label class="form-check-label" asp-for="@Model.Categories[i].IsSelected">@Model.Categories[i].Name</label>
+                            @Html.HiddenFor(m => Model.Categories[i].CategoryId)
+                            @Html.HiddenFor(m => Model.Categories[i].Name)
+                            @Html.HiddenFor(m => Model.Categories[i].Description)
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <br />
             <h5><strong>MÀU SẮC - KÍCH THƯỚC</strong></h5>
             <hr />
             <div class="row">
-               @Html.HiddenFor(m => m.Image)
-               @for (int i = 0; i < Model.Items.Count; ++i)
+                @Html.HiddenFor(m => m.Image)
+                @for (int i = 0; i < Model.Items.Count; ++i)
                 {
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label asp-for="@Model.Items[i].Quantity" class="control-label">@Model.Items[i].ColorValue - @Model.Items[i].SizeValue</label>
-                        <input asp-for="@Model.Items[i].Quantity" class="form-control"/>
-                        <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="@Model.Items[i].Quantity" class="control-label">@Model.Items[i].ColorValue - @Model.Items[i].SizeValue</label>
+                            <input asp-for="@Model.Items[i].Quantity" class="form-control" />
+                            <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
-                @Html.HiddenFor(m => Model.Items[i].ColorId)
-                @Html.HiddenFor(m => Model.Items[i].SizeId)
-                
+                    @Html.HiddenFor(m => Model.Items[i].ColorId)
+                    @Html.HiddenFor(m => Model.Items[i].SizeId)
+
                 }
-               
+
             </div>
         </div>
         

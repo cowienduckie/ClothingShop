@@ -1,0 +1,45 @@
+﻿@model ClothingShop.Entity.Models.CategoryModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa danh mục";
+}
+
+<h4>Chỉnh sửa danh mục</h4>
+<hr />
+<br />
+<form asp-action="EditCategory" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <h5><strong>THÔNG SỐ</strong></h5>
+            <hr />
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <input asp-for="CategoryId" class="form-control disabled" disabled/>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-block btn-danger" asp-action="CategoryList">Quay lại</a>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block">Chỉnh sửa</button>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.CategoryId)
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
