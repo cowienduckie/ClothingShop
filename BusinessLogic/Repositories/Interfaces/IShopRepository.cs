@@ -9,7 +9,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
     {
         Task<AllProductModels> GetAllProduct();
 
-        PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? pageNumber, int? pageSize);
+        PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? category, int? pageNumber, int? pageSize);
 
         Task<ProductDetailModel> GetProductDetails(int? id);
 

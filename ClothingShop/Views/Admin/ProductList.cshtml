@@ -58,10 +58,13 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                     @foreach (var item in Categories)
                     {
-                        @item.Name
+                        <button class="@("dropdown-item " + (item.CategoryId == Category ? "active" : ""))"
+                                type="submit" name="category" value="@item.CategoryId">
+                            @item.Name
+                        </button>
                         <div class="dropdown-divider"></div>
                     }
-                    <a class="dropdown-item text-center text-success" asp-action="ProductList">Xóa bộ lọc</a>
+                    <button class="dropdown-item text-center text-danger" type="submit" name="category" value="">Tất cả sản phẩm</button>
                 </div>
             </div>
         </div>
@@ -195,6 +198,6 @@ else
 
         <input type="hidden" name="name" value="@Name">
         <input type="hidden" name="sort" value="@Sort">
-        <input type="hidden" name="sort" value="@Category">
+        <input type="hidden" name="category" value="@Category">
     </form>
 }

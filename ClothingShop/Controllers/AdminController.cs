@@ -40,24 +40,25 @@ namespace ClothingShop.Controllers
         //GET: Admin/ProductList
         [HttpGet]
         [Route("Admin/ProductList")]
-        public IActionResult ProductList(string name, string sort, int? pageNumber, int? pageSize)
+        public IActionResult ProductList(string name, string sort, int? category, int? pageNumber, int? pageSize)
         {
             try
             {
-                var model = _shopRepository.GetProductList(name, sort, pageNumber, pageSize);
+                var model = _shopRepository.GetProductList(name, sort, category, pageNumber, pageSize);
 
                 //View bag
                 if (name != null) ViewBag.Name = name;
                 if (sort != null) ViewBag.Sort = sort;
+                if (category != null) ViewBag.Category = category;
+
                 ViewBag.Categories = _shopRepository.GetAllCategories();
 
                 return View(model);
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return View();
+                return RedirectToAction("ProductList");
             }
         }
 

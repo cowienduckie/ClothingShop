@@ -36,23 +36,23 @@ namespace ClothingShop.BusinessLogic.Repositories
             };
         }
 
-        public PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? pageNumber, int? pageSize)
+        public PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? category, int? pageNumber, int? pageSize)
         {
-            var queryProducts = IQueryProductList(name, sort);
-            var total = queryProducts.Count();
+            var queryProducts = IQueryProductList(name, sort, category);
+            var total = (queryProducts?.Count()) ?? 0;
             var PageSize = pageSize ?? 20;
             var PageNumber = pageNumber ?? 1;
 
-            var products = queryProducts.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(p => new ProductViewModel()
+            var products = queryProducts?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(p => new ProductViewModel()
             {
                 ProductId = p.ProductId,
                 Name = p.Name,
                 Image = p.Image,
                 Price = p.Price,
                 Stock = p.ProductEntries.Sum(pe => pe.Quantity)
-            }).ToList();
+            }).ToList() ?? new List<ProductViewModel>();
 
-            return new PaginationModel<ProductViewModel>()
+            return new PaginationModel<ProductViewModel>
             {
                 ItemList = products,
                 Total = total,
@@ -61,18 +61,31 @@ namespace ClothingShop.BusinessLogic.Repositories
             };
         }
 
-        private IQueryable<Product> IQueryProductList(string name, string sort)
+        private IQueryable<Product> IQueryProductList(string name, string sort, int? category)
         {
-            var products = _db.Product.AsQueryable();
+            IQueryable<Product> products = null;
+
+            //List items by category
+            if (category != null)
+            {
+                products = _db.Category.FirstOrDefault(c => c.CategoryId == category)
+                                       .ProductCategories
+                                       ?.Select(pc => pc.Product)
+                                       .AsQueryable();
+            }
+            else    //List all items
+            {
+                products = _db.Product.AsQueryable();
+            }
 
             //Search filters
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name) && products != null)
             {
                 products = products.Where(p => p.Name.Contains(name));
             }
 
             //Sort filters
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(sort) && products != null)
             {
                 if (sort == "name") products = products.OrderBy(p => p.Name);
                 else if (sort == "-name") products = products.OrderByDescending(p => p.Name);
