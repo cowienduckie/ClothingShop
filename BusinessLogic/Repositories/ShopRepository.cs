@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ClothingShop.Entity.Entities;
+using Newtonsoft.Json;
 
 namespace ClothingShop.BusinessLogic.Repositories
 {
@@ -68,10 +69,11 @@ namespace ClothingShop.BusinessLogic.Repositories
             //List items by category
             if (category != null)
             {
-                products = _db.Category.FirstOrDefault(c => c.CategoryId == category)
-                                       .ProductCategories
-                                       ?.Select(pc => pc.Product)
-                                       .AsQueryable();
+                products = _db.ProductCategory.Where(c => c.CategoryId == category.Value)
+                                              .Select(pc => pc.Product)
+                                              .AsQueryable();
+
+                Console.WriteLine(JsonConvert.SerializeObject(products));
             }
             else    //List all items
             {

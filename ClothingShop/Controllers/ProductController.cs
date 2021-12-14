@@ -40,7 +40,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -60,7 +60,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
     }
