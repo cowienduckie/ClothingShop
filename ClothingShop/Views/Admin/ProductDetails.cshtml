@@ -29,6 +29,12 @@
                 @Html.DisplayFor(model => model.Name)
             </dd>
             <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Categories)
+            </dt>
+            <dd class="col-sm-8">
+                @string.Join(",  ", Model.Categories.Select(c => c.Name).ToList())
+            </dd>
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Price)
             </dt>
             <dd class="col-sm-8">

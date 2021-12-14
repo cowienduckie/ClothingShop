@@ -48,6 +48,7 @@ namespace ClothingShop.Entity.Models
 
         public List<ItemModel> Items { get; set; }
 
+        [Display(Name = "Danh mục sản phẩm")]
         public List<CategoryModel> Categories { get; set; }
 
         public ProductDetailModel()

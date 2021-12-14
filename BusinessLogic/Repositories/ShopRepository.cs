@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ClothingShop.Entity.Entities;
+using Newtonsoft.Json;
 
 namespace ClothingShop.BusinessLogic.Repositories
 {
@@ -36,23 +37,23 @@ namespace ClothingShop.BusinessLogic.Repositories
             };
         }
 
-        public PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? pageNumber, int? pageSize)
+        public PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? category, int? pageNumber, int? pageSize)
         {
-            var queryProducts = IQueryProductList(name, sort);
-            var total = queryProducts.Count();
+            var queryProducts = IQueryProductList(name, sort, category);
+            var total = (queryProducts?.Count()) ?? 0;
             var PageSize = pageSize ?? 20;
             var PageNumber = pageNumber ?? 1;
 
-            var products = queryProducts.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(p => new ProductViewModel()
+            var products = queryProducts?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(p => new ProductViewModel()
             {
                 ProductId = p.ProductId,
                 Name = p.Name,
                 Image = p.Image,
                 Price = p.Price,
                 Stock = p.ProductEntries.Sum(pe => pe.Quantity)
-            }).ToList();
+            }).ToList() ?? new List<ProductViewModel>();
 
-            return new PaginationModel<ProductViewModel>()
+            return new PaginationModel<ProductViewModel>
             {
                 ItemList = products,
                 Total = total,
@@ -61,18 +62,32 @@ namespace ClothingShop.BusinessLogic.Repositories
             };
         }
 
-        private IQueryable<Product> IQueryProductList(string name, string sort)
+        private IQueryable<Product> IQueryProductList(string name, string sort, int? category)
         {
-            var products = _db.Product.AsQueryable();
+            IQueryable<Product> products = null;
+
+            //List items by category
+            if (category != null)
+            {
+                products = _db.ProductCategory.Where(c => c.CategoryId == category.Value)
+                                              .Select(pc => pc.Product)
+                                              .AsQueryable();
+
+                Console.WriteLine(JsonConvert.SerializeObject(products));
+            }
+            else    //List all items
+            {
+                products = _db.Product.AsQueryable();
+            }
 
             //Search filters
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name) && products != null)
             {
                 products = products.Where(p => p.Name.Contains(name));
             }
 
             //Sort filters
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(sort) && products != null)
             {
                 if (sort == "name") products = products.OrderBy(p => p.Name);
                 else if (sort == "-name") products = products.OrderByDescending(p => p.Name);
@@ -169,13 +184,19 @@ namespace ClothingShop.BusinessLogic.Repositories
                 CreateTime = now,
                 LastModified = now,
                 ProductEntries = model.Items.Where(i => i.Quantity != 0)
-                                            .Select(i => new ProductEntry()
+                                            .Select(i => new ProductEntry
                                             {
                                                 ColorId = i.ColorId,
                                                 SizeId = i.SizeId,
                                                 Quantity = i.Quantity
                                             })
-                                            .ToList()
+                                            .ToList(),
+                ProductCategories = model.Categories.Where(c => c.IsSelected)
+                                                    .Select(c => new ProductCategory
+                                                    {
+                                                        CategoryId = c.CategoryId
+                                                    })
+                                                    .ToList()
             };
             
             await _db.Product.AddAsync(product);
@@ -232,6 +253,118 @@ namespace ClothingShop.BusinessLogic.Repositories
         private bool HasProductId(int id)
         {
             return _db.Product.Any(p => p.ProductId == id);
+        }
+
+        public List<CategoryModel> GetAllCategories()
+        {
+            return _db.Category.Select(c => new CategoryModel
+                                {
+                                    CategoryId = c.CategoryId,
+                                    Name = c.Name
+                                })
+                                .ToList();
+        }
+
+        public PaginationModel<CategoryModel> GetCategoryList(int? pageNumber, int? pageSize)
+        {
+            var querryCategories = _db.Category.AsQueryable();
+            var total = querryCategories.Count();
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var categories= querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
+            {
+                CategoryId = c.CategoryId,
+                Name = c.Name,
+                Description = c.Description,
+            }).ToList();
+
+            return new PaginationModel<CategoryModel>()
+            {
+                ItemList = categories,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
+        }
+
+        public async Task<CategoryModel> GetCategoryDetails(int? id)
+        {
+            if (id == null) return null;
+
+            return await _db.Category.Where(c => c.CategoryId == id)
+                                    .Select(c => new CategoryModel
+                                    {
+                                        CategoryId = c.CategoryId,
+                                        Name = c.Name,
+                                        Description = c.Description
+                                    }).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateCategory(CategoryModel model)
+        {
+            var now = DateTime.Now;
+
+            var category = new Category
+            {
+                Name = model.Name,
+                Description = model.Description,
+                CreateTime = now,
+                LastModified = now,
+            };
+
+            await _db.Category.AddAsync(category);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<CategoryModel> EditCategory(CategoryModel model)
+        {
+            try
+            {
+                var category= await _db.Category.Where(c => c.CategoryId == model.CategoryId)
+                                               .Select(c => c)
+                                               .FirstOrDefaultAsync();
+                if (category == null) return null;
+
+                //Available fields for editing
+                category.Name = model.Name;
+                category.Description = model.Description;
+
+                category.LastModified = DateTime.Now;
+
+                _db.Category.Update(category);
+
+                await _db.SaveChangesAsync();
+
+                return model;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HasCategoryId(model.CategoryId))
+                {
+                    Console.WriteLine("Error DBupdate");
+                }
+                return null;
+            }
+        }
+
+        public async Task DeleteCategory(int id)
+        {
+            var category = await _db.Category.Where(c => c.CategoryId == id)
+                                               .Select(c => c)
+                                               .FirstOrDefaultAsync();
+
+            if (category != null)
+            {
+                _db.Category.Remove(category);
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        private bool HasCategoryId(int id)
+        {
+            return _db.Category.Any(c => c.CategoryId == id);
         }
     }
 }

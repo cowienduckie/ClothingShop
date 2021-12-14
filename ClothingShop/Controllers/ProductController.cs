@@ -22,16 +22,17 @@ namespace ClothingShop.Controllers
         //GET: Product
         [HttpGet]
         [Route("Product")]
-        public IActionResult Index(string name, string sort, int? pageNumber, int? pageSize)
+        public IActionResult Index(string name, string sort, int? category, int? pageNumber, int? pageSize)
         {
             try
             {
                 pageSize ??= 9; //9 items per page
-                var model = _shopRepository.GetProductList(name, sort, pageNumber, pageSize);
+                var model = _shopRepository.GetProductList(name, sort, category, pageNumber, pageSize);
 
                 //View bag
                 if (name != null) ViewBag.Name = name;
                 if (sort != null) ViewBag.Sort = sort;
+                ViewBag.Categories = _shopRepository.GetAllCategories();
 
                 return View(model);
 
@@ -39,7 +40,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -59,7 +60,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
     }
