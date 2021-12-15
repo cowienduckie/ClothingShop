@@ -4,6 +4,6 @@ namespace ClothingShop.Entity.Entities
 {
     public class Users : IdentityUser
     {
-
+       
     }
 }
