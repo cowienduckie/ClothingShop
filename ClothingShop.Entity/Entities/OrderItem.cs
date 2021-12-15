@@ -1,21 +1,20 @@
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ClothingShop.Entity.Entities;
+using System.Text;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class CartItem
+    public class OrderItem
     {
         [Required, Key]
-        public int CartItemId { get; set; }
+        public int OrderItemId { get; set; }
 
         [Required, Key]
         public int SkuId { get; set; }
 
         [Required, Key]
-        public int CartId { get; set; }
+        public int OrderId { get; set; }
 
         [Required]
         public int Quantity { get; set; }

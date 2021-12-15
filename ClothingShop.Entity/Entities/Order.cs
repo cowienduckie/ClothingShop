@@ -13,19 +13,19 @@ namespace ClothingShop.Entity.Entities
         public int OrderId { get; set; }
 
         [Required]
-        public int SessionId { get; set; }
+        public int UserId { get; set; }
 
-        [Required]
-        public string OrderState { get; set; }
+        public int OriginalPrice { get; set; }
 
-        public string PaymentMethod { get; set; }
+        public int Discount { get; set; }
+
+        public int TotalPrice { get; set; }
+
+        public string Status { get; set; }
 
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
-
-        [Display(Name = "Is Deleted")]
-        public bool IsDelete { get; set; }
     }
 }

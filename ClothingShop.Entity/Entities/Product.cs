@@ -22,21 +22,19 @@ namespace ClothingShop.Entity.Entities
         [Required, DataType(DataType.Currency)]
         public int Price { get; set; }
 
-        [Range(1, 100)]
-        [Column(TypeName = "decimal(4, 2)")]
-        public decimal? Discount { get; set; }
+        public int DiscountId { get; set; }
 
         [StringLength(500)]
         public string Description { get; set; }
 
         [Required]
-        [Display(Name = "Create Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Create Time"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "LastModified Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 
         //

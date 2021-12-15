@@ -11,18 +11,37 @@ namespace ClothingShop.Entity.Entities
     {
         [Required]
         public int DiscountId { get; set; }
-        
-        [Required]
-        public int VoucherId { get; set; }
 
         [StringLength(50), Required]
         public string Name { get; set; }
 
-        [Range(1, 100), Required]
+        [Range(0, 100), Required]
         [Column(TypeName = "decimal(4, 2)")]
-        public decimal Value { get; set; }
+        public decimal Percentage { get; set; }
+
+        [Required]
+        public bool IsPublic { get; set; }
 
         [StringLength(250)]
         public string Description { get; set; }
+
+        [Display(Name = "Start Date"), DataType(DataType.Date), Required]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StartTime { get; set; }
+
+        [Required]
+        [Display(Name = "End Date"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EndTime { get; set; }
+
+        [Required]
+        [Display(Name = "Create Time"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime CreateTime { get; set; }
+
+        [Required]
+        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime LastModified { get; set; }
     }
 }

@@ -9,6 +9,10 @@ namespace ClothingShop.Entity.Entities
     {
         [Required]
         [Key]
+        public int SkuId { get; set; }
+
+        [Required]
+        [Key]
         public int ProductId { get; set; }
 
         public Product Product { get; set; }

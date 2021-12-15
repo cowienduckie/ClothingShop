@@ -2,22 +2,20 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Category
+    public class Point
     {
+        [Required, Key]
+        public int PointId { get; set; }
+
+        [Required, Key]
+        public int UserId { get; set; }
+
         [Required]
-        [Key]
-        public int CategoryId { get; set; }
-
-        public int? ParentId { get; set; }
-
-        [Required, StringLength(50)]
-        public string Name { get; set; }
-
-        [StringLength(100)]
-        public string Description { get; set; }
+        public int Value { get; set; }
 
         [Required]
         [Display(Name = "Create Time"), DataType(DataType.Date)]
@@ -29,7 +27,6 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 
-        //
-        public IList<ProductCategory> ProductCategories { get; set; }
+        public bool IsValid { get; set; }
     }
 }

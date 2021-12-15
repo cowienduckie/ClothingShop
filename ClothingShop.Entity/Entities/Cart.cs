@@ -7,29 +7,31 @@ using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Session
+    public class Cart
     {
-        [Required]
-        public int SessionId { get; set; }
+        [Required, Key]
+        public int CartId { get; set; }
 
-        [Required]
+        [Required, Key]
         public int UserId { get; set; }
 
-        [Required]
-        public int CartItemId { get; set; }
+        public int OriginalPrice { get; set; }
+
+        public int Discount { get; set; }
+
+        public int TotalPrice { get; set; }
 
         [Required]
-        [Display(Name = "Create Date"), DataType(DataType.Date)]
+        [Display(Name = "Create Time"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "Last Modified Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
-        
+
         [Required]
-        [Display(Name = "Is Deleted")]
         public bool IsDelete { get; set; }
     }
 }

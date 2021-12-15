@@ -9,23 +9,15 @@ namespace ClothingShop.Entity.Entities
 {
     public class Voucher
     {
-        [Required]
+        [Required, Key]
         public int VoucherId { get; set; }
 
-        [StringLength(50), Required]
-        public string Name { get; set; }
+        [Required, Key]
+        public int DiscountId { get; set; }
 
-        [StringLength(250)]
-        public string Description { get; set; }
+        [Required, Key]
+        public int UserId { get; set; }
 
-        [Required]
-        [Display(Name = "Start Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime StartTime { get; set; }
-
-        [Required]
-        [Display(Name = "End Date"), DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime EndTime { get; set; }
+        public string Value { get; set; }
     }
 }
