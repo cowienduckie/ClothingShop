@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ClothingShop.Entity.Entities
 {
     public class Rank
     {
-        [Required, Key]
         public int RankId { get; set; }
         
         public int NextRankId { get; set; }
@@ -16,6 +16,8 @@ namespace ClothingShop.Entity.Entities
 
         public int MinimumPoint { get; set; }
 
+        [Range(0, 100), Required]
+        [Column(TypeName = "decimal(4, 2)")]
         public decimal ConvertPointPercentager { get; set; }
 
         //

@@ -9,14 +9,11 @@ namespace ClothingShop.Entity.Entities
 {
     public class Voucher
     {
-        [Required, Key]
         public int VoucherId { get; set; }
 
-        [Required, Key]
         public int DiscountId { get; set; }
 
-        [Required, Key]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public string Value { get; set; }
 

@@ -11,10 +11,8 @@ namespace ClothingShop.Entity.Entities
         [Required, Key]
         public int CartItemId { get; set; }
 
-        [Required, Key]
         public int SkuId { get; set; }
 
-        [Required, Key]
         public int CartId { get; set; }
 
         [Required]

@@ -10,10 +10,8 @@ namespace ClothingShop.Entity.Entities
         [Required, Key]
         public int OrderItemId { get; set; }
 
-        [Required, Key]
         public int SkuId { get; set; }
 
-        [Required, Key]
         public int OrderId { get; set; }
 
         [Required]

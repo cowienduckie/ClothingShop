@@ -9,7 +9,6 @@ namespace ClothingShop.Entity.Entities
 {
     public class Discount
     {
-        [Required]
         public int DiscountId { get; set; }
 
         [StringLength(50), Required]

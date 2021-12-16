@@ -17,6 +17,14 @@ namespace ClothingShop.Entity.Data
         public DbSet<ProductEntry> ProductEntry { get; set; }
         public DbSet<Color> Color { get; set; }
         public DbSet<Size> Size { get; set; }
+        public DbSet<Cart> Cart { get; set; }
+        public DbSet<CartItem> CartItem { get; set; }
+        public DbSet<Discount> Discount { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrederItem { get; set; }
+        public DbSet<Point> Point { get; set; }
+        public DbSet<Rank> Rank { get; set; }
+        public DbSet<Voucher> Voucher { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,7 +55,7 @@ namespace ClothingShop.Entity.Data
 
             //Product_Entry
             modelBuilder.Entity<ProductEntry>()
-                .HasKey(pe => new { pe.SkuId, pe.ProductId, pe.ColorId, pe.SizeId });
+                .HasKey(pe => new { pe.SkuId });
 
             modelBuilder.Entity<ProductEntry>()
                 .HasOne<Product>(pe => pe.Product)
@@ -65,9 +73,6 @@ namespace ClothingShop.Entity.Data
                 .HasForeignKey(pe => pe.SizeId);
 
             //CartItem
-            modelBuilder.Entity<CartItem>()
-                .HasKey(ci => new { ci.CartItemId, ci.CartId, ci.SkuId });
-
             modelBuilder.Entity<CartItem>()
                 .HasOne<ProductEntry>(ci => ci.SKU)
                 .WithMany(pe => pe.CartItems)
@@ -91,9 +96,6 @@ namespace ClothingShop.Entity.Data
 
             //OrderItem
             modelBuilder.Entity<OrderItem>()
-                .HasKey(oi => new { oi.OrderItemId, oi.OrderId, oi.SkuId });
-
-            modelBuilder.Entity<OrderItem>()
                 .HasOne<ProductEntry>(oi => oi.SKU)
                 .WithMany(pe => pe.OrderItems)
                 .HasForeignKey(oi => oi.SkuId);
@@ -112,12 +114,10 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Discount>()
                 .HasMany<Product>(d => d.Products)
                 .WithOne(p => p.Discount)
-                .HasForeignKey(p => p.DiscountId);
+                .HasForeignKey(p => p.DiscountId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             //Voucher
-            modelBuilder.Entity<Voucher>()
-                .HasKey(v => new { v.VoucherId, v.DiscountId, v.UserId });
-
             modelBuilder.Entity<Voucher>()
                 .HasOne<Discount>(v => v.Discount)
                 .WithMany(d => d.Vouchers)
@@ -126,7 +126,8 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Voucher>()
                 .HasOne<Users>(v => v.User)
                 .WithMany(u => u.Vouchers)
-                .HasForeignKey(v => v.UserId);
+                .HasForeignKey(v => v.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             //Rank
             modelBuilder.Entity<Users>()
@@ -137,12 +138,10 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Rank>()
                 .HasMany<Users>(r => r.Users)
                 .WithOne(u => u.Rank)
-                .HasForeignKey(u => u.RankId);
+                .HasForeignKey(u => u.RankId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             //Points
-            modelBuilder.Entity<Point>()
-                .HasKey(p => new { p.PointId, p.UserId, p.OrderId });
-
             modelBuilder.Entity<Point>()
                 .HasOne<Users>(p => p.User)
                 .WithMany(u => u.Points)
@@ -164,9 +163,6 @@ namespace ClothingShop.Entity.Data
                 .HasForeignKey<Point>(p => p.OrderId);
 
             //Order
-            modelBuilder.Entity<Order>()
-                .HasKey(o => new { o.OrderId, o.UserId });
-
             modelBuilder.Entity<Order>()
                 .HasOne<Users>(o => o.User)
                 .WithMany(u => u.Orders)

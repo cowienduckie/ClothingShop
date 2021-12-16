@@ -9,11 +9,10 @@ namespace ClothingShop.Entity.Entities
 {
     public class Order
     {
-        [Required]
+        [Key]
         public int OrderId { get; set; }
 
-        [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public int OriginalPrice { get; set; }
 

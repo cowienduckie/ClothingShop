@@ -145,7 +145,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         Name = p.Name,
                                         Image = p.Image,
                                         Price = p.Price,
-                                        Discount = p.Discount,
                                         Description = p.Description,
                                         Stock = p.ProductEntries.Sum(pe => pe.Quantity),
                                         CreateTime = p.CreateTime,
@@ -179,7 +178,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                 Name = model.Name,
                 Image = string.IsNullOrEmpty(model.Image) ? defaultImage : model.Image,
                 Price = model.Price,
-                Discount = model.Discount,
                 Description = model.Description,
                 CreateTime = now,
                 LastModified = now,
@@ -216,7 +214,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                 product.Name = model.Name;
                 product.Price = model.Price;
                 product.Description = model.Description;
-                product.Discount = model.Discount;
 
                 product.LastModified = DateTime.Now;
 

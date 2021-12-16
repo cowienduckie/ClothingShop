@@ -9,6 +9,26 @@
 	  <Compile Remove="Migrations\20211124093949_Update.Designer.cs" />
 	  <Compile Remove="Migrations\20211214155558_Testing_141221.cs" />
 	  <Compile Remove="Migrations\20211214155558_Testing_141221.Designer.cs" />
+	  <Compile Remove="Migrations\20211216040614_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216040614_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216040838_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216040838_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216042628_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216042628_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216043214_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216043214_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216043735_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216043735_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216044451_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216044451_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216044901_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216044901_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216044953_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216044953_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216045112_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216045112_DB_v2.Designer.cs" />
+	  <Compile Remove="Migrations\20211216045158_DB_v2.cs" />
+	  <Compile Remove="Migrations\20211216045158_DB_v2.Designer.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

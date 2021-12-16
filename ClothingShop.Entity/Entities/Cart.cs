@@ -12,8 +12,7 @@ namespace ClothingShop.Entity.Entities
         [Required, Key]
         public int CartId { get; set; }
 
-        [Required, Key]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public int OriginalPrice { get; set; }
 
