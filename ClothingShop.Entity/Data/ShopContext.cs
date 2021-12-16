@@ -31,6 +31,7 @@ namespace ClothingShop.Entity.Data
                 }
             }
 
+            //Product_Category
             modelBuilder.Entity<ProductCategory>()
                 .HasKey(pc => new { pc.CategoryId, pc.ProductId });
 
@@ -44,8 +45,9 @@ namespace ClothingShop.Entity.Data
                 .WithMany(c => c.ProductCategories)
                 .HasForeignKey(pc => pc.CategoryId);
 
+            //Product_Entry
             modelBuilder.Entity<ProductEntry>()
-                .HasKey(pe => new { pe.ProductId, pe.ColorId, pe.SizeId });
+                .HasKey(pe => new { pe.SkuId, pe.ProductId, pe.ColorId, pe.SizeId });
 
             modelBuilder.Entity<ProductEntry>()
                 .HasOne<Product>(pe => pe.Product)
@@ -61,6 +63,119 @@ namespace ClothingShop.Entity.Data
                 .HasOne<Size>(pe => pe.Size)
                 .WithMany(s => s.ProductEntries)
                 .HasForeignKey(pe => pe.SizeId);
+
+            //CartItem
+            modelBuilder.Entity<CartItem>()
+                .HasKey(ci => new { ci.CartItemId, ci.CartId, ci.SkuId });
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne<ProductEntry>(ci => ci.SKU)
+                .WithMany(pe => pe.CartItems)
+                .HasForeignKey(ci => ci.SkuId);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne<Cart>(ci => ci.Cart)
+                .WithMany(c => c.CartItems)
+                .HasForeignKey(ci => ci.CartId);
+
+            //Cart
+            modelBuilder.Entity<Users>()
+                .HasOne<Cart>(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(c => c.UserId);
+
+            modelBuilder.Entity<Cart>()
+                .HasOne<Users>(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId);
+
+            //OrderItem
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => new { oi.OrderItemId, oi.OrderId, oi.SkuId });
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne<ProductEntry>(oi => oi.SKU)
+                .WithMany(pe => pe.OrderItems)
+                .HasForeignKey(oi => oi.SkuId);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne<Order>(oi => oi.Order)
+                .WithMany(c => c.OrderItems)
+                .HasForeignKey(oi => oi.OrderId);
+
+            //Discount
+            modelBuilder.Entity<Product>()
+                .HasOne<Discount>(p => p.Discount)
+                .WithMany(d => d.Products)
+                .HasForeignKey(p => p.DiscountId);
+
+            modelBuilder.Entity<Discount>()
+                .HasMany<Product>(d => d.Products)
+                .WithOne(p => p.Discount)
+                .HasForeignKey(p => p.DiscountId);
+
+            //Voucher
+            modelBuilder.Entity<Voucher>()
+                .HasKey(v => new { v.VoucherId, v.DiscountId, v.UserId });
+
+            modelBuilder.Entity<Voucher>()
+                .HasOne<Discount>(v => v.Discount)
+                .WithMany(d => d.Vouchers)
+                .HasForeignKey(v => v.DiscountId);
+
+            modelBuilder.Entity<Voucher>()
+                .HasOne<Users>(v => v.User)
+                .WithMany(u => u.Vouchers)
+                .HasForeignKey(v => v.UserId);
+
+            //Rank
+            modelBuilder.Entity<Users>()
+                .HasOne<Rank>(u => u.Rank)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RankId);
+
+            modelBuilder.Entity<Rank>()
+                .HasMany<Users>(r => r.Users)
+                .WithOne(u => u.Rank)
+                .HasForeignKey(u => u.RankId);
+
+            //Points
+            modelBuilder.Entity<Point>()
+                .HasKey(p => new { p.PointId, p.UserId, p.OrderId });
+
+            modelBuilder.Entity<Point>()
+                .HasOne<Users>(p => p.User)
+                .WithMany(u => u.Points)
+                .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<Users>()
+                .HasMany(u => u.Points)
+                .WithOne(p => p.User)
+                .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<Point>()
+                .HasOne<Order>(p => p.Order)
+                .WithOne(o => o.Point)
+                .HasForeignKey<Point>(p => p.OrderId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne<Point>(o => o.Point)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Point>(p => p.OrderId);
+
+            //Order
+            modelBuilder.Entity<Order>()
+                .HasKey(o => new { o.OrderId, o.UserId });
+
+            modelBuilder.Entity<Order>()
+                .HasOne<Users>(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
+
+            modelBuilder.Entity<Users>()
+                .HasMany<Order>(u => u.Orders)
+                .WithOne(o => o.User)
+                .HasForeignKey(o => o.UserId);
         }
     }
 }

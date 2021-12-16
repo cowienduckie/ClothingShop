@@ -5,27 +5,33 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ClothingShop.Entity.Entities;
 
-
 namespace ClothingShop.Entity.Entities
 {
-    public class Product
+    public class Discount
     {
         [Required]
-        public int ProductId { get; set; }
+        public int DiscountId { get; set; }
 
         [StringLength(50), Required]
         public string Name { get; set; }
 
-        [Required]
-        public string Image { get; set; }
+        [Range(0, 100), Required]
+        [Column(TypeName = "decimal(4, 2)")]
+        public decimal Percentage { get; set; }
 
-        [Required, DataType(DataType.Currency)]
-        public int Price { get; set; }
+        public bool IsPublic { get; set; }
 
-        public int DiscountId { get; set; }
-
-        [StringLength(500)]
+        [StringLength(250)]
         public string Description { get; set; }
+
+        [Display(Name = "Start Date"), DataType(DataType.Date), Required]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StartTime { get; set; }
+
+        [Required]
+        [Display(Name = "End Date"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EndTime { get; set; }
 
         [Required]
         [Display(Name = "Create Time"), DataType(DataType.Date)]
@@ -38,10 +44,7 @@ namespace ClothingShop.Entity.Entities
         public DateTime LastModified { get; set; }
 
         //
-        public IList<ProductEntry> ProductEntries { get; set; }
-
-        public IList<ProductCategory> ProductCategories { get; set; }
-
-        public Discount Discount { get; set; }
+        public IList<Product> Products { get; set; }
+        public IList<Voucher> Vouchers { get; set; }
     }
 }

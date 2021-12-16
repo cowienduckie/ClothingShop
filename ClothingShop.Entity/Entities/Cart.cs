@@ -2,22 +2,24 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
-    public class Category
+    public class Cart
     {
-        [Required]
-        [Key]
-        public int CategoryId { get; set; }
+        [Required, Key]
+        public int CartId { get; set; }
 
-        public int? ParentId { get; set; }
+        [Required, Key]
+        public int UserId { get; set; }
 
-        [Required, StringLength(50)]
-        public string Name { get; set; }
+        public int OriginalPrice { get; set; }
 
-        [StringLength(100)]
-        public string Description { get; set; }
+        public int Discount { get; set; }
+
+        public int TotalPrice { get; set; }
 
         [Required]
         [Display(Name = "Create Time"), DataType(DataType.Date)]
@@ -29,7 +31,12 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 
+        [Required]
+        public bool IsDelete { get; set; }
+
         //
-        public IList<ProductCategory> ProductCategories { get; set; }
+        public Users User { get; set; }
+
+        public IList<CartItem> CartItems { get; set; }
     }
 }
