@@ -33,5 +33,10 @@ namespace ClothingShop.Entity.Entities
 
         [Required]
         public bool IsDelete { get; set; }
+
+        //
+        public Users User { get; set; }
+
+        public IList<CartItem> CartItems { get; set; }
     }
 }

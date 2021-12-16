@@ -19,7 +19,6 @@ namespace ClothingShop.Entity.Entities
         [Column(TypeName = "decimal(4, 2)")]
         public decimal Percentage { get; set; }
 
-        [Required]
         public bool IsPublic { get; set; }
 
         [StringLength(250)]
@@ -43,5 +42,9 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Last Modified"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
+
+        //
+        public IList<Product> Products { get; set; }
+        public IList<Voucher> Vouchers { get; set; }
     }
 }

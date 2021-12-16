@@ -27,5 +27,12 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Create Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
+
+        //
+        public Point Point { get; set; }
+
+        public Users User { get; set; }
+
+        public IList<OrderItem> OrderItems { get; set; }
     }
 }

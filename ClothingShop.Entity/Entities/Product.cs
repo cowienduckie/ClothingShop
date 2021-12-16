@@ -41,5 +41,7 @@ namespace ClothingShop.Entity.Entities
         public IList<ProductEntry> ProductEntries { get; set; }
 
         public IList<ProductCategory> ProductCategories { get; set; }
+
+        public Discount Discount { get; set; }
     }
 }

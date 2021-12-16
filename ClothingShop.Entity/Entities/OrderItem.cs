@@ -28,5 +28,9 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "LastModified Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
+
+        //
+        public ProductEntry SKU { get; set; }
+        public Order Order { get; set; }
     }
 }

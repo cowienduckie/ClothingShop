@@ -17,5 +17,8 @@ namespace ClothingShop.Entity.Entities
         public int MinimumPoint { get; set; }
 
         public decimal ConvertPointPercentager { get; set; }
+
+        //
+        public IList<Users> Users { get; set; }
     }
 }

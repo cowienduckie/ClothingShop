@@ -14,6 +14,8 @@ namespace ClothingShop.Entity.Entities
         [Required, Key]
         public int UserId { get; set; }
 
+        public int OrderId { get; set; }
+
         [Required]
         public int Value { get; set; }
 
@@ -28,5 +30,10 @@ namespace ClothingShop.Entity.Entities
         public DateTime LastModified { get; set; }
 
         public bool IsValid { get; set; }
+
+        //
+        public Users User { get; set; }
+
+        public Order Order { get; set; }
     }
 }
