@@ -4,14 +4,16 @@ using ClothingShop.Entity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClothingShop.Entity.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20211228101457_Nullable-prop-user")]
+    partial class Nullablepropuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,7 +289,7 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
-                    b.Property<int?>("DiscountId")
+                    b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
@@ -443,7 +445,7 @@ namespace ClothingShop.Entity.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DateOfBirth")
+                    b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -703,7 +705,8 @@ namespace ClothingShop.Entity.Migrations
                 {
                     b.HasOne("ClothingShop.Entity.Entities.Discount", "Discount")
                         .WithMany("Products")
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("DiscountId")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.ProductCategory", b =>
