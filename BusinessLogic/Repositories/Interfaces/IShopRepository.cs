@@ -32,5 +32,15 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task<CategoryModel> EditCategory(CategoryModel category);
 
         Task DeleteCategory(int id);
+
+        PaginationModel<DiscountModel> GetDiscountList(string name, int? pageNumber, int? pageSize);
+
+        Task<DiscountModel> GetDiscountDetails(int? id);
+
+        Task CreateDiscount(DiscountModel discount);
+
+        Task<DiscountModel> EditDiscount(DiscountModel discount);
+
+        Task DeleteDiscount(int id);
     }
 }

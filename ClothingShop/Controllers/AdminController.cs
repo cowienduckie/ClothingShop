@@ -257,5 +257,99 @@ namespace ClothingShop.Controllers
                 return View();
             }
         }
+
+        //GET: Admin/DiscountList
+        public IActionResult DiscountList(string name, int? pageNumber, int? pageSize)
+        {
+            try
+            {
+                var model = _shopRepository.GetDiscountList(name, pageNumber, pageSize);
+
+                return View(model);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
+
+        //GET: Admin/CreateDiscount
+        [HttpGet]
+        public IActionResult CreateDiscount()
+        {
+            return View(new DiscountModel());
+        }
+
+        //POST: Admin/CreateDiscount
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateDiscount(DiscountModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            try
+            {
+                await _shopRepository.CreateDiscount(model);
+                return RedirectToAction(nameof(DiscountList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/EditDiscount
+        [HttpGet]
+        public async Task<IActionResult> EditDiscount(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(DiscountList));
+            var discount = await _shopRepository.GetDiscountDetails(id);
+            if (discount == null) return NotFound();
+
+            return View(discount);
+        }
+
+        //POST: Admin/EditDiscount
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDiscount(DiscountModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            try
+            {
+                var returnModel = await _shopRepository.EditDiscount(model);
+
+                if (returnModel == null)
+                    return View(model);
+
+                return RedirectToAction(nameof(DiscountList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View(model);
+            }
+        }
+
+        //GET: Admin/DeleteDiscount
+        [HttpGet]
+        public async Task<IActionResult> DeleteDiscount(int? id)
+        {
+            if (id == null) return RedirectToAction(nameof(ProductList));
+            try
+            {
+                await _shopRepository.DeleteDiscount(id.Value);
+                return RedirectToAction(nameof(DiscountList));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return View();
+            }
+        }
     }
 }

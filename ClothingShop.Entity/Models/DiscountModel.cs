@@ -1,28 +1,25 @@
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
+using System.Text;
 
-namespace ClothingShop.Entity.Entities
+namespace ClothingShop.Entity.Models
 {
-    public class Discount
+    public class DiscountModel
     {
         public int DiscountId { get; set; }
 
-        [StringLength(50), Required]
         public string Name { get; set; }
 
-        [Range(0, 100), Required]
+        [Range(0, 100)]
         [Column(TypeName = "decimal(4, 2)")]
         public decimal Percentage { get; set; }
 
-        [Required]
-        public bool IsExpired { get; set; }
-
         [StringLength(250)]
         public string Description { get; set; }
+
+        public bool IsExpired { get; set; }
 
         [Display(Name = "Start Date"), DataType(DataType.Date), Required]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
@@ -32,18 +29,12 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
 
-        [Required]
         [Display(Name = "Create Time"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
-        [Required]
         [Display(Name = "Last Modified"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
-
-        //
-        public IList<ProductDiscount> ProductDiscounts { get; set; }
-        public IList<Voucher> Vouchers { get; set; }
     }
 }

@@ -73,8 +73,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                 products = _db.ProductCategory.Where(c => c.CategoryId == category.Value)
                                               .Select(pc => pc.Product)
                                               .AsQueryable();
-
-                Console.WriteLine(JsonConvert.SerializeObject(products));
             }
             else    //List all items
             {
@@ -388,6 +386,137 @@ namespace ClothingShop.BusinessLogic.Repositories
         private bool HasCategoryId(int id)
         {
             return _db.Category.Any(c => c.CategoryId == id);
+        }
+
+        //Discount
+        public PaginationModel<DiscountModel> GetDiscountList(string name, int? pageNumber, int? pageSize)
+        {
+            var discounts = _db.Discount.AsQueryable();
+
+            if(!string.IsNullOrEmpty(name))
+            {
+                discounts = discounts.Where(p => p.Name.Contains(name));
+            }
+
+            var total = discounts.Count();
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var discountList = discounts.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(d => new DiscountModel
+            {
+                DiscountId = d.DiscountId,
+                Name = d.Name,
+                Percentage = d.Percentage,
+                Description = d.Description,
+                IsExpired = d.IsExpired,
+                StartTime = d.StartTime,
+                EndTime = d.EndTime,
+                CreateTime = d.CreateTime,
+                LastModified = d.LastModified,
+            }).ToList();
+
+            return new PaginationModel<DiscountModel>()
+            {
+                ItemList = discountList,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
+        }
+
+        public async Task<DiscountModel> GetDiscountDetails(int? id)
+        {
+            if (id == null) return null;
+
+            return await _db.Discount.Where(d => d.DiscountId == id)
+                                    .Select(d => new DiscountModel
+                                    {
+                                        DiscountId = d.DiscountId,
+                                        Name = d.Name,
+                                        Percentage = d.Percentage,
+                                        Description = d.Description,
+                                        IsExpired = d.IsExpired,
+                                        StartTime = d.StartTime,
+                                        EndTime = d.EndTime,
+                                        CreateTime = d.CreateTime,
+                                        LastModified = d.LastModified,
+                                    }).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateDiscount(DiscountModel model)
+        {
+            var now = DateTime.Now;
+
+            var discount = new Discount
+            {
+                DiscountId = model.DiscountId,
+                Name = model.Name,
+                Percentage = model.Percentage,
+                Description = model.Description,
+                IsExpired = model.IsExpired,
+                StartTime = model.StartTime,
+                EndTime = model.EndTime,
+                CreateTime = now,
+                LastModified = now,
+            };
+
+            await _db.Discount.AddAsync(discount);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<DiscountModel> EditDiscount(DiscountModel model)
+        {
+            try
+            {
+                var discount = await _db.Discount.Where(d => d.DiscountId == model.DiscountId)
+                                                 .Select(d => d)
+                                                 .FirstOrDefaultAsync();
+
+                if (discount == null) return null;
+
+                //Available fields for editing
+                discount.Name = model.Name;
+                discount.Description = model.Description;
+                discount.Percentage = model.Percentage;
+                discount.IsExpired = model.IsExpired;
+                discount.StartTime = model.StartTime;
+                discount.EndTime = model.EndTime;
+
+                discount.LastModified = DateTime.Now;
+
+                _db.Discount.Update(discount);
+
+                await _db.SaveChangesAsync();
+
+                return model;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HasDiscountId(model.DiscountId))
+                {
+                    Console.WriteLine("Error DBupdate");
+                }
+                return null;
+            }
+        }
+
+        public async Task DeleteDiscount(int id)
+        {
+            var discount = await _db.Discount.Where(d => d.DiscountId == id)
+                                                 .Select(d => d)
+                                                 .FirstOrDefaultAsync();
+
+            if (discount != null)
+            {
+                _db.Discount.Remove(discount);
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        private bool HasDiscountId(int id)
+        {
+            return _db.Discount.Any(d => d.DiscountId == id);
         }
     }
 }
