@@ -6,9 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using ClothingShop.BusinessLogic.Helpers;
 using ClothingShop.Entity.Entities;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.BusinessLogic.Repositories
 {
@@ -107,6 +108,13 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             for (int i = 0; i < colors.Count; ++i)
             {
+                model.Colors.Add(new ColorModel
+                {
+                    ColorId = colors[i].ColorId,
+                    ColorHexCode = colors[i].ColorHexCode,
+                    Value = colors[i].Value
+                });
+
                 for (int j = 0; j < sizes.Count; ++j)
                 {
                     model.Items.Add(new ItemModel
@@ -119,6 +127,15 @@ namespace ClothingShop.BusinessLogic.Repositories
                         Quantity = 0
                     });
                 }
+            }
+
+            for (int j = 0; j < sizes.Count; ++j)
+            {
+                model.Sizes.Add(new SizeModel
+                {
+                    SizeId = sizes[j].SizeId,
+                    Value = sizes[j].Value,
+                });
             }
 
             for (int i = 0; i <  categories.Count; ++i)
@@ -171,7 +188,16 @@ namespace ClothingShop.BusinessLogic.Repositories
         public async Task CreateProduct(ProductDetailModel model)
         {
             var now = DateTime.Now;
-            const string defaultImage = "https://imgur.com/a/tZDUgE8";
+            const string defaultImage = "~/img/default.jpg";
+
+            if (model.UploadImage != null && model.UploadImage.Length != 0)
+            {
+                Console.WriteLine("ok");
+
+                model.Image = ImageHelper.UploadImage(model.UploadImage);
+
+                Console.WriteLine(model.Image);
+            }
 
             var product = new Product
             {
