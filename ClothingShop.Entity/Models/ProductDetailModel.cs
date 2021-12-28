@@ -24,11 +24,6 @@ namespace ClothingShop.Entity.Models
         [Required]
         public int Price { get; set; }
 
-        [Column(TypeName = "decimal(4, 2)")]
-        [Display(Name="Chiết khấu(%)")]
-        [Range(0, 100, ErrorMessage = "Chiết khấu chỉ nằm trong khoảng 0 - 100%")]
-        public decimal? Discount { get; set; }
-
         [StringLength(500)]
         [Display(Name = "Mô tả")]
         public string Description { get; set; }
@@ -53,7 +48,6 @@ namespace ClothingShop.Entity.Models
 
         public ProductDetailModel()
         {
-            this.Discount = 0;
             this.Image = "https://i.imgur.com/iQeIsmz.jpg";
             this.Items = new List<ItemModel>();
             this.Categories = new List<CategoryModel>();

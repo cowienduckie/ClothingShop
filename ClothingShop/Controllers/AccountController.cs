@@ -12,6 +12,7 @@ using ClothingShop.Entity.Data;
 using ClothingShop.Entity.Models;
 using ClothingShop.Entity.Entities;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using System.Text.Json;
 
 namespace ClothingShop.Controllers
 {
@@ -61,6 +62,8 @@ namespace ClothingShop.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                var json = JsonSerializer.Serialize(model);
+                Console.WriteLine(json);
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
