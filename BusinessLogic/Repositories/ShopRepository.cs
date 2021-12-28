@@ -121,7 +121,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 }
             }
 
-            for (int i = 0; i <  categories.Count; ++i)
+            for (int i = 0; i < categories.Count; ++i)
             {
                 model.Categories.Add(new CategoryModel
                 {
@@ -150,15 +150,15 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         CreateTime = p.CreateTime,
                                         LastModified = p.LastModified,
                                         Items = p.ProductEntries.Select(pe => new ItemModel()
-                                                                        {
-                                                                            ColorId = pe.ColorId,
-                                                                            ColorValue = pe.Color.Value,
-                                                                            ColorHexCode = pe.Color.ColorHexCode,
-                                                                            SizeId = pe.SizeId,
-                                                                            SizeValue = pe.Size.Value,
-                                                                            SKU = pe.SKU,
-                                                                            Quantity = pe.Quantity
-                                                                        }).ToList(),
+                                        {
+                                            ColorId = pe.ColorId,
+                                            ColorValue = pe.Color.Value,
+                                            ColorHexCode = pe.Color.ColorHexCode,
+                                            SizeId = pe.SizeId,
+                                            SizeValue = pe.Size.Value,
+                                            SKU = pe.SKU,
+                                            Quantity = pe.Quantity
+                                        }).ToList(),
                                         Categories = p.ProductCategories.Select(pc => new CategoryModel
                                         {
                                             CategoryId = pc.Category.CategoryId,
@@ -196,7 +196,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                     })
                                                     .ToList()
             };
-            
+
             await _db.Product.AddAsync(product);
             await _db.SaveChangesAsync();
         }
@@ -255,10 +255,10 @@ namespace ClothingShop.BusinessLogic.Repositories
         public List<CategoryModel> GetAllCategories()
         {
             return _db.Category.Select(c => new CategoryModel
-                                {
-                                    CategoryId = c.CategoryId,
-                                    Name = c.Name
-                                })
+            {
+                CategoryId = c.CategoryId,
+                Name = c.Name
+            })
                                 .ToList();
         }
 
@@ -269,7 +269,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             var PageSize = pageSize ?? 20;
             var PageNumber = pageNumber ?? 1;
 
-            var categories= querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
+            var categories = querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
             {
                 CategoryId = c.CategoryId,
                 Name = c.Name,
@@ -318,7 +318,7 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             try
             {
-                var category= await _db.Category.Where(c => c.CategoryId == model.CategoryId)
+                var category = await _db.Category.Where(c => c.CategoryId == model.CategoryId)
                                                .Select(c => c)
                                                .FirstOrDefaultAsync();
                 if (category == null) return null;
@@ -362,6 +362,91 @@ namespace ClothingShop.BusinessLogic.Repositories
         private bool HasCategoryId(int id)
         {
             return _db.Category.Any(c => c.CategoryId == id);
+        }
+
+        private bool HasOrderId(int id)
+        {
+            return _db.Order.Any(c => c.OrderId == id);
+        }
+
+
+        // Xac nhan thanh toan -->
+        public async Task AddOrder(OrderDetailModel model)
+        {
+            var now = DateTime.Now;
+            String status = "progressing";
+
+            try
+            {
+                var order = new Order
+                {
+                    UserId = model.UserId,
+                    OriginalPrice = model.OriginalPrice,
+                    Discount = model.Discount,
+                    TotalPrice = model.TotalPrice,
+                    Status = status,
+                    CreateTime = now,
+                    OrderItems = model.ListItem.Select(c => new OrderItem
+                    {
+                        OrderItemId = c.OrderItemId,
+                        OrderId = c.OrderId,
+                        SkuId = c.SkuId,
+                        Quantity = c.Quantity,
+                        CreateTime = now,
+                        LastModified = now
+                    }).ToList()
+                };
+
+                await _db.Order.AddAsync(order);
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HasOrderId(model.OrderId))
+                {
+                    Console.WriteLine("Error DBupdate");
+                }
+            }
+        }
+
+
+        // xem lich su mua hang
+        public List<OrderDetailModel> GetAllOrder()
+        {
+            return _db.Order.Select(o => new OrderDetailModel
+            {
+                OrderId = o.OrderId,
+                OriginalPrice = o.OriginalPrice,
+                CreateTime = o.CreateTime,
+                Discount = o.Discount,
+                Status = o.Status,
+                TotalPrice = o.TotalPrice
+            })
+                                .ToList();
+        }
+        
+
+        public async Task<OrderDetailModel> GetOrderDetails(int? orderID)
+        {
+            if (orderID == null) return null;
+
+            return await _db.Order.Where(o => o.OrderId == orderID)
+                                    .Select(o => new OrderDetailModel
+                                    {
+                                        OrderId = o.OrderId,
+                                        OriginalPrice = o.OriginalPrice,
+                                        CreateTime = o.CreateTime,
+                                        Discount = o.Discount,
+                                        Status = o.Status,
+                                        TotalPrice = o.TotalPrice,
+                                        ListItem = o.OrderItems.Where(ot => ot.OrderId == orderID)
+                                                                .Select(ot => new OrderItemModel
+                                        {
+                                            OrderItemId = ot.OrderItemId,
+                                            SkuId = ot.SkuId,
+                                            Quantity = ot.Quantity                                            
+                                        }).ToList()
+                                    }).FirstOrDefaultAsync();
         }
     }
 }

@@ -32,5 +32,11 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task<CategoryModel> EditCategory(CategoryModel category);
 
         Task DeleteCategory(int id);
+
+        Task AddOrder(OrderDetailModel model);
+
+        List<OrderDetailModel> GetAllOrder();
+
+        Task<OrderDetailModel> GetOrderDetails(int? orderID);
     }
 }
