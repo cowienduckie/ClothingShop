@@ -17,6 +17,8 @@ namespace ClothingShop.Entity.Entities
 
         public string Value { get; set; }
 
+        public bool IsUsed { get; set; }
+
         //
         public Discount Discount { get; set; }
         public Users User { get; set; }

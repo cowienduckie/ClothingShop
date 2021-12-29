@@ -136,7 +136,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 });
             }
 
-            for (int i = 0; i <  categories.Count; ++i)
+            for (int i = 0; i < categories.Count; ++i)
             {
                 model.Categories.Add(new CategoryModel
                 {
@@ -165,15 +165,15 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         CreateTime = p.CreateTime,
                                         LastModified = p.LastModified,
                                         Items = p.ProductEntries.Select(pe => new ItemModel()
-                                                                        {
-                                                                            ColorId = pe.ColorId,
-                                                                            ColorValue = pe.Color.Value,
-                                                                            ColorHexCode = pe.Color.ColorHexCode,
-                                                                            SizeId = pe.SizeId,
-                                                                            SizeValue = pe.Size.Value,
-                                                                            SKU = pe.SKU,
-                                                                            Quantity = pe.Quantity
-                                                                        }).ToList(),
+                                        {
+                                            ColorId = pe.ColorId,
+                                            ColorValue = pe.Color.Value,
+                                            ColorHexCode = pe.Color.ColorHexCode,
+                                            SizeId = pe.SizeId,
+                                            SizeValue = pe.Size.Value,
+                                            SKU = pe.SKU,
+                                            Quantity = pe.Quantity
+                                        }).ToList(),
                                         Categories = p.ProductCategories.Select(pc => new CategoryModel
                                         {
                                             CategoryId = pc.Category.CategoryId,
@@ -220,7 +220,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                     })
                                                     .ToList()
             };
-            
+
             await _db.Product.AddAsync(product);
             await _db.SaveChangesAsync();
         }
@@ -279,10 +279,10 @@ namespace ClothingShop.BusinessLogic.Repositories
         public List<CategoryModel> GetAllCategories()
         {
             return _db.Category.Select(c => new CategoryModel
-                                {
-                                    CategoryId = c.CategoryId,
-                                    Name = c.Name
-                                })
+            {
+                CategoryId = c.CategoryId,
+                Name = c.Name
+            })
                                 .ToList();
         }
 
@@ -293,7 +293,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             var PageSize = pageSize ?? 20;
             var PageNumber = pageNumber ?? 1;
 
-            var categories= querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
+            var categories = querryCategories.Skip(PageSize * (PageNumber - 1)).Take(PageSize).Select(c => new CategoryModel
             {
                 CategoryId = c.CategoryId,
                 Name = c.Name,
@@ -342,7 +342,7 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             try
             {
-                var category= await _db.Category.Where(c => c.CategoryId == model.CategoryId)
+                var category = await _db.Category.Where(c => c.CategoryId == model.CategoryId)
                                                .Select(c => c)
                                                .FirstOrDefaultAsync();
                 if (category == null) return null;
@@ -393,7 +393,7 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             var discounts = _db.Discount.AsQueryable();
 
-            if(!string.IsNullOrEmpty(code))
+            if (!string.IsNullOrEmpty(code))
             {
                 discounts = discounts.Where(p => p.Code.Contains(code));
             }
@@ -442,6 +442,8 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         EndTime = d.EndTime,
                                         CreateTime = d.CreateTime,
                                         LastModified = d.LastModified,
+                                        UsedVoucherNumber = d.Vouchers.Count(v => v.IsUsed),
+                                        UnUsedVoucherNumber = d.Vouchers.Count(v => !v.IsUsed)
                                     }).FirstOrDefaultAsync();
         }
 
@@ -521,6 +523,124 @@ namespace ClothingShop.BusinessLogic.Repositories
         private bool HasDiscountId(int id)
         {
             return _db.Discount.Any(d => d.DiscountId == id);
+        }
+
+        public async Task CreateVoucher(int VoucherNumber, int DiscountId)
+        {
+            var discount = await _db.Discount.Where(d => d.DiscountId == DiscountId)
+                                                 .Select(d => d)
+                                                 .FirstOrDefaultAsync();
+
+            if (discount != null)
+            {
+                var VoucherList = new List<Voucher>();
+
+                for (int i = 0; i < VoucherNumber; ++i)
+                {
+                    VoucherList.Add(new Voucher
+                    {
+                        DiscountId = DiscountId,
+                        Discount = discount,
+                        IsUsed = false
+                    });
+                }
+
+                _db.Voucher.AddRange(VoucherList);
+                _db.SaveChanges();
+
+                for (int i = 0; i < VoucherNumber; ++i)
+                {
+                    VoucherList[i].Value = ShopHelper.MD5Hash(VoucherList[i].VoucherId.ToString());
+                }
+
+                _db.Voucher.UpdateRange(VoucherList);
+                _db.SaveChanges();
+            }
+        }
+
+        public async Task DeleteVoucher(int id)
+        {
+            var Voucher = await _db.Voucher.Where(d => d.VoucherId == id)
+                                                 .Select(d => d)
+                                                 .FirstOrDefaultAsync();
+
+            if (Voucher != null)
+            {
+                _db.Voucher.Remove(Voucher);
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAllVoucher(int DiscountId)
+        {
+            var discount = await _db.Discount.Where(d => d.DiscountId == DiscountId)
+                                                 .Select(d => d)
+                                                 .FirstOrDefaultAsync();
+
+            if (discount != null)
+            {
+                _db.Voucher.RemoveRange(_db.Voucher.Where(v => v.DiscountId == discount.DiscountId));
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public RankModel GetRank(int RankId)
+        {
+            var rank = _db.Rank.FirstOrDefault(r => r.RankId == RankId);
+
+            if (rank == null) return null;
+
+            var model = new RankModel
+            {
+                RankId = rank.RankId,
+                NextRankId = rank.NextRankId,
+                Name = rank.Name,
+                MinimumPoint = rank.MinimumPoint,
+                ConvertPointPercentage = rank.ConvertPointPercentage,
+            };
+
+            var nextRank = _db.Rank.FirstOrDefault(r => r.RankId == rank.NextRankId);
+
+            if (nextRank != null)
+            {
+                model.NextRank = new RankModel
+                {
+                    RankId = nextRank.RankId,
+                    NextRankId = nextRank.NextRankId,
+                    Name = nextRank.Name,
+                    MinimumPoint = nextRank.MinimumPoint,
+                    ConvertPointPercentage = nextRank.ConvertPointPercentage
+                };
+            }
+
+            return model;
+        }
+
+        public List<RankModel> GetAllRanks()
+        {
+            return _db.Rank.Select(r => new RankModel
+            {
+                RankId = r.RankId,
+                NextRankId = r.NextRankId,
+                Name = r.Name,
+                MinimumPoint = r.MinimumPoint,
+                ConvertPointPercentage = r.ConvertPointPercentage
+            }).ToList();
+        }
+
+        public List<VoucherModel> GetVoucherListByUser(string UserId)
+        {
+            return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId).Select(v => new VoucherModel
+            {
+                VoucherId = v.VoucherId,
+                UserId = v.UserId,
+                DiscountId = v.DiscountId,
+                Discount = v.Discount,
+                Value = v.Value,
+                IsUsed = v.IsUsed,
+            }).ToList();
         }
     }
 }

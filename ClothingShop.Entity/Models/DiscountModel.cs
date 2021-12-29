@@ -38,5 +38,15 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Last Modified"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
+
+        public int UsedVoucherNumber { get; set; }
+
+        public int UnUsedVoucherNumber { get; set; }
+
+        public DiscountModel()
+        {
+            UsedVoucherNumber = 0;
+            UnUsedVoucherNumber = 0;
+        }
     }
 }

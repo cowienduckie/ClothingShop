@@ -33,7 +33,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task DeleteCategory(int id);
 
-        PaginationModel<DiscountModel> GetDiscountList(string name, int? pageNumber, int? pageSize);
+        PaginationModel<DiscountModel> GetDiscountList(string code, int? pageNumber, int? pageSize);
 
         Task<DiscountModel> GetDiscountDetails(int? id);
 
@@ -42,5 +42,17 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task<DiscountModel> EditDiscount(DiscountModel discount);
 
         Task DeleteDiscount(int id);
+
+        Task CreateVoucher(int VoucherNumber, int DiscountId);
+
+        Task DeleteVoucher(int id);
+
+        Task DeleteAllVoucher(int DiscountId);
+
+        RankModel GetRank(int RankId);
+
+        List<RankModel> GetAllRanks();
+
+        List<VoucherModel> GetVoucherListByUser(string UserId);
     }
 }
