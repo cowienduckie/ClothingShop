@@ -389,13 +389,13 @@ namespace ClothingShop.BusinessLogic.Repositories
         }
 
         //Discount
-        public PaginationModel<DiscountModel> GetDiscountList(string name, int? pageNumber, int? pageSize)
+        public PaginationModel<DiscountModel> GetDiscountList(string code, int? pageNumber, int? pageSize)
         {
             var discounts = _db.Discount.AsQueryable();
 
-            if(!string.IsNullOrEmpty(name))
+            if(!string.IsNullOrEmpty(code))
             {
-                discounts = discounts.Where(p => p.Name.Contains(name));
+                discounts = discounts.Where(p => p.Code.Contains(code));
             }
 
             var total = discounts.Count();
@@ -406,6 +406,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             {
                 DiscountId = d.DiscountId,
                 Name = d.Name,
+                Code = d.Code,
                 Percentage = d.Percentage,
                 Description = d.Description,
                 IsExpired = d.IsExpired,
@@ -433,6 +434,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                     {
                                         DiscountId = d.DiscountId,
                                         Name = d.Name,
+                                        Code = d.Code,
                                         Percentage = d.Percentage,
                                         Description = d.Description,
                                         IsExpired = d.IsExpired,
@@ -451,6 +453,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             {
                 DiscountId = model.DiscountId,
                 Name = model.Name,
+                Code = model.Code,
                 Percentage = model.Percentage,
                 Description = model.Description,
                 IsExpired = model.IsExpired,
@@ -476,6 +479,7 @@ namespace ClothingShop.BusinessLogic.Repositories
 
                 //Available fields for editing
                 discount.Name = model.Name;
+                discount.Code = model.Code;
                 discount.Description = model.Description;
                 discount.Percentage = model.Percentage;
                 discount.IsExpired = model.IsExpired;

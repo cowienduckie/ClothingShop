@@ -61,6 +61,7 @@ else
         <thead>
             <tr>
                 <th scope="col" style="text-align:center">STT</th>
+                <th scope="col" style="text-align:center">Tên Khuyến Mãi</th>
                 <th scope="col" style="text-align:center">Mã Khuyến Mãi</th>
                 <th scope="col" style="text-align:center">Chiết khấu</th>
                 <th scope="col" style="text-align:center">Hết hạn?</th>
@@ -74,11 +75,12 @@ else
             {
                 <tr data-toggle="tooltip" data-placement="bottom" title="@Model.ItemList[i].Description">
                     <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
-                    <td class="align-middle">@Model.ItemList[i].Name</td>
-                    <td class="align-middle" align="center">@Model.ItemList[i].Percentage</td>
-                    <td class="align-middle" align="center">@(Model.ItemList[i].IsExpired ? "Không thời hạn" : "Có thời hạn")</td>
-                    <td class="align-middle" align="center">@Model.ItemList[i].StartTime</td>
-                    <td class="align-middle" align="center">@Model.ItemList[i].EndTime</td>
+                    <td class="align-middle">@Html.DisplayFor(m => m.ItemList[i].Name)</td>
+                    <td class="align-middle" align="center">@Html.DisplayFor(m => m.ItemList[i].Code)</td>
+                    <td class="align-middle" align="center">@Html.DisplayFor(m => m.ItemList[i].Percentage)</td>
+                    <td class="align-middle" align="center">@(Model.ItemList[i].IsExpired ? "Có thời hạn" : "Không thời hạn")</td>
+                    <td class="align-middle" align="center">@Html.DisplayFor(m => m.ItemList[i].StartTime)</td>
+                    <td class="align-middle" align="center">@Html.DisplayFor(m => m.ItemList[i].EndTime)</td>
                     <td class="align-middle" align="center">
                         <a class="btn btn-sm btn-success" asp-controller="Admin" asp-action="EditDiscount" asp-route-id="@Model.ItemList[i].DiscountId"
                            data-toggle="tooltip" data-placement="bottom" title="Chỉnh sửa">

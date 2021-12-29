@@ -14,9 +14,12 @@ namespace ClothingShop.Entity.Entities
         [StringLength(50), Required]
         public string Name { get; set; }
 
+        [StringLength(50), Required]
+        public string Code { get; set; }
+
         [Range(0, 100), Required]
-        [Column(TypeName = "decimal(4, 2)")]
-        public decimal Percentage { get; set; }
+        [DisplayFormat(DataFormatString = "{0:#%")]
+        public int Percentage { get; set; }
 
         [Required]
         public bool IsExpired { get; set; }
