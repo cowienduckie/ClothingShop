@@ -15,6 +15,7 @@
         ("Account", "Quản lý tài khoản"),
         ("Role", "Quản lý vai trò"),
         ("User", "Quản lý tài khoản"),
+        ("Membership", "Khách hàng thân thiết")
    };
     var actions = new List<(string name, string text)>
 {
@@ -81,7 +82,12 @@
                            asp-controller="Home" asp-action="Index">Trang chủ</a>
                         <a class="@("nav-item nav-link "+(controllerName == "Product" ? "active" : ""))"
                            asp-controller="Product" asp-action="Index">Danh Mục Sản phẩm</a>
-                    </div>
+                        @if (authorizationService.AuthorizeAsync(User, "User").Result.Succeeded)
+                        {
+                        <a class="@("nav-item nav-link "+(controllerName == "Membership" ? "active" : ""))"
+                           asp-controller="Membership" asp-action="Index">Khách hàng thân thiết</a>
+                        }
+                        </div>
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <div class="navbar-nav d-sm-inline-flex justify-content-end">

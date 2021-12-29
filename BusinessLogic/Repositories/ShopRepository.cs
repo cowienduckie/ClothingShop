@@ -533,7 +533,6 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             if (discount != null)
             {
-                Console.WriteLine(VoucherNumber);
                 var VoucherList = new List<Voucher>();
 
                 for (int i = 0; i < VoucherNumber; ++i)
@@ -585,6 +584,63 @@ namespace ClothingShop.BusinessLogic.Repositories
 
                 await _db.SaveChangesAsync();
             }
+        }
+
+        public RankModel GetRank(int RankId)
+        {
+            var rank = _db.Rank.FirstOrDefault(r => r.RankId == RankId);
+
+            if (rank == null) return null;
+
+            var model = new RankModel
+            {
+                RankId = rank.RankId,
+                NextRankId = rank.NextRankId,
+                Name = rank.Name,
+                MinimumPoint = rank.MinimumPoint,
+                ConvertPointPercentage = rank.ConvertPointPercentage,
+            };
+
+            var nextRank = _db.Rank.FirstOrDefault(r => r.RankId == rank.NextRankId);
+
+            if (nextRank != null)
+            {
+                model.NextRank = new RankModel
+                {
+                    RankId = nextRank.RankId,
+                    NextRankId = nextRank.NextRankId,
+                    Name = nextRank.Name,
+                    MinimumPoint = nextRank.MinimumPoint,
+                    ConvertPointPercentage = nextRank.ConvertPointPercentage
+                };
+            }
+
+            return model;
+        }
+
+        public List<RankModel> GetAllRanks()
+        {
+            return _db.Rank.Select(r => new RankModel
+            {
+                RankId = r.RankId,
+                NextRankId = r.NextRankId,
+                Name = r.Name,
+                MinimumPoint = r.MinimumPoint,
+                ConvertPointPercentage = r.ConvertPointPercentage
+            }).ToList();
+        }
+
+        public List<VoucherModel> GetVoucherListByUser(string UserId)
+        {
+            return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId).Select(v => new VoucherModel
+            {
+                VoucherId = v.VoucherId,
+                UserId = v.UserId,
+                DiscountId = v.DiscountId,
+                Discount = v.Discount,
+                Value = v.Value,
+                IsUsed = v.IsUsed,
+            }).ToList();
         }
     }
 }

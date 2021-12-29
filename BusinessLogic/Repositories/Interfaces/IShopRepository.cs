@@ -48,5 +48,11 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task DeleteVoucher(int id);
 
         Task DeleteAllVoucher(int DiscountId);
+
+        RankModel GetRank(int RankId);
+
+        List<RankModel> GetAllRanks();
+
+        List<VoucherModel> GetVoucherListByUser(string UserId);
     }
 }
