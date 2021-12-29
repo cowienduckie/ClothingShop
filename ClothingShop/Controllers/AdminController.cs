@@ -351,5 +351,50 @@ namespace ClothingShop.Controllers
                 return View();
             }
         }
+
+        //GET: Admin/CreateVoucher
+        public async Task<IActionResult> CreateVoucher(int DiscountId, int VoucherNumber)
+        {
+            try
+            {
+                await _shopRepository.CreateVoucher(VoucherNumber, DiscountId);
+                return RedirectToAction(nameof(EditDiscount), new {id = DiscountId} );
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
+        //GET: Admin/CreateVoucher
+        public async Task<IActionResult> DeleteVoucher(int VoucherId, int DiscountId)
+        {
+            try
+            {
+                await _shopRepository.DeleteVoucher(VoucherId);
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
+        //GET: Admin/CreateVoucher
+        public async Task<IActionResult> DeleteAllVoucher(int DiscountId)
+        {
+            try
+            {
+                await _shopRepository.DeleteAllVoucher(DiscountId);
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
     }
 }

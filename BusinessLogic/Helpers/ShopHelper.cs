@@ -1,31 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ClothingShop.BusinessLogic.Helpers
 {
-    public static class ImageHelper
+    public static class ShopHelper
     {
-        public static string UploadImage(IFormFile FileUpload, int id = -1)
+        public static string MD5Hash(string input)
         {
-            var ext = Path.GetExtension(FileUpload.FileName);
-            var fileName = id != -1 ? $"{id}_{DateTime.Now:yyyyMMddHHmmss}{ext}"
-                                       : $"img_{DateTime.Now:yyyyMMddHHmmss}{ext}";
-            var path = Path.Combine(
-                            Directory.GetCurrentDirectory(), "wwwroot/img",
-                            fileName);
+            StringBuilder hash = new StringBuilder();
+            MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(input));
 
-            using (var stream = new FileStream(path, FileMode.Create))
+            for (int i = 0; i < bytes.Length; i++)
             {
-                FileUpload.CopyTo(stream);
+                hash.Append(bytes[i].ToString("x2"));
             }
-
-            var filePath = $"~/img/{fileName}";
-
-            return filePath;
+            return hash.ToString();
         }
     }
 }
