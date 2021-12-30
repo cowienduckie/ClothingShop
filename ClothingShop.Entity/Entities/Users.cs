@@ -11,6 +11,7 @@ namespace ClothingShop.Entity.Entities
 
         public string LastName { get; set; }
 
+
         [AllowNull]
         public DateTime? DateOfBirth { get; set; }
 
@@ -33,5 +34,7 @@ namespace ClothingShop.Entity.Entities
         public IList<Voucher> Vouchers { get; set; }
 
         public IList<Point> Points { get; set; }
+
+        public IList<Address> Addresses { get; set; }
     }
 }

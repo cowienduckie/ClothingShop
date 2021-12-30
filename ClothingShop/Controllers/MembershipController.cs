@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
-    [Authorize(Roles = "Admin,User")]
+    [Authorize]
     public class MembershipController : Controller
     {
         private readonly IShopRepository _shopRepository;
