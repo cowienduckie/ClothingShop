@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,9 +14,12 @@ namespace ClothingShop.Entity.Entities
         public int? ParentId { get; set; }
 
         [Required, StringLength(50)]
+
+        [Display(Name = "Tên danh mục")]
         public string Name { get; set; }
 
         [StringLength(100)]
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
 
         [Required]

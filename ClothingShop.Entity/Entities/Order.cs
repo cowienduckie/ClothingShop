@@ -14,12 +14,26 @@ namespace ClothingShop.Entity.Entities
 
         public string UserId { get; set; }
 
+<<<<<<< Updated upstream
+=======
+        public int AddressId { get; set; }
+
+        [Display(Name = "Giá g?c")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
+>>>>>>> Stashed changes
         public int OriginalPrice { get; set; }
 
+
+        [Display(Name = "Chi?t kh?u")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int Discount { get; set; }
 
+
+        [Display(Name = "T?ng giá")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int TotalPrice { get; set; }
 
+        [Display(Name = "Tr?ng thái")]
         public string Status { get; set; }
 
         [Required]
