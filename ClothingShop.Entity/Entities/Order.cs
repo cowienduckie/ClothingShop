@@ -14,6 +14,8 @@ namespace ClothingShop.Entity.Entities
 
         public string UserId { get; set; }
 
+        public int AddressId { get; set; }
+
         public int OriginalPrice { get; set; }
 
         public int Discount { get; set; }
@@ -28,6 +30,8 @@ namespace ClothingShop.Entity.Entities
         public DateTime CreateTime { get; set; }
 
         //
+        public Address Address { get; set; }
+
         public Point Point { get; set; }
 
         public Users User { get; set; }

@@ -381,8 +381,7 @@ namespace ClothingShop.Controllers
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
-
-        //GET: Admin/CreateVoucher
+        //POST: Admin/CreateVoucher
         public async Task<IActionResult> DeleteAllVoucher(int DiscountId)
         {
             try
@@ -394,6 +393,21 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
+        //GET: Admin/OrderList
+        public async Task<IActionResult> OrderList(int OrderId, string status, int? pageNumber, int? pageSize)
+        {
+            try
+            {
+
+                return View();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList", "Admin");
             }
         }
     }

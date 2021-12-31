@@ -39,5 +39,12 @@ namespace ClothingShop.Entity.Entities
         //
         public IList<CartItem> CartItems { get; set; }
         public IList<OrderItem> OrderItems { get; set; }
+
+        public ProductEntry Buy(int quantity)
+        {
+            this.Quantity -= quantity;
+
+            return this;
+        }
     }
 }

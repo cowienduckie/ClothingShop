@@ -4,14 +4,16 @@ using ClothingShop.Entity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClothingShop.Entity.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20211230222334_Update-Address")]
+    partial class UpdateAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +82,13 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CartId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Cart");
                 });
@@ -554,10 +560,6 @@ namespace ClothingShop.Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId")
-                        .IsUnique()
-                        .HasFilter("[CartId] IS NOT NULL");
-
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -710,6 +712,13 @@ namespace ClothingShop.Entity.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("ClothingShop.Entity.Entities.Cart", b =>
+                {
+                    b.HasOne("ClothingShop.Entity.Entities.Users", "User")
+                        .WithOne("Cart")
+                        .HasForeignKey("ClothingShop.Entity.Entities.Cart", "UserId");
+                });
+
             modelBuilder.Entity("ClothingShop.Entity.Entities.CartItem", b =>
                 {
                     b.HasOne("ClothingShop.Entity.Entities.Cart", "Cart")
@@ -819,10 +828,6 @@ namespace ClothingShop.Entity.Migrations
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.Users", b =>
                 {
-                    b.HasOne("ClothingShop.Entity.Entities.Cart", "Cart")
-                        .WithOne("User")
-                        .HasForeignKey("ClothingShop.Entity.Entities.Users", "CartId");
-
                     b.HasOne("ClothingShop.Entity.Entities.Rank", "Rank")
                         .WithMany("Users")
                         .HasForeignKey("RankId")

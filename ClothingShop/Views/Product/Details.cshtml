@@ -2,12 +2,13 @@
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
 
+    var ColorHexCode = Model.Items.Select(i => i.ColorHexCode).ToList().Distinct();
 }
 <br />
 <div class="row">
     <div class="col-md-6 justify-content-center">
         <!--Image Slider-->
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <div id="carouselExampleIndicators" class="carousel slide border" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                 <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -41,32 +42,65 @@
         <h5><strong>Màu sắc</strong></h5>
         <br />
         <div class="row">
-            @foreach (var item in Model.Items)
+            @foreach (var hexCode in ColorHexCode)
             {
                 <div class="col-md-2">
-                    <button class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @item.ColorHexCode"> </button>
+                    <button id="@hexCode.Trim().Substring(1)"
+                            class="btn btn-outline-dark btn-circle btn-lg color"
+                            style="background-color: @hexCode"> </button>
+                </div>
+                <div id="@(hexCode.Trim().Substring(1) + "-size")" style="display: none;">
+                    <div class="row">
+                        @foreach (var item in Model.Items)
+                        {
+                            if (item.ColorHexCode == hexCode)
+                            {
+                                <div class="col-md-2">
+                                    <button class="size-btn btn btn-block btn-outline-dark" value="@item.SkuId">@item.SizeValue</button>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
             }
         </div>
         <br />
         <h5><strong>Kích cỡ</strong></h5>
         <br />
+        <div id="size-div">
+            <div></div>
+        </div>
+        <br />
+        <h5><strong>Số lượng</strong></h5>
+        <br />
         <div class="row">
-            @foreach (var item in Model.Items)
-            {
-                <div class="col-md-2">
-                    <button class="btn btn-block btn-outline-dark">@item.SizeValue</button>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input class="form-control" type="number" id="Quantity" name="Quantity" min="1"
+                           placeholder="Số lượng" 
+                           style="display: none;"/>
                 </div>
-            }
+            </div>
         </div>
         <br />
         <br />
         <div class="row">
-            <div class="col-sm-6">
-                <button class="btn btn-success btn-block">Thêm vào giỏ hàng</button>
+            <div class="col-sm-6">                
+                <a class="btn btn-warning btn-block"
+                   asp-controller="Product"
+                   asp-action="Index">
+                    Trờ lại danh mục
+                </a>
             </div>
             <div class="col-sm-6">
-                <button class="btn btn-danger btn-block">Mua ngay</button>
+                <a id="add-to-cart-btn"
+                   class="btn btn-danger btn-block"
+                   asp-controller="Product"
+                   asp-action="AddToCart"
+                   asp-route-Quantity="1"
+                   asp-route-SkuId="0">
+                    Thêm vào giỏ hàng
+                </a>
             </div>
         </div>
         <hr />
@@ -77,3 +111,34 @@
     </div>
 </div>
 
+@section Scripts
+{
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function ()
+        {
+            $(".color").click(function (e){
+                e.preventDefault();
+                var content = $("#" + this.id + "-size").first().html();
+                $('#size-div div:first-child').first().replaceWith($.parseHTML(content));
+            });
+
+            $(document).on('click', '.size-btn' ,function (e) {
+                e.preventDefault();
+                $('#Quantity').val("1");
+                $('#Quantity').css("display", "");
+                var SkuId = 'SkuId=' + this.value;
+                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/SkuId=\d+/, SkuId));
+                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, 'Quantity=1'));
+            });
+
+            $('#Quantity').on('change', function () {
+                var newValue = 'Quantity=' + this.value;
+                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, newValue));
+            });
+
+        });
+    </script>
+}

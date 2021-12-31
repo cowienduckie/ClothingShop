@@ -124,7 +124,7 @@
 
                 $('#VoucherNumber').on('change', function () {
                     var newValue = 'VoucherNumber=' + this.value;
-                    $("#create-voucher-btn").attr("href", $("#create-voucher-btn").attr('href').replace('VoucherNumber=0', newValue));
+                    $("#create-voucher-btn").attr("href", $("#create-voucher-btn").attr('href').replace(/VoucherNumber=\d+/, newValue));
                 });
             });
         </script>

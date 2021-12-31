@@ -16,12 +16,12 @@ namespace ClothingShop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Product");
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            return RedirectToAction("Index", "Product");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
