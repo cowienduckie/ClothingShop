@@ -397,17 +397,67 @@ namespace ClothingShop.Controllers
         }
 
         //GET: Admin/OrderList
-        public async Task<IActionResult> OrderList(int OrderId, string status, int? pageNumber, int? pageSize)
+        public IActionResult OrderList(int? orderId, string status, int? pageNumber, int? pageSize)
         {
             try
             {
+                var model = _shopRepository.GetOrderList(orderId, status, pageNumber, pageSize);
 
-                return View();
+                //View bag
+                if (orderId != null) ViewBag.OrderId = orderId;
+                if (status != null) ViewBag.Status = status;
+
+                return View(model);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                return RedirectToAction("ProductList", "Admin");
+                return RedirectToAction("ProductList");
+            }
+        }
+
+        public async Task<IActionResult> OrderDetails(int orderId)
+        {
+            try
+            {
+                var model = await _shopRepository.GetOrder(orderId);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("OrderList");
+            }
+        }
+
+        public async Task<IActionResult> AcceptOrder(int orderId)
+        {
+            try
+            {
+                await _shopRepository.AcceptOrder(orderId);
+
+                return RedirectToAction("OrderList");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList");
+            }
+        }
+
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            try
+            {
+                await _shopRepository.CancelOrder(orderId);
+
+                return RedirectToAction("OrderList");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList");
             }
         }
     }

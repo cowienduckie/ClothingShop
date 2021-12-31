@@ -389,6 +389,28 @@ namespace ClothingShop.BusinessLogic.Repositories
             return _db.Category.Any(c => c.CategoryId == id);
         }
 
+        public async Task<OrderDetailModel> GetOrderDetails(int? orderID)
+        {
+            if (orderID == null) return null;
+
+            return await _db.Order.Where(o => o.OrderId == orderID)
+                                    .Select(o => new OrderDetailModel
+                                    {
+                                        OrderId = o.OrderId,
+                                        OriginalPrice = o.OriginalPrice,
+                                        CreateTime = o.CreateTime,
+                                        Discount = o.Discount,
+                                        Status = o.Status,
+                                        TotalPrice = o.TotalPrice,
+                                        ListItem = o.OrderItems.Where(ot => ot.OrderId == orderID)
+                                                                .Select(ot => new OrderItemModel
+                                        {
+                                            OrderItemId = ot.OrderItemId,
+                                            SkuId = ot.SkuId,
+                                            Quantity = ot.Quantity                                            
+                                        }).ToList()
+                                    }).FirstOrDefaultAsync();
+        }
         //Discount
         public PaginationModel<DiscountModel> GetDiscountList(string code, int? pageNumber, int? pageSize)
         {
@@ -831,6 +853,93 @@ namespace ClothingShop.BusinessLogic.Repositories
             _db.ProductEntry.UpdateRange(skus);
             _db.Order.Update(order);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task CancelOrder(int OrderId)
+        {
+            var order = await _db.Order.Where(o => o.OrderId == OrderId)
+                                       .Include(o => o.OrderItems)
+                                           .ThenInclude(i => i.SKU)
+                                       .FirstOrDefaultAsync();
+
+            order.Status = "Hủy";
+
+            _db.Order.Update(order);
+            await _db.SaveChangesAsync();
+        }
+
+        public PaginationModel<Order> GetOrderList(int? orderId, string status, int? pageNumber, int? pageSize)
+        {
+            var queryOrders = IQueryOrderList(orderId, status);
+            var total = (queryOrders?.Count()) ?? 0;
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var orders = queryOrders?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList() ?? new List<Order>();
+
+            return new PaginationModel<Order>
+            {
+                ItemList = orders,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
+        }
+
+        private IQueryable<Order> IQueryOrderList(int? orderId, string status)
+        {
+            IQueryable<Order> orders = _db.Order.Include(o => o.User)
+                                                .AsQueryable();
+
+            //Search filters
+            if (orderId != null)
+            {
+                orders = orders.Where(o => o.OrderId.Equals(orderId));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                orders = orders.Where(o => o.Status.Equals(status));
+            }
+
+            return orders;
+        }
+
+        public async Task<Order> GetOrder(int OrderId)
+        {
+            return await _db.Order.Where(o => o.OrderId == OrderId)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Product)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Size)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Color)
+                                  .FirstOrDefaultAsync();
+        }
+
+        public PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize)
+        {
+            var Orders = _db.Order.Where(o => o.UserId == UserId)
+                                        .Include(o => o.User)
+                                        .AsQueryable();
+            var total = (Orders?.Count()) ?? 0;
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var orders = Orders?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList() ?? new List<Order>();
+
+            return new PaginationModel<Order>
+            {
+                ItemList = orders,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
         }
     }
 }

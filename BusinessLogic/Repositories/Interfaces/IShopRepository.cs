@@ -71,5 +71,13 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task CreateOrder(int CartId, Address Address);
 
         Task AcceptOrder(int OrderId);
+
+        Task CancelOrder(int OrderId);
+
+        PaginationModel<Order> GetOrderList(int? orderId, string status, int? pageNumber, int? pageSize);
+
+        Task<Order> GetOrder(int OrderId);
+
+        PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize);
     }
 }
