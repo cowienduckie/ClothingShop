@@ -855,66 +855,71 @@ namespace ClothingShop.BusinessLogic.Repositories
             await _db.SaveChangesAsync();
         }
 
-        private bool HasOrderId(int id)
+        public async Task CancelOrder(int OrderId)
         {
-            return _db.Order.Any(c => c.OrderId == id);
+            var order = await _db.Order.Where(o => o.OrderId == OrderId)
+                                       .Include(o => o.OrderItems)
+                                           .ThenInclude(i => i.SKU)
+                                       .FirstOrDefaultAsync();
+
+            order.Status = "Hủy";
+
+            _db.Order.Update(order);
+            await _db.SaveChangesAsync();
         }
 
-
-        // Xac nhan thanh toan -->
-        public async Task AddOrder(OrderDetailModel model)
+        public PaginationModel<Order> GetOrderList(int? orderId, string status, int? pageNumber, int? pageSize)
         {
-            var now = DateTime.Now;
-            String status = "progressing";
+            var queryOrders = IQueryOrderList(orderId, status);
+            var total = (queryOrders?.Count()) ?? 0;
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
 
-            try
-            {
-                var order = new Order
-                {
-                    UserId = model.UserId,
-                    OriginalPrice = model.OriginalPrice,
-                    Discount = model.Discount,
-                    TotalPrice = model.TotalPrice,
-                    Status = status,
-                    CreateTime = now,
-                    OrderItems = model.ListItem.Select(c => new OrderItem
-                    {
-                        OrderItemId = c.OrderItemId,
-                        OrderId = c.OrderId,
-                        SkuId = c.SkuId,
-                        Quantity = c.Quantity,
-                        CreateTime = now,
-                        LastModified = now
-                    }).ToList()
-                };
+            var orders = queryOrders?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList() ?? new List<Order>();
 
-                await _db.Order.AddAsync(order);
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+            return new PaginationModel<Order>
             {
-                if (!HasOrderId(model.OrderId))
-                {
-                    Console.WriteLine("Error DBupdate");
-                }
-            }
+                ItemList = orders,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
         }
 
-
-        // xem lich su mua hang
-        public List<OrderDetailModel> GetAllOrder()
+        private IQueryable<Order> IQueryOrderList(int? orderId, string status)
         {
-            return _db.Order.Select(o => new OrderDetailModel
-            {
-                OrderId = o.OrderId,
-                OriginalPrice = o.OriginalPrice,
-                CreateTime = o.CreateTime,
-                Discount = o.Discount,
-                Status = o.Status,
-                TotalPrice = o.TotalPrice
-            })
-                                .ToList();
-        }       
+            IQueryable<Order> orders = _db.Order.Include(o => o.User)
+                                                .AsQueryable();
 
+            //Search filters
+            if (orderId != null)
+            {
+                orders = orders.Where(o => o.OrderId.Equals(orderId));
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                orders = orders.Where(o => o.Status.Equals(status));
+            }
+
+            return orders;
+        }
+
+        public async Task<Order> GetOrder(int OrderId)
+        {
+            return await _db.Order.Where(o => o.OrderId == OrderId)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Product)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Size)
+                                  .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.SKU)
+                                        .ThenInclude(i => i.Color)
+                                  .FirstOrDefaultAsync();
+        }
     }
 }
