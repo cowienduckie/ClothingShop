@@ -7,16 +7,21 @@ using ClothingShop.Entity.Models;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IShopRepository _shopRepository;
+        private readonly UserManager<Users> _userManager;
 
-        public ProductController(IShopRepository shopRepository)
+        public ProductController(IShopRepository shopRepository,
+                                 UserManager<Users> userManager)
         {
             _shopRepository = shopRepository;
+            _userManager = userManager;
         }
 
         //GET: Product
@@ -67,17 +72,18 @@ namespace ClothingShop.Controllers
 
         //POST: Product/AddToCart
         [Authorize]
-        [HttpPost]
-        [Route("Product/AddToCart")]
-        public async Task<IActionResult> AddToCart(int?ItemId)
+        [Route("Product/AddToCart/")]
+        public async Task<IActionResult> AddToCart(int? SkuId, int Quantity = 1)
         {
-            if (ItemId == null) return RedirectToAction("Index", "Product");
+            if (SkuId == null) return RedirectToAction("Index", "Product");
 
             try
             {
-                //Put item to cart
+                var user = await GetLoggedUser();
 
-                return View();
+                await _shopRepository.AddToCart(SkuId.Value, Quantity, user.Id);
+
+                return RedirectToAction("UpdateCart", "Product");
             }
             catch (Exception e)
             {
@@ -86,9 +92,8 @@ namespace ClothingShop.Controllers
             }
         }
 
-        //POST: Product/RemoveFromCart
+        //DELETE: Product/RemoveFromCart
         [Authorize]
-        [HttpPost]
         [Route("Product/RemoveFromCart")]
         public async Task<IActionResult> RemoveFromCart(int? ItemId)
         {
@@ -96,9 +101,9 @@ namespace ClothingShop.Controllers
 
             try
             {
-                //Remove item from cart
+                await _shopRepository.RemoveFromCart(ItemId.Value);
 
-                return View();
+                return RedirectToAction("UpdateCart", "Product");
             }
             catch (Exception e)
             {
@@ -107,19 +112,17 @@ namespace ClothingShop.Controllers
             }
         }
 
-        //POST: Product/UpdateCart
+        //PUT: Product/UpdateCart
         [Authorize]
-        [HttpPost]
         [Route("Product/UpdateCart")]
-        public async Task<IActionResult> UpdateCart(int? ItemId)
+        public async Task<IActionResult> UpdateCart()
         {
-            if (ItemId == null) return RedirectToAction("Index", "Product");
-
             try
             {
-                //Update cart for current changes
+                var user = await GetLoggedUser();
+                await _shopRepository.UpdateCart(await _shopRepository.GetCartId(user.Id));
 
-                return View();
+                return RedirectToAction("ShowCart", "Product");
             }
             catch (Exception e)
             {
@@ -128,19 +131,17 @@ namespace ClothingShop.Controllers
             }
         }
 
-        //POST: Product/EmptyCart
+        //DELETE: Product/EmptyCart
         [Authorize]
-        [HttpPost]
         [Route("Product/EmptyCart")]
-        public async Task<IActionResult> EmptyCart(int? ItemId)
+        public async Task<IActionResult> EmptyCart()
         {
-            if (ItemId == null) return RedirectToAction("Index", "Product");
-
             try
             {
-                //Empty cart for current changes
+                var user = await GetLoggedUser();
+                await _shopRepository.EmptyCart(await _shopRepository.GetCartId(user.Id));
 
-                return View();
+                return RedirectToAction("UpdateCart", "Product");
             }
             catch (Exception e)
             {
@@ -157,9 +158,10 @@ namespace ClothingShop.Controllers
         {
             try
             {
-                //Show cart of logged in user
+                var user = await GetLoggedUser();
+                var model = await _shopRepository.GetCart(await _shopRepository.GetCartId(user.Id));
 
-                return View();
+                return View(model);
             }
             catch (Exception e)
             {
@@ -176,10 +178,15 @@ namespace ClothingShop.Controllers
         {
             try
             {
-                //Show check out screen for confirmation
-                //Get receiver's information (phone number, email, address, ... )
+                var user = await GetLoggedUser();
+                var cartId = await _shopRepository.GetCartId(user.Id);
+                await _shopRepository.UpdateCart(cartId);
+                var model = new CheckOutModel
+                {
+                    Cart = await _shopRepository.GetCart(cartId)
+                };
 
-                return View();
+                return View(model);
             }
             catch (Exception e)
             {
@@ -192,19 +199,27 @@ namespace ClothingShop.Controllers
         [Authorize]
         [HttpPost]
         [Route("Product/CheckOut")]
-        public async Task<IActionResult> CheckOut(int param)
+        public async Task<IActionResult> CheckOut(CheckOutModel model)
         {
+            if (!ModelState.IsValid) return RedirectToAction("ShowCart", "Product");
+
             try
             {
-                //Check out all items in cart
+                await _shopRepository.CreateOrder(model.Cart.CartId, model.Address);
+                await _shopRepository.EmptyCart(model.Cart.CartId);
 
-                return View();
+                return RedirectToAction("Index", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
                 return RedirectToAction("Index", "Product");
             }
+        }
+
+        private async Task<Users> GetLoggedUser()
+        {
+            return await _userManager.FindByNameAsync(User.Identity.Name);
         }
     }
 }

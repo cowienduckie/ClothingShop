@@ -168,6 +168,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         {
                                             ColorId = pe.ColorId,
                                             ColorValue = pe.Color.Value,
+                                            SkuId = pe.SkuId,
                                             ColorHexCode = pe.Color.ColorHexCode,
                                             SizeId = pe.SizeId,
                                             SizeValue = pe.Size.Value,
@@ -641,6 +642,195 @@ namespace ClothingShop.BusinessLogic.Repositories
                 Value = v.Value,
                 IsUsed = v.IsUsed,
             }).ToList();
+        }
+
+        private async Task<Cart> CreateCart(string UserId)
+        {
+            var now = DateTime.Now;
+            var cart = new Cart
+            {
+                UserId = UserId,
+                OriginalPrice = 0,
+                Discount = 0,
+                TotalPrice = 0,
+                CreateTime = now,
+                LastModified = now
+            };
+
+            _db.Cart.Add(cart);
+            await _db.SaveChangesAsync();
+
+            return cart;
+        }
+
+        public async Task<Cart> GetCart(int CartId)
+        {
+            return await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.CartItems)
+                                        .ThenInclude(i => i.SKU)
+                                            .ThenInclude(i => i.Product)
+                                     .Include(c => c.CartItems)
+                                        .ThenInclude(i => i.SKU)
+                                            .ThenInclude(i => i.Color)
+                                     .Include(c => c.CartItems)
+                                        .ThenInclude(i => i.SKU)
+                                            .ThenInclude(i => i.Size)
+                                     .FirstOrDefaultAsync();
+        }
+
+        public async Task<int> GetCartId(string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                                        .Include(u => u.Cart)
+                                      .FirstOrDefaultAsync();
+            if (user.Cart == null)
+            {
+                var cart = await CreateCart(UserId);
+                user.CartId = cart.CartId;
+                _db.Users.Update(user);
+                await _db.SaveChangesAsync();
+                
+                return cart.CartId;
+            }
+            else
+            {
+                return user.CartId.Value;
+            }
+        }
+
+        public async Task AddToCart(int SkuId, int Quantity, string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                                      .Include(u => u.Cart)
+                                        .ThenInclude(c => c.CartItems)
+                                      .FirstOrDefaultAsync();
+
+            if (user != null)
+            {
+                var cart = user.Cart ?? await CreateCart(user.Id);
+                var now = DateTime.Now;
+
+                var item = cart.CartItems.FirstOrDefault(i => i.SkuId == SkuId);
+
+                if (item == null)
+                {
+                    item = new CartItem
+                    {
+                        SkuId = SkuId,
+                        CartId = cart.CartId,
+                        Quantity = Quantity,
+                        CreateTime = now,
+                        LastModified = now
+                    };
+                    await _db.CartItem.AddAsync(item);
+                }
+                else
+                {
+                    item.Quantity += Quantity;
+                    item.LastModified = now;
+
+                    _db.CartItem.Update(item);
+                }
+
+                cart.LastModified = now;
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateCart(int CartId)
+        {
+            var now = DateTime.Now;
+            var cart = await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.CartItems)
+                                        .ThenInclude(i => i.SKU)
+                                            .ThenInclude(i => i.Product)
+                                     .FirstOrDefaultAsync();
+
+            cart.OriginalPrice = cart.CartItems.Select(i => i.SKU.Product.Price).ToList().Sum();
+            cart.TotalPrice = cart.OriginalPrice - cart.Discount;
+            cart.LastModified = now;
+
+            _db.Cart.Update(cart);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task RemoveFromCart(int ItemId)
+        {
+            var item = await _db.CartItem.Where(i => i.CartItemId == ItemId)
+                                         .Include(i => i.Cart)
+                                         .Include(i => i.SKU)
+                                            .ThenInclude(s => s.Product)
+                                         .FirstOrDefaultAsync();
+
+            item.Cart.LastModified = DateTime.Now;
+
+            _db.CartItem.Remove(item);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task EmptyCart(int CartId)
+        {
+            var now = DateTime.Now;
+            var cart = await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.CartItems)
+                                     .FirstOrDefaultAsync();
+
+            var items = cart.CartItems;
+            cart.LastModified = now;
+
+            _db.Cart.Update(cart);
+            _db.CartItem.RemoveRange(items);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task CreateOrder(int CartId, Address Address)
+        {
+            await _db.Address.AddAsync(Address);
+             _db.SaveChanges();
+
+            var now = DateTime.Now;
+            var cart = await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.CartItems)
+                                        .ThenInclude(i => i.SKU)
+                                            .ThenInclude(i => i.Product)
+                                     .FirstOrDefaultAsync();
+            var order = new Order
+            {
+                UserId = cart.UserId,
+                AddressId = Address.AddressId,
+                OriginalPrice = cart.OriginalPrice,
+                Discount = cart.Discount,
+                TotalPrice = cart.TotalPrice,
+                Status = "Chờ nhận hàng",
+                CreateTime = now,
+                OrderItems = cart.CartItems.Select(i => new OrderItem
+                {
+                    SkuId = i.SkuId,
+                    Quantity = i.Quantity,
+                    Price = i.SKU.Product.Price,
+                    CreateTime = now,
+                    LastModified = now
+                }).ToList()
+            };
+
+            await _db.Order.AddAsync(order);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task AcceptOrder(int OrderId)
+        {
+            var order = await _db.Order.Where(o => o.OrderId == OrderId)
+                                       .Include(o => o.OrderItems)
+                                           .ThenInclude(i => i.SKU)
+                                       .FirstOrDefaultAsync();
+
+            order.Status = "Thành công";
+
+            var skus = order.OrderItems.Select(i => i.SKU.Buy(i.Quantity)).ToList();
+
+            _db.ProductEntry.UpdateRange(skus);
+            _db.Order.Update(order);
+            await _db.SaveChangesAsync();
         }
     }
 }

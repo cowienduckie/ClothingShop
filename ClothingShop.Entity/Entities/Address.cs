@@ -16,6 +16,10 @@ namespace ClothingShop.Entity.Entities
 
         public string Detail { get; set; }
 
+        public string PhoneNumber { get; set; }
+
+        public string Receiver { get; set; }
+
         public string UserId { get; set; }
 
         public Users User { get; set; }

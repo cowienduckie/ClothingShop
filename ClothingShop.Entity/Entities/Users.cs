@@ -18,7 +18,6 @@ namespace ClothingShop.Entity.Entities
         [AllowNull]
         public int? RankId { get; set; }
 
-        [AllowNull]
         public int? CartId { get; set; }
 
         [AllowNull]

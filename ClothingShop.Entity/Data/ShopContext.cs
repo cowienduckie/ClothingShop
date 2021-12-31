@@ -95,7 +95,7 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Cart>()
                 .HasOne<Users>(c => c.User)
                 .WithOne(u => u.Cart)
-                .HasForeignKey<Cart>(c => c.UserId);
+                .HasForeignKey<Users>(u => u.CartId);
 
             //OrderItem
             modelBuilder.Entity<OrderItem>()
