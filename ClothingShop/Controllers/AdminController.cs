@@ -381,8 +381,7 @@ namespace ClothingShop.Controllers
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
-
-        //GET: Admin/CreateVoucher
+        //POST: Admin/CreateVoucher
         public async Task<IActionResult> DeleteAllVoucher(int DiscountId)
         {
             try
@@ -394,6 +393,71 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
+        //GET: Admin/OrderList
+        public IActionResult OrderList(int? orderId, string status, int? pageNumber, int? pageSize)
+        {
+            try
+            {
+                var model = _shopRepository.GetOrderList(orderId, status, pageNumber, pageSize);
+
+                //View bag
+                if (orderId != null) ViewBag.OrderId = orderId;
+                if (status != null) ViewBag.Status = status;
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList");
+            }
+        }
+
+        public async Task<IActionResult> OrderDetails(int orderId)
+        {
+            try
+            {
+                var model = await _shopRepository.GetOrder(orderId);
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("OrderList");
+            }
+        }
+
+        public async Task<IActionResult> AcceptOrder(int orderId)
+        {
+            try
+            {
+                await _shopRepository.AcceptOrder(orderId);
+
+                return RedirectToAction("OrderList");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList");
+            }
+        }
+
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            try
+            {
+                await _shopRepository.CancelOrder(orderId);
+
+                return RedirectToAction("OrderList");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("ProductList");
             }
         }
     }

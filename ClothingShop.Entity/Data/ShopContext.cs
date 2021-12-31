@@ -27,6 +27,8 @@ namespace ClothingShop.Entity.Data
         public DbSet<Rank> Rank { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
 
+        public DbSet<Address> Address { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -93,7 +95,7 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Cart>()
                 .HasOne<Users>(c => c.User)
                 .WithOne(u => u.Cart)
-                .HasForeignKey<Cart>(c => c.UserId);
+                .HasForeignKey<Users>(u => u.CartId);
 
             //OrderItem
             modelBuilder.Entity<OrderItem>()
@@ -175,6 +177,25 @@ namespace ClothingShop.Entity.Data
                 .HasMany<Order>(u => u.Orders)
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId);
+
+            //Address
+            modelBuilder.Entity<Address>()
+                .HasMany<Order>(a => a.Orders)
+                .WithOne(o => o.Address)
+                .HasForeignKey(o => o.AddressId);
+            modelBuilder.Entity<Order>()
+                .HasOne<Address>(o => o.Address)
+                .WithMany(a => a.Orders)
+                .HasForeignKey(o => o.AddressId);
+            modelBuilder.Entity<Address>()
+                .HasOne<Users>(a => a.User)
+                .WithMany(u => u.Addresses)
+                .HasForeignKey(a => a.UserId);
+            modelBuilder.Entity<Users>()
+                .HasMany<Address>(u => u.Addresses)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
+
         }
     }
 }

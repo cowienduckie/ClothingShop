@@ -11,6 +11,8 @@ namespace ClothingShop.Entity.Models
 
         public int SizeId { get; set; }
 
+        public int SkuId { get; set; }
+
         [Display(Name = "Màu sắc")]
         public string ColorValue { get; set; }
         

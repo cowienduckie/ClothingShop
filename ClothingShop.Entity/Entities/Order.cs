@@ -14,13 +14,10 @@ namespace ClothingShop.Entity.Entities
 
         public string UserId { get; set; }
 
-<<<<<<< Updated upstream
-=======
         public int AddressId { get; set; }
 
-        [Display(Name = "Giá g?c")]
+        [Display(Name = "GiÃ¡ gá»‘c")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
->>>>>>> Stashed changes
         public int OriginalPrice { get; set; }
 
 
@@ -29,11 +26,11 @@ namespace ClothingShop.Entity.Entities
         public int Discount { get; set; }
 
 
-        [Display(Name = "T?ng giá")]
+        [Display(Name = "T?ng giï¿½")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int TotalPrice { get; set; }
 
-        [Display(Name = "Tr?ng thái")]
+        [Display(Name = "Tr?ng thï¿½i")]
         public string Status { get; set; }
 
         [Required]
@@ -42,6 +39,8 @@ namespace ClothingShop.Entity.Entities
         public DateTime CreateTime { get; set; }
 
         //
+        public Address Address { get; set; }
+
         public Point Point { get; set; }
 
         public Users User { get; set; }

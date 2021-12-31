@@ -1,4 +1,5 @@
-﻿using ClothingShop.Entity.Models;
+﻿using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -54,5 +55,29 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         List<RankModel> GetAllRanks();
 
         List<VoucherModel> GetVoucherListByUser(string UserId);
+
+        Task AddToCart(int SkuId, int Quantity, string UserId);
+
+        Task UpdateCart(int CartId);
+
+        Task RemoveFromCart(int ItemId);
+
+        Task EmptyCart(int CartId);
+
+        Task<Cart> GetCart(int CartId);
+
+        Task<int> GetCartId(string UserId);
+
+        Task CreateOrder(int CartId, Address Address);
+
+        Task AcceptOrder(int OrderId);
+
+        Task CancelOrder(int OrderId);
+
+        PaginationModel<Order> GetOrderList(int? orderId, string status, int? pageNumber, int? pageSize);
+
+        Task<Order> GetOrder(int OrderId);
+
+        PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize);
     }
 }

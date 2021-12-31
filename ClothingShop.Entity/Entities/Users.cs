@@ -11,13 +11,13 @@ namespace ClothingShop.Entity.Entities
 
         public string LastName { get; set; }
 
+
         [AllowNull]
         public DateTime? DateOfBirth { get; set; }
 
         [AllowNull]
         public int? RankId { get; set; }
 
-        [AllowNull]
         public int? CartId { get; set; }
 
         [AllowNull]
@@ -33,5 +33,7 @@ namespace ClothingShop.Entity.Entities
         public IList<Voucher> Vouchers { get; set; }
 
         public IList<Point> Points { get; set; }
+
+        public IList<Address> Addresses { get; set; }
     }
 }

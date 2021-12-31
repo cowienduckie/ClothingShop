@@ -18,12 +18,9 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Số lượng")]
         public int Quantity { get; set; }
 
-<<<<<<< Updated upstream
-=======
         [Display(Name = "Đơn giấ")]
         public int Price { get; set; }
-
->>>>>>> Stashed changes
+      
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
