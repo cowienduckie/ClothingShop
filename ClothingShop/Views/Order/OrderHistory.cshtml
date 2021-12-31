@@ -1,0 +1,105 @@
+﻿@model ClothingShop.Entity.Models.PaginationModel<Order>
+
+@{
+    ViewData["Title"] = "Lịch sử đơn hàng";
+    int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
+    int FirstPage = 1;
+    int CurrPage = Model.PageNumber;
+    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="search-icon" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+    </symbol>
+    <symbol id="details-icon" viewBox="0 0 16 16">
+        <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z" />
+    </symbol>
+</svg>
+
+<br />
+<h3><strong>LỊCH SỬ ĐƠN HÀNG</strong></h3>
+<br />
+@if (Model.ItemList.Count == 0)
+{
+    <h5 class="text-center">Hiện tại không có đơn hàng nào. <a asp-controller="Product" asp-action="Index">Tiếp tục mua sắm.</a></h5>
+}
+else
+{
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="text-align:center">STT</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].OrderId)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.ItemList[0].User.UserName)</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].TotalPrice)</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Status)</th>
+                <th scope="col" style="text-align:center"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ItemList.Count; ++i)
+            {
+                <tr>
+                    <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
+                    <td class="align-middle" align="center">@Model.ItemList[i].OrderId</td>
+                    <td class="align-middle">@Model.ItemList[i].User.UserName</td>
+                    <td class="align-middle" align="center">@Model.ItemList[i].TotalPrice</td>
+                    <td class="align-middle" align="center">@Model.ItemList[i].Status</td>
+                    <td class="align-middle" align="center">
+                        <a class="btn btn-sm btn-outline-primary" asp-controller="Order" asp-action="Details" asp-route-orderId="@Model.ItemList[i].OrderId"
+                           data-toggle="tooltip" data-placement="bottom" title="Chi tiết">
+                            <svg class="bi" width="16" height="16"><use xlink:href="#details-icon" /></svg>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-controller="Order" asp-action="OrderHistory" method="get">
+        <ul class="pagination justify-content-center">
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
+                    &laquo;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang trước">
+                    &#8249;
+                </button>
+            </li>
+
+            @{
+                var TotalShowPage = 10;//Change this value to adjust code below
+                var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                    FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                  LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
+
+                for (var i = StartShowPage; i <= EndShowPage; ++i)
+                {
+                    <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                        <button class="page-link" type="submit" name="pageNumber" value="@i">
+                            @i
+                        </button>
+                    </li>
+                }
+            }
+
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang sau">
+                    &#8250;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
+                    &raquo;
+                </button>
+            </li>
+        </ul>
+    </form>
+}

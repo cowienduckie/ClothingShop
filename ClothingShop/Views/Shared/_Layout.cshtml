@@ -89,10 +89,10 @@
                            asp-controller="Product" asp-action="Index">Danh Mục Sản phẩm</a>
                         <a class="@("nav-item nav-link "+(controllerName == "Membership" ? "active" : ""))"
                            asp-controller="Membership" asp-action="Index">Khách hàng thân thiết</a>
-                        </div>
+                    </div>
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <div class="navbar-nav d-sm-inline-flex justify-content-end">                            
+                        <div class="navbar-nav d-sm-inline-flex justify-content-end">
                             <a class="nav-link nav-item">Xin chào @UserManager.GetUserName(User)!</a>
                             <a class="@("nav-item nav-link "+(controllerName == "Product" && actionName =="ShowCart" ? "active" : ""))"
                                asp-controller="Product" asp-action="ShowCart">
@@ -120,6 +120,18 @@
                                     <a class="dropdown-item" asp-controller="User" asp-action="Index">Quản lý tài khoản</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" asp-controller="Role" asp-action="Index">Quản lý vai trò</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Order" asp-action="OrderHistory">Lịch sử mua hàng</a>
+                                </div>
+                            </div>
+                        }
+                        @if (authorizationService.AuthorizeAsync(User, "User").Result.Succeeded)
+                        {
+                            <div class="navbar-nav dropdown">
+                                <a class="nav-item nav-link dropdown-toggle mr-md-2 btn-lg" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right  bg-light">
+                                    <a class="dropdown-item" asp-controller="Order" asp-action="OrderHistory">Lịch sử mua hàng</a>
                                 </div>
                             </div>
                         }

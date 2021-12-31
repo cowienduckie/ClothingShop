@@ -921,5 +921,25 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         .ThenInclude(i => i.Color)
                                   .FirstOrDefaultAsync();
         }
+
+        public PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize)
+        {
+            var Orders = _db.Order.Where(o => o.UserId == UserId)
+                                        .Include(o => o.User)
+                                        .AsQueryable();
+            var total = (Orders?.Count()) ?? 0;
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var orders = Orders?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList() ?? new List<Order>();
+
+            return new PaginationModel<Order>
+            {
+                ItemList = orders,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
+        }
     }
 }

@@ -77,5 +77,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         PaginationModel<Order> GetOrderList(int? orderId, string status, int? pageNumber, int? pageSize);
 
         Task<Order> GetOrder(int OrderId);
+
+        PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize);
     }
 }
