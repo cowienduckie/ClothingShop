@@ -15,10 +15,12 @@ namespace ClothingShop.Entity.Entities
         public int OrderId { get; set; }
 
         [Required]
+        [Display(Name = "Số lượng")]
         public int Quantity { get; set; }
 
+        [Display(Name = "Đơn giấ")]
         public int Price { get; set; }
-
+      
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

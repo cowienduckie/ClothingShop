@@ -16,6 +16,7 @@ namespace ClothingShop.Entity.Entities
         public int CartId { get; set; }
 
         [Required]
+        [Display(Name = "S? l??ng")]
         public int Quantity { get; set; }
 
         [Required]
