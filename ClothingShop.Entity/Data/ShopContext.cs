@@ -26,7 +26,6 @@ namespace ClothingShop.Entity.Data
         public DbSet<Point> Point { get; set; }
         public DbSet<Rank> Rank { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
-
         public DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -160,7 +159,7 @@ namespace ClothingShop.Entity.Data
             modelBuilder.Entity<Point>()
                 .HasOne<Order>(p => p.Order)
                 .WithOne(o => o.Point)
-                .HasForeignKey<Point>(p => p.OrderId);
+                .HasForeignKey<Order>(o => o.PointId);
 
             modelBuilder.Entity<Order>()
                 .HasOne<Point>(o => o.Point)

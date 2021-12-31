@@ -32,7 +32,7 @@ namespace ClothingShop.Entity.Entities
         public string PhoneNumber { get; set; }
 
         [StringLength(50), Required]
-        [Display(Name = "NGười nhận")]
+        [Display(Name = "Người nhận")]
         public string Receiver { get; set; }
 
         [Display(Name = "ID Tài khoản")]

@@ -10,9 +10,13 @@ namespace ClothingShop.Entity.Entities
     public class Order
     {
         [Key]
+        [Display(Name = "ID Đơn hàng")]
         public int OrderId { get; set; }
 
+        [Display(Name = "ID Tài khoản")]
         public string UserId { get; set; }
+
+        public int PointId { get; set; }
 
         public int AddressId { get; set; }
 
@@ -21,16 +25,16 @@ namespace ClothingShop.Entity.Entities
         public int OriginalPrice { get; set; }
 
 
-        [Display(Name = "Chi?t kh?u")]
+        [Display(Name = "Chiết khấu")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int Discount { get; set; }
 
 
-        [Display(Name = "T?ng gi�")]
+        [Display(Name = "Tổng giá")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int TotalPrice { get; set; }
 
-        [Display(Name = "Tr?ng th�i")]
+        [Display(Name = "Trạng thái")]
         public string Status { get; set; }
 
         [Required]

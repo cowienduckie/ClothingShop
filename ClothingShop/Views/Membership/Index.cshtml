@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Khách hàng thân thiết";
 
-    var ProgressPercentage = Model.TotalPoint / Model.Rank.NextRank.MinimumPoint;
+    var ProgressPercentage = (Model.TotalPoint.Value * 100 / Model.Rank.NextRank.MinimumPoint);
     var PointToRankUp = Model.Rank.NextRank.MinimumPoint - Model.TotalPoint;
     if (PointToRankUp < 0) PointToRankUp = 0;
 }

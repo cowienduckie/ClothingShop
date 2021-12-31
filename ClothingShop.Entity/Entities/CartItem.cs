@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +16,7 @@ namespace ClothingShop.Entity.Entities
         public int CartId { get; set; }
 
         [Required]
-        [Display(Name = "S? l??ng")]
+        [Display(Name = "Số lượng")]
         public int Quantity { get; set; }
 
         [Required]

@@ -54,6 +54,10 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         List<RankModel> GetAllRanks();
 
+        Task UpdateRank(string UserId);
+
+        Task<Point> AddPoint(string UserId, int OrderId, int value);
+
         List<VoucherModel> GetVoucherListByUser(string UserId);
 
         Task AddToCart(int SkuId, int Quantity, string UserId);

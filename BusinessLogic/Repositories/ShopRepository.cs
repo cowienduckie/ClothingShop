@@ -653,6 +653,22 @@ namespace ClothingShop.BusinessLogic.Repositories
             }).ToList();
         }
 
+        public async Task UpdateRank(string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                                      .Include(u => u.Rank)
+                                      .Include(u => u.Points)
+                                      .FirstOrDefaultAsync();
+            var nextRank = await _db.Rank.FirstOrDefaultAsync(r => r.RankId == user.Rank.NextRankId);
+            user.TotalPoint = user.Points.Select(p => p.Value).Sum();
+            if (user.TotalPoint >= nextRank.MinimumPoint)
+            {
+                user.RankId = user.Rank.NextRankId;
+            }
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+        }
+
         public List<VoucherModel> GetVoucherListByUser(string UserId)
         {
             return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId).Select(v => new VoucherModel
@@ -664,6 +680,24 @@ namespace ClothingShop.BusinessLogic.Repositories
                 Value = v.Value,
                 IsUsed = v.IsUsed,
             }).ToList();
+        }
+
+        public async Task<Point> AddPoint(string UserId, int OrderId, int value)
+        {
+            var now = DateTime.Now;
+            var point = new Point
+            {
+                UserId = UserId,
+                OrderId = OrderId,
+                Value = value,
+                CreateTime = now,
+                LastModified = now,
+            };
+
+            await _db.Point.AddAsync(point);
+            await _db.SaveChangesAsync();
+
+            return point;
         }
 
         private async Task<Cart> CreateCart(string UserId)
@@ -844,15 +878,21 @@ namespace ClothingShop.BusinessLogic.Repositories
             var order = await _db.Order.Where(o => o.OrderId == OrderId)
                                        .Include(o => o.OrderItems)
                                            .ThenInclude(i => i.SKU)
+                                       .Include(o => o.User)
+                                           .ThenInclude(u => u.Rank)
                                        .FirstOrDefaultAsync();
+            var skus = order.OrderItems.Select(i => i.SKU.Buy(i.Quantity)).ToList();
+            var point = await AddPoint(order.User.Id, order.OrderId, Convert.ToInt32(order.TotalPrice * order.User.Rank.ConvertPointPercentage / 1000));
 
             order.Status = "Thành công";
-
-            var skus = order.OrderItems.Select(i => i.SKU.Buy(i.Quantity)).ToList();
+            order.PointId = point.PointId;
 
             _db.ProductEntry.UpdateRange(skus);
             _db.Order.Update(order);
+
             await _db.SaveChangesAsync();
+
+            await UpdateRank(order.UserId);
         }
 
         public async Task CancelOrder(int OrderId)
