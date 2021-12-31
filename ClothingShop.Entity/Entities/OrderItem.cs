@@ -17,6 +17,8 @@ namespace ClothingShop.Entity.Entities
         [Required]
         public int Quantity { get; set; }
 
+        public int Price { get; set; }
+
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

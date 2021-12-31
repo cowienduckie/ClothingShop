@@ -18,7 +18,7 @@ namespace ClothingShop.Entity.Entities
 
         [Range(0, 100), Required]
         [Column(TypeName = "decimal(4, 2)")]
-        public decimal ConvertPointPercentager { get; set; }
+        public decimal ConvertPointPercentage { get; set; }
 
         //
         public IList<Users> Users { get; set; }

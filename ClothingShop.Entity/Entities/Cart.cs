@@ -37,5 +37,10 @@ namespace ClothingShop.Entity.Entities
         public Users User { get; set; }
 
         public IList<CartItem> CartItems { get; set; }
+
+        public Cart()
+        {
+            CartItems = new List<CartItem>();
+        }
     }
 }

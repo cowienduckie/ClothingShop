@@ -14,11 +14,15 @@ namespace ClothingShop.Entity.Entities
         [StringLength(50), Required]
         public string Name { get; set; }
 
-        [Range(0, 100), Required]
-        [Column(TypeName = "decimal(4, 2)")]
-        public decimal Percentage { get; set; }
+        [StringLength(50), Required]
+        public string Code { get; set; }
 
-        public bool IsPublic { get; set; }
+        [Range(0, 100), Required]
+        [DisplayFormat(DataFormatString = "{0:#%")]
+        public int Percentage { get; set; }
+
+        [Required]
+        public bool IsExpired { get; set; }
 
         [StringLength(250)]
         public string Description { get; set; }
@@ -27,7 +31,6 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 
-        [Required]
         [Display(Name = "End Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
@@ -43,7 +46,7 @@ namespace ClothingShop.Entity.Entities
         public DateTime LastModified { get; set; }
 
         //
-        public IList<Product> Products { get; set; }
+        public IList<ProductDiscount> ProductDiscounts { get; set; }
         public IList<Voucher> Vouchers { get; set; }
     }
 }

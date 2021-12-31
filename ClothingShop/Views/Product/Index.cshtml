@@ -108,7 +108,7 @@ else
         {
             <div class="col-md-4" style="margin-top: 15px; margin-bottom: 15px">
                 <div class="card">
-                    <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.Name">
+                    <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.Name" style="margin: auto">
                     <div class="card-body">
                         <h5 class="card-title"><strong>@item.Name</strong></h5>
                         <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
@@ -166,5 +166,6 @@ else
 
         <input type="hidden" name="name" value="@Name">
         <input type="hidden" name="sort" value="@Sort">
+        <input type="hidden" name="category" value="@Category" />
     </form>
 }

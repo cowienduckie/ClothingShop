@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ClothingShop.Entity.Entities;
-
+using System.Diagnostics.CodeAnalysis;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -21,8 +21,6 @@ namespace ClothingShop.Entity.Entities
 
         [Required, DataType(DataType.Currency)]
         public int Price { get; set; }
-
-        public int DiscountId { get; set; }
 
         [StringLength(500)]
         public string Description { get; set; }
@@ -42,6 +40,6 @@ namespace ClothingShop.Entity.Entities
 
         public IList<ProductCategory> ProductCategories { get; set; }
 
-        public Discount Discount { get; set; }
+        public IList<ProductDiscount> ProductDiscounts { get; set; }
     }
 }

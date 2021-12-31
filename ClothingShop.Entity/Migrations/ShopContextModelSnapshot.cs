@@ -19,6 +19,41 @@ namespace ClothingShop.Entity.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ClothingShop.Entity.Entities.Address", b =>
+                {
+                    b.Property<int>("AddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Detail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("District")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Receiver")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Ward")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AddressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Address");
+                });
+
             modelBuilder.Entity("ClothingShop.Entity.Entities.Cart", b =>
                 {
                     b.Property<int>("CartId")
@@ -45,13 +80,9 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CartId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Cart");
                 });
@@ -143,6 +174,11 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
@@ -153,7 +189,7 @@ namespace ClothingShop.Entity.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsPublic")
+                    b.Property<bool>("IsExpired")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModified")
@@ -164,8 +200,8 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<decimal>("Percentage")
-                        .HasColumnType("decimal(4, 2)");
+                    b.Property<int>("Percentage")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -181,6 +217,9 @@ namespace ClothingShop.Entity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
@@ -202,6 +241,8 @@ namespace ClothingShop.Entity.Migrations
 
                     b.HasKey("OrderId");
 
+                    b.HasIndex("AddressId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Order");
@@ -221,6 +262,9 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -287,9 +331,6 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasMaxLength(500);
 
-                    b.Property<int>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -307,8 +348,6 @@ namespace ClothingShop.Entity.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("DiscountId");
-
                     b.ToTable("Product");
                 });
 
@@ -325,6 +364,21 @@ namespace ClothingShop.Entity.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductCategory");
+                });
+
+            modelBuilder.Entity("ClothingShop.Entity.Entities.ProductDiscount", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "DiscountId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("ProductDiscount");
                 });
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.ProductEntry", b =>
@@ -368,7 +422,7 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("ConvertPointPercentager")
+                    b.Property<decimal>("ConvertPointPercentage")
                         .HasColumnType("decimal(4, 2)");
 
                     b.Property<int>("MinimumPoint")
@@ -436,14 +490,14 @@ namespace ClothingShop.Entity.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("CartId")
+                    b.Property<int?>("CartId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -482,13 +536,13 @@ namespace ClothingShop.Entity.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RankId")
+                    b.Property<int?>("RankId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TotalPoint")
+                    b.Property<int?>("TotalPoint")
                         .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -499,6 +553,10 @@ namespace ClothingShop.Entity.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId")
+                        .IsUnique()
+                        .HasFilter("[CartId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -522,6 +580,9 @@ namespace ClothingShop.Entity.Migrations
 
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -642,11 +703,11 @@ namespace ClothingShop.Entity.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("ClothingShop.Entity.Entities.Cart", b =>
+            modelBuilder.Entity("ClothingShop.Entity.Entities.Address", b =>
                 {
                     b.HasOne("ClothingShop.Entity.Entities.Users", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("ClothingShop.Entity.Entities.Cart", "UserId");
+                        .WithMany("Addresses")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.CartItem", b =>
@@ -666,6 +727,12 @@ namespace ClothingShop.Entity.Migrations
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.Order", b =>
                 {
+                    b.HasOne("ClothingShop.Entity.Entities.Address", "Address")
+                        .WithMany("Orders")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ClothingShop.Entity.Entities.Users", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId");
@@ -699,14 +766,6 @@ namespace ClothingShop.Entity.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("ClothingShop.Entity.Entities.Product", b =>
-                {
-                    b.HasOne("ClothingShop.Entity.Entities.Discount", "Discount")
-                        .WithMany("Products")
-                        .HasForeignKey("DiscountId")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ClothingShop.Entity.Entities.ProductCategory", b =>
                 {
                     b.HasOne("ClothingShop.Entity.Entities.Category", "Category")
@@ -717,6 +776,21 @@ namespace ClothingShop.Entity.Migrations
 
                     b.HasOne("ClothingShop.Entity.Entities.Product", "Product")
                         .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClothingShop.Entity.Entities.ProductDiscount", b =>
+                {
+                    b.HasOne("ClothingShop.Entity.Entities.Discount", "Discount")
+                        .WithMany("ProductDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClothingShop.Entity.Entities.Product", "Product")
+                        .WithMany("ProductDiscounts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -745,11 +819,14 @@ namespace ClothingShop.Entity.Migrations
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.Users", b =>
                 {
+                    b.HasOne("ClothingShop.Entity.Entities.Cart", "Cart")
+                        .WithOne("User")
+                        .HasForeignKey("ClothingShop.Entity.Entities.Users", "CartId");
+
                     b.HasOne("ClothingShop.Entity.Entities.Rank", "Rank")
                         .WithMany("Users")
                         .HasForeignKey("RankId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ClothingShop.Entity.Entities.Voucher", b =>

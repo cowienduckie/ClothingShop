@@ -1,0 +1,115 @@
+﻿@model ClothingShop.Entity.Models.CheckOutModel;
+
+@{
+    ViewData["Title"] = "Thanh Toán";
+
+    var OriginalPrice = Model.Cart.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
+    var Discount = 0;
+}
+<br />
+<h3><i class="fa fa-credit-card" aria-hidden="true"></i> <strong>THANH TOÁN</strong></h3>
+<br />
+@if (Model.Cart.CartItems.Count == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <img src="~/img/cart-icon.png" width="150" height="150" class="img-fluid"><br /><br />
+            <h3><strong>Giỏ hàng của bạn đang trống</strong></h3><br />
+            <h4>Hãy thêm những món đồ bạn yêu thích :)</h4> <br />
+            <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <h5><strong>THÔNG TIN</strong></h5>
+            <hr />
+            <form asp-action="CheckOut" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Address.Receiver" class="control-label"></label>
+                    <input asp-for="Address.Receiver" class="form-control" />
+                    <span asp-validation-for="Address.Receiver" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address.PhoneNumber" class="control-label"></label>
+                    <input asp-for="Address.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Address.PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address.Detail" class="control-label"></label>
+                    <input asp-for="Address.Detail" class="form-control" />
+                    <span asp-validation-for="Address.Detail" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Address.Province" class="control-label"></label>
+                            <input asp-for="Address.Province" class="form-control" />
+                            <span asp-validation-for="Address.Province" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Address.District" class="control-label"></label>
+                            <input asp-for="Address.District" class="form-control" />
+                            <span asp-validation-for="Address.District" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Address.Ward" class="control-label"></label>
+                            <input asp-for="Address.Ward" class="form-control" />
+                            <span asp-validation-for="Address.Ward" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.Cart.CartId)
+                @Html.HiddenFor(m => m.Cart)
+                <br />
+                <h5><strong>HÌNH THỨC THANH TOÁN</strong></h5>
+                <hr />
+                <div class="d-block">
+                    <div class="custom-control custom-radio">
+                        <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked="" required="">
+                        <label class="custom-control-label" for="credit">Ship COD</label>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">ĐẶT HÀNG</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h5 class="d-flex justify-content-between align-items-center mb-3">
+                <span><strong>GIỎ HÀNG</strong></span>
+                <span class="badge badge-warning badge-pill">@Model.Cart.CartItems.Count</span>
+            </h5>
+            <hr />
+            <ul class="list-group mb-3">
+               @foreach (var item in Model.Cart.CartItems)
+                {
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">@item.SKU.Product.Name</h6>
+                        <small class="text-muted">Màu @item.SKU.Color.Value - Cỡ @item.SKU.Size.Value - Số lượng @item.Quantity</small>
+                    </div>
+                    <span class="text-muted">@String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price)</span>
+                </li>
+                }
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <div class="text-success">
+                        <h6 class="my-0">Chiết Khấu</h6>
+                        <small>EXAMPLECODE</small>
+                    </div>
+                    <span class="text-success">@(String.Format("{0:-#,#VND;;-0VND}", Discount))</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Tổng cộng</span>
+                    <strong>@(String.Format("{0:#,#VND}", OriginalPrice - Discount))</strong>
+                </li>
+            </ul>
+        </div>            
+    </div>
+}

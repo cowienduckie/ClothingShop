@@ -1,0 +1,134 @@
+﻿@model ClothingShop.Entity.Entities.Cart;
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+
+    var OriginalPrice = Model.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
+    var Discount = 0;
+}
+<br />
+<h3><i class="fa fa-shopping-cart" aria-hidden="true"></i> <strong>GIỎ HÀNG CỦA BẠN</strong></h3>
+<br />
+@if (Model.CartItems.Count == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <img src="~/img/cart-icon.png" width="150" height="150" class="img-fluid"><br /><br />
+            <h3><strong>Giỏ hàng của bạn đang trống</strong></h3><br />
+            <h4>Hãy thêm những món đồ bạn yêu thích :)</h4> <br />
+            <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-9">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th class="align-middle" scope="col" style="text-align:center">Sản phẩm</th>
+                        <th class="align-middle" scope="col" style="text-align:center">Số lượng</th>
+                        <th class="align-middle" scope="col" style="text-align:center">Giá</th>
+                        <th scope="col" style="text-align:center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border"/>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="mb-2 mt-3">
+                                            <strong>@item.SKU.Product.Name.Trim().ToUpper()</strong><br />
+                                        </p>
+                                        <p>
+                                            Màu: @item.SKU.Color.Value<br />
+                                            Kích cỡ: @item.SKU.Size.Value<br />
+                                            Giá: @(String.Format("{0:#,#VND}", item.SKU.Product.Price))
+                                        </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle" align="center">@item.Quantity</td>
+                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
+                            <td class="align-middle" align="center">
+                                <a class="btn btn-sm btn-secondary" 
+                                   asp-controller="Product" 
+                                   asp-action="RemoveFromCart" 
+                                   asp-route-ItemId="@item.CartItemId"
+                                   data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="text-center"><strong>ƯU ĐÃI</strong></h5>
+                    <hr />
+                    <div class="form-group">
+                        <input class="form-control" type="text" id="discount-code" name="discount-code"
+                               placeholder="Nhập mã ưu đãi" />
+                    </div>
+                    <a class="btn btn-block btn-light text-left">
+                        Ví voucher của bạn &#8250;
+                    </a>
+                </div>
+            </div>
+            <br />
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="text-center"><strong>ĐƠN HÀNG</strong></h5>
+                    <hr />
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td>
+                                </td>
+                                <td class="text-right">
+                                    @(String.Format("{0:#,#VND}", OriginalPrice))
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    -
+                                </td>
+                                <td class="text-right">
+                                    @(String.Format("{0:-#,#VND;;0VND}", Discount))
+                                </td>
+                            </tr>
+                            <tr class="border-top">
+                                <td>
+                                    <strong>Tổng</strong>
+                                </td>
+                                <td class="text-right">
+                                    @(String.Format("{0:#,#VND}", OriginalPrice - Discount))
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+            <a class="btn btn-block btn-danger"               
+               asp-controller="Product"
+               asp-action="CheckOut">
+            Thanh toán
+            </a>
+            <a class="btn btn-block btn-outline-dark"
+               asp-controller="Product"
+               asp-action="Index">
+               Tiếp tục mua sắm
+            </a>
+        </div>
+    </div>
+}
