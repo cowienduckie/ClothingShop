@@ -21,7 +21,7 @@ namespace ClothingShop.Controllers
 
         public IActionResult Privacy()
         {
-            return View();
+            return RedirectToAction("Index", "Product");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

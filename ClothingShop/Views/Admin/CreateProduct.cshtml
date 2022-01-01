@@ -5,67 +5,176 @@
 <h1>THÊM SẢN PHẨM</h1>
 <hr />
 <br />
-<form asp-action="CreateProduct" method="post">
+<form asp-action="CreateProduct" method="post"
+      enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
-        <div class="col-md-4">
-            <h5><strong>THÔNG SỐ</strong></h5>
+        <div class="col-md-3">
+            <h5><strong>ẢNH ĐẠI DIỆN</strong></h5>
             <hr />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <img src="@Url.Content(Model.Image)" class="img-fluid border" id="avatar-img" />
+            <hr />
+            <div class="custom-file">
+                <label asp-for="UploadImage" class="control-label custom-file-label" id="upload-img-label"
+                       style="overflow: hidden; height: 95%;">Chọn ảnh</label>
+                <input asp-for="UploadImage" class="form-control custom-file-input" id="upload-img"
+                       accept="image/*" />
+                <div id="img-detail" style="word-wrap: break-word;"></div>
+                <span asp-validation-for="UploadImage" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <a class="btn btn-block btn-danger" asp-action="ProductList">Quay lại</a>
-                </div>
-                <div class="col-md-6">
-                    <button type="submit" class="btn btn-success btn-block">Thêm</button>
-                </div>
-            </div>
-            
         </div>
-        <div class="col-md-8">
-            <h5><strong>MÀU SẮC - KÍCH THƯỚC</strong></h5>
-            <hr />
+        <div class="col-md-9">
             <div class="row">
-               @Html.HiddenFor(m => m.Image)
-               @for (int i = 0; i < Model.Items.Count; ++i)
-                {
-                <div class="col-md-4">
+                <div class="col-md-6">
+                    <h5><strong>THÔNG SỐ</strong></h5>
+                    <hr />
                     <div class="form-group">
-                        <label asp-for="@Model.Items[i].Quantity" class="control-label">@Model.Items[i].ColorValue - @Model.Items[i].SizeValue</label>
-                        <input asp-for="@Model.Items[i].Quantity" class="form-control"/>
-                        <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>
-                @Html.HiddenFor(m => Model.Items[i].ColorId)
-                @Html.HiddenFor(m => Model.Items[i].SizeId)
-                
-                }
-               
+                <div class="col-md-6">
+                    <h5><strong>DANH MỤC PHÂN LOẠI</strong></h5>
+                    <hr />
+                    <div class="row">
+                        @for (int i = 0; i < Model.Categories.Count; ++i)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" asp-for="@Model.Categories[i].IsSelected" class="form-check-input">
+                                    <label class="form-check-label" asp-for="@Model.Categories[i].IsSelected">@Model.Categories[i].Name</label>
+                                    @Html.HiddenFor(m => Model.Categories[i].CategoryId)
+                                    @Html.HiddenFor(m => Model.Categories[i].Name)
+                                    @Html.HiddenFor(m => Model.Categories[i].Description)
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <br />
+                    <h5><strong>MÀU SẮC - KÍCH CỠ</strong></h5>
+                    <hr />
+                    <br />
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModalScrollable">
+                        Chọn số lượng
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalScrollableTitle">
+                                        Chọn số lượng cho Màu sắc - Kích cỡ
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="text-align:center"></th>
+                                                @foreach (var size in Model.Sizes)
+                                                {
+                                                    <th scope="col" style="text-align:center">@(size.Value)</th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{var count = 0;}
+                                            @foreach (var color in Model.Colors)
+                                            {
+                                            <tr>
+                                                <th scope="row" style="text-align:center" class="text-wrap">
+                                                    @(color.Value)<br />
+                                                    <i class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @color.ColorHexCode"> </i>
+                                                </th>
+                                                @{
+                                                    @for (int i = count; i < count + Model.Sizes.Count; ++i)
+                                                    {
+                                                        <td scope="col" style="text-align:center">
+                                                            <div class="form-group">
+                                                                <input asp-for="@Model.Items[i].Quantity" class="form-control" />
+                                                                <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                                                            </div>
+                                                        </td>
+                                                        @Html.HiddenFor(m => Model.Items[i].ColorId)
+                                                        @Html.HiddenFor(m => Model.Items[i].SizeId)
+                                                    }
+                                                    count += Model.Sizes.Count;
+                                                }
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" data-dismiss="modal">Xác nhận</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                   
+                </div>
             </div>
         </div>
-        
+    </div>
+    <hr />
+    @Html.HiddenFor(m => m.Image) 
+    <div class="row justify-content-center">
+        <div class="col-md-2">
+            <a class="btn btn-block btn-danger" asp-action="ProductList">Quay lại</a>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success btn-block">Thêm</button>
+        </div>
     </div>
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+                integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+                crossorigin="anonymous"></script>
+        <!--Change file's label by file name-->
+        <script>
+            $('#upload-img').on("change", function () {
+                var fileName = this.files[0].name;
+                var extension = fileName.substr(fileName.lastIndexOf('.'));
+                //Calculate file size
+                var _size = this.files[0].size;
+                var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
+                    i = 0; while (_size > 900) { _size /= 1024; i++; }
+                var exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[i];
+                //Update
+                $(this).prev('#upload-img-label').html(fileName);
+                $(this).next('#img-detail').html(   "Tên file: " + fileName + "<br />" +
+                                                    "Đuôi mở rộng: " + extension + "<br />" +
+                                                    "Kích cỡ: " + exactSize);
+                var validExtension = new Array('.jpg', '.jpeg', '.png');
+                if (jQuery.inArray(extension, validExtension) != -1)
+                {
+                    document.getElementById('avatar-img').src = window.URL.createObjectURL(this.files[0]);
+                }
+                else
+                {
+                    document.getElementById('avatar-img').src = "/assets/NoPreviewImage.png";
+                }
+            });
+        </script>
+    }
 }

@@ -1,0 +1,127 @@
+﻿@model ClothingShop.Entity.Models.MembershipModel
+
+@{
+    ViewData["Title"] = "Khách hàng thân thiết";
+
+    var ProgressPercentage = (Model.TotalPoint.Value * 100 / Model.Rank.NextRank.MinimumPoint);
+    var PointToRankUp = Model.Rank.NextRank.MinimumPoint - Model.TotalPoint;
+    if (PointToRankUp < 0) PointToRankUp = 0;
+}
+<br />
+<div>
+    <div class="row">
+        <div class="col-md-6 border-right">
+            <h5><strong>THỂ LỆ</strong></h5>
+            <hr />
+            <p class="text-center">
+                <em>
+                    Còn gì tuyệt vời hơn khi đến với Eva de Eva, không chỉ để mua sắm những món thời trang đơn giản và thời đại,
+                    bạn còn có thể tích lũy điểm để thăng hạng và nhận ngay những đặc quyền tuyệt vời chỉ dành riêng cho bạn.
+                </em>
+            </p>
+            <br />
+            <h5 class="text-center"><strong>Tích điểm thật dễ dàng</strong></h5>
+            <br />
+            <table class=" table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" style="text-align:center">Hạng</th>
+                        <th scope="col" style="text-align:center">Điểm đạt được</th>
+                        <th scope="col" style="text-align:center">Điểm tích lũy trên hóa đơn</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.RankList)
+                    {
+                        <tr>
+                            <td class="align-middle" align="center">@item.Name</td>
+                            <td class="align-middle" align="center">@item.MinimumPoint</td>
+                            <td class="align-middle" align="center">@(item.ConvertPointPercentage * 100)%</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <h5 class="text-center"><strong>Quyền lợi siêu hấp dẫn</strong></h5>
+            <br />
+            <p class="text-center">
+                Khách hàng thăng hạng càng cao, tích điểm càng nhanh. Ngay khi bạn thăng hạng, những voucher siêu ưu đãi sẽ được gửi ngay vào tài khoản của bạn.<br /><br />
+                Ngoài ra, cửa hàng cũng sẽ gửi tặng bạn những sự kiện khuyến mãi cực kỳ hấp dẫn cùng vô vàn những voucher số lượng có hạn với ưu đãi độc quyền.<br /><br />
+                Điểm tích lũy vô hạn, bạn có thể sử dụng điểm của mình để đổi lấy những phần quà thú vị. Tính năng sẽ được cập nhật sớm thôi!
+            </p>
+            <br />
+            <div class=" row justify-content-center">
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-warning" asp-controller="Product" asp-action="Index">Mua sắm ngay</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h5><strong>TÍCH ĐIỂM</strong></h5>
+            <hr />
+            <div class="card"
+                 style="background-color: #FBAB7E;
+                        background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%); ">
+                <div class="card-body" style="text-align: center">
+                    <h4>
+                        <strong>
+                            @Model.FirstName.ToUpper() @Model.LastName.ToUpper()
+                        </strong>
+                    </h4>
+                    <p>
+                        @Model.TotalPoint Điểm - Hạng @Model.Rank.Name
+                    </p>
+                    <svg id="barcode" style="fill-opacity:0.3"></svg>
+                </div>
+            </div>
+            <br />
+            <div class="progress" style="height: 30px">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                     role="progressbar"
+                     style="@("width: " + ProgressPercentage + "%;")"
+                     aria-valuenow="@Model.TotalPoint"
+                     aria-valuemin="@Model.Rank.MinimumPoint"
+                     aria-valuemax="@Model.Rank.NextRank.MinimumPoint">@Model.TotalPoint / @Model.Rank.NextRank.MinimumPoint</div>
+            </div>
+            <br />
+            <p>
+                Cần thêm @PointToRankUp Điểm ~ @String.Format("{0:#,#VND}", PointToRankUp * 1000m / Model.Rank.ConvertPointPercentage) để thăng hạng @Model.Rank.NextRank.Name.
+            </p>
+            <br />
+            <h5><strong>PHIẾU ƯU ĐÃI CỦA BẠN</strong></h5>
+            <hr />
+            @if(Model.VoucherList.Count == 0)
+            {
+                <p class="text-center">Bạn chưa có phiếu ưu đãi nào. <a asp-controller="Product" asp-action="Index">Mua sắm ngay</a>.</p>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-body">
+                        
+                    </div>
+                </div>
+            }
+        </div>
+    </div>    
+</div>
+
+@section Scripts
+{
+    <script src="~/js/JsBarcode.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+            crossorigin="anonymous"></script>
+    <script>
+        JsBarcode("#barcode", "@Model.UserName",
+        {
+            width: 3,
+            displayValue: true,
+        });
+
+        $(document).ready(function () {
+            $("#barcode rect:first-child").first().css("opacity", "0.4");
+        });
+    </script>
+}

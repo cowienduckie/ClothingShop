@@ -29,6 +29,12 @@
                 @Html.DisplayFor(model => model.Name)
             </dd>
             <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Categories)
+            </dt>
+            <dd class="col-sm-8">
+                @string.Join(",  ", Model.Categories.Select(c => c.Name).ToList())
+            </dd>
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Price)
             </dt>
             <dd class="col-sm-8">
@@ -73,11 +79,12 @@
 
                 @foreach (var item in Model.Items)
                 {
-    <tr>
-        <td class="align-middle" align="center">@item.ColorValue</td>
-        <td class="align-middle" align="center">@item.SizeValue</td>
-        <td class="align-middle" align="center">@item.Quantity</td>
-    </tr>}
+                <tr>
+                    <td class="align-middle" align="center">@item.ColorValue</td>
+                    <td class="align-middle" align="center">@item.SizeValue</td>
+                    <td class="align-middle" align="center">@item.Quantity</td>
+                </tr>
+                }
             </tbody>
         </table>
     </div>

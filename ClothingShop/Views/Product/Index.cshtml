@@ -1,15 +1,17 @@
 ﻿@model ClothingShop.Entity.Models.PaginationModel<ProductViewModel>
 
 @{ ViewData["Title"] = "Danh mục sản phẩm";
-                int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
-                int FirstPage = 1;
-                int CurrPage = Model.PageNumber;
-                int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+    int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
+    int FirstPage = 1;
+    int CurrPage = Model.PageNumber;
+    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
 
-                var Name = ViewBag.Name;
-                var Sort = ViewBag.Sort;
+    var Name = ViewBag.Name;
+    var Sort = ViewBag.Sort;
+    var Category = ViewBag.Category;
+    var Categories = ViewBag.Categories;
 
-                var SortType = new List<(string sort, string text)> {
+    var SortType = new List<(string sort, string text)> {
         ("name", "Tên sản phẩm"),
         ("-name", "Tên sản phẩm"),
         ("price", "Giá sản phẩm"),
@@ -46,7 +48,25 @@
 <br />
 <form asp-controller="Product" asp-action="Index" method="get">
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-2">
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle btn-block" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Danh mục
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    @foreach (var item in Categories)
+                    {
+                        <button class="@("dropdown-item " + (item.CategoryId == Category ? "active" : ""))"
+                                type="submit" name="category" value="@item.CategoryId">
+                            @item.Name
+                        </button>
+                        <div class="dropdown-divider"></div>
+                    }
+                    <button class="dropdown-item text-center text-danger" type="submit" name="category" value="">Tất cả sản phẩm</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
             <input class="form-control input-sm w-100" type="text" name="name" placeholder="Tên sản phẩm" value="@Name" />
         </div>
         <div class="col-sm-1">
@@ -76,66 +96,76 @@
     </div>
 </form>
 <br />
-<div class="row card-deck">
-    @foreach (var item in Model.ItemList)
-    {
-        <div class="col-md-4" style="margin-top: 15px; margin-bottom: 15px">
-            <div class="card">
-                <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.Name">
-                <div class="card-body">
-                    <h5 class="card-title"><strong>@item.Name</strong></h5>
-                    <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
-                    <hr />
-                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductId">Xem chi tiết</a>
+@if (Model.ItemList.Count == 0)
+{
+    <hr />
+    <h5 class="text-center">Hiện tại không có sản phẩm nào phù hợp. <a asp-controller="Home" asp-action="Index">Quay lại trang chủ</a></h5>
+}
+else
+{
+    <div class="row card-deck">
+        @foreach (var item in Model.ItemList)
+        {
+            <div class="col-md-4" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="card">
+                    <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.Name" style="margin: auto">
+                    <div class="card-body">
+                        <h5 class="card-title"><strong>@item.Name</strong></h5>
+                        <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
+                        <hr />
+                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductId">Xem chi tiết</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
 
-<form asp-controller="Product" asp-action="Index" method="get">
-    <ul class="pagination justify-content-center">
-        <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
-                &laquo;
-            </button>
-        </li>
-        <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang trước">
-                &#8249;
-            </button>
-        </li>
-
-        @{ var TotalShowPage = 10;//Change this value to adjust code below
-                        var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
-                                            FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
-                        var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
-                                          LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
-
-                        for (var i = StartShowPage; i <= EndShowPage; ++i)
-                        {
-            <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
-                <button class="page-link" type="submit" name="pageNumber" value="@i">
-                    @i
+    <form asp-controller="Product" asp-action="Index" method="get">
+        <ul class="pagination justify-content-center">
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
+                    &laquo;
                 </button>
-            </li> } }
+            </li>
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang trước">
+                    &#8249;
+                </button>
+            </li>
 
-        <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang sau">
-                &#8250;
-            </button>
-        </li>
-        <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
-            <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
-                    data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
-                &raquo;
-            </button>
-        </li>
-    </ul>
+            @{ var TotalShowPage = 10;//Change this value to adjust code below
+                var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                    FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                  LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
 
-    <input type="hidden" name="name" value="@Name">
-    <input type="hidden" name="sort" value="@Sort">
-</form>
+                for (var i = StartShowPage; i <= EndShowPage; ++i)
+                {
+                    <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                        <button class="page-link" type="submit" name="pageNumber" value="@i">
+                            @i
+                        </button>
+                    </li>
+ } }
+
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang sau">
+                    &#8250;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
+                    &raquo;
+                </button>
+            </li>
+        </ul>
+
+        <input type="hidden" name="name" value="@Name">
+        <input type="hidden" name="sort" value="@Sort">
+        <input type="hidden" name="category" value="@Category" />
+    </form>
+}

@@ -1,0 +1,132 @@
+﻿@model ClothingShop.Entity.Models.DiscountModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa khuyến mãi";
+    var VoucherNumber = 0;
+}
+
+<h4>Chỉnh sửa khuyến mãi</h4>
+<hr />
+<br />
+<form asp-action="EditDiscount" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <h5><strong>THÔNG SỐ</strong></h5>
+            <hr />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Percentage" class="control-label"></label>
+                <input asp-for="Percentage" class="form-control" />
+                <span asp-validation-for="Percentage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label asp-for="IsExpired">
+                            <input asp-for="IsExpired" id="isExpired" />
+                            @Html.DisplayNameFor(m => m.IsExpired)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" type="text" onfocus="this.type = 'date'" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="endTime" style="display:none">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" type="text" onfocus="this.type = 'date'" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+
+            @Html.HiddenFor(m => m.DiscountId)
+
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="btn btn-block btn-danger" asp-action="DiscountList">Quay lại</a>
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success btn-block">Chỉnh sửa</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h5><strong>TẠO VOUCHER</strong></h5>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" type="number" asp-for="@VoucherNumber" value=""
+                               placeholder="Số lượng thêm"/>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <a id="create-voucher-btn"
+                       class="btn btn-block btn-outline-success"
+                       asp-controller="Admin"
+                       asp-action="CreateVoucher"
+                       asp-route-VoucherNumber="0"
+                       asp-route-DiscountId="@Model.DiscountId">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Tạo thêm Voucher
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-outline-danger"
+                       asp-controller="Admin"
+                       asp-action="DeleteAllVoucher"
+                       asp-route-DiscountId="@Model.DiscountId">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Xoá toàn bộ Voucher 
+                    </a>
+                </div>
+            </div>
+            <div>
+                <p class="text-justify">
+                    Hiện tại trong kho đang có <strong>@Model.UsedVoucherNumber</strong> voucher đã sử dụng và <strong>@Model.UnUsedVoucherNumber</strong> voucher chưa sử dụng.
+                </p>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+                integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+                crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                if ($('#isExpired').is(':checked'))
+                {
+                    $("#endTime").toggle();
+                }
+
+                $('#isExpired').click(function () {
+                    $("#endTime").toggle(this.checked);
+                });
+
+                $('#VoucherNumber').on('change', function () {
+                    var newValue = 'VoucherNumber=' + this.value;
+                    $("#create-voucher-btn").attr("href", $("#create-voucher-btn").attr('href').replace(/VoucherNumber=\d+/, newValue));
+                });
+            });
+        </script>
+    }
+}

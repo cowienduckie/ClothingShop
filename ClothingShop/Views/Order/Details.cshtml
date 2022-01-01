@@ -1,0 +1,109 @@
+﻿@model ClothingShop.Entity.Entities.Order;
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+<br />
+<h3><strong>CHI TIẾT ĐƠN HÀNG</strong></h3>
+<br />
+<div class="row">
+    <div class="col-md-9">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="align-middle" scope="col" style="text-align:center">Sản phẩm</th>
+                    <th class="align-middle" scope="col" style="text-align:center">Số lượng</th>
+                    <th class="align-middle" scope="col" style="text-align:center">Giá</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border" />
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="mb-2 mt-3">
+                                        <strong>@item.SKU.Product.Name.Trim().ToUpper()</strong><br />
+                                    </p>
+                                    <p>
+                                        Màu: @item.SKU.Color.Value<br />
+                                        Kích cỡ: @item.SKU.Size.Value<br />
+                                        Giá: @(String.Format("{0:#,#VND}", item.SKU.Product.Price))
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle" align="center">@item.Quantity</td>
+                        <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="text-center"><strong>TÀI KHOẢN</strong></h5>
+                <hr />
+                <small>
+                    @Model.User.UserName - @Model.User.Email
+                </small>
+            </div>
+        </div>
+        <br />
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="text-center"><strong>NGƯỜI NHẬN</strong></h5>
+                <hr />
+                <small>
+                    @Model.Address.Receiver, @Model.Address.PhoneNumber<br />
+                    @Model.Address.Detail<br />
+                    @String.Join(", ", Model.Address.Ward, Model.Address.District, Model.Address.Province)
+                </small>
+            </div>
+        </div>
+        <br />
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="text-center"><strong>ĐƠN HÀNG</strong></h5>
+                <hr />
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                            </td>
+                            <td class="text-right">
+                                @(String.Format("{0:#,#VND}", Model.OriginalPrice))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                -
+                            </td>
+                            <td class="text-right">
+                                @(String.Format("{0:-#,#VND;;0VND}", Model.Discount))
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td>
+                                <strong>Tổng</strong>
+                            </td>
+                            <td class="text-right">
+                                @(String.Format("{0:#,#VND}", Model.TotalPrice))
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        <a class="btn btn-block btn-outline-dark"
+           asp-action="OrderHistory">
+            Trở lại danh sách
+        </a>
+    </div>
+</div>
