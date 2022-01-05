@@ -103,11 +103,11 @@ else
                         <h6 class="my-0">Chiết Khấu</h6>
                         <small>EXAMPLECODE</small>
                     </div>
-                    <span class="text-success">@(String.Format("{0:-#,#VND;;-0VND}", Discount))</span>
+                    <span class="text-success">-@Html.DisplayFor(m => m.Cart.Discount)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Tổng cộng</span>
-                    <strong>@(String.Format("{0:#,#VND}", OriginalPrice - Discount))</strong>
+                    <strong>@Html.DisplayFor(m => m.Cart.TotalPrice)</strong>
                 </li>
             </ul>
         </div>            

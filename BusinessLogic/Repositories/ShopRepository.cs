@@ -612,6 +612,27 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
         }
 
+        public async Task AddVoucher(string UserId, int VoucherId)
+        {
+            var Voucher = await _db.Voucher.Where(v => v.VoucherId == VoucherId)
+                                           .Include(v => v.Discount)
+                                           .FirstOrDefaultAsync();
+
+            if (Voucher != null && !string.IsNullOrEmpty(UserId) && Voucher.UserId == UserId)
+            {
+                var Cart = await GetCart(await GetCartId(UserId));
+
+                Cart.VoucherId = VoucherId;
+                Cart.Voucher = Voucher;
+                Cart.Discount = (int)Math.Ceiling(Cart.OriginalPrice * ((double)Voucher.Discount.Percentage / 100));
+                Cart.TotalPrice = Cart.OriginalPrice - Cart.Discount;
+                Cart.LastModified = DateTime.Now;
+
+                _db.Cart.Update(Cart);
+                await _db.SaveChangesAsync();
+            }
+        }
+
         public RankModel GetRank(int RankId)
         {
             var rank = _db.Rank.FirstOrDefault(r => r.RankId == RankId);
@@ -672,17 +693,19 @@ namespace ClothingShop.BusinessLogic.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public List<VoucherModel> GetVoucherListByUser(string UserId)
+        public List<Voucher> GetVoucherListByUser(string UserId)
         {
-            return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId).Select(v => new VoucherModel
-            {
-                VoucherId = v.VoucherId,
-                UserId = v.UserId,
-                DiscountId = v.DiscountId,
-                Discount = v.Discount,
-                Value = v.Value,
-                IsUsed = v.IsUsed,
-            }).ToList();
+
+            return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId)
+                              .Include(v => v.Discount)
+                              .ToList();
+        }
+        public List<Voucher> GetVoucherListByUser(string UserId, int number)
+        {
+            return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId)
+                              .Include(v => v.Discount)
+                              .Take(number)
+                              .ToList();
         }
 
         public async Task<Point> AddPoint(string UserId, int OrderId, int value)
@@ -725,6 +748,8 @@ namespace ClothingShop.BusinessLogic.Repositories
         public async Task<Cart> GetCart(int CartId)
         {
             return await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.Voucher)
+                                        .ThenInclude(c => c.Discount)
                                      .Include(c => c.CartItems)
                                         .ThenInclude(i => i.SKU)
                                             .ThenInclude(i => i.Product)
@@ -817,12 +842,15 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             var now = DateTime.Now;
             var cart = await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.Voucher)
+                                        .ThenInclude(v => v.Discount)
                                      .Include(c => c.CartItems)
                                         .ThenInclude(i => i.SKU)
                                             .ThenInclude(i => i.Product)
                                      .FirstOrDefaultAsync();
 
             cart.OriginalPrice = cart.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
+            cart.Discount = (int)Math.Ceiling(cart.OriginalPrice * ((double)cart.Voucher.Discount.Percentage / 100));
             cart.TotalPrice = cart.OriginalPrice - cart.Discount;
             cart.LastModified = now;
 
@@ -866,10 +894,14 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             var now = DateTime.Now;
             var cart = await _db.Cart.Where(c => c.CartId == CartId)
+                                     .Include(c => c.Voucher)
                                      .Include(c => c.CartItems)
                                         .ThenInclude(i => i.SKU)
                                             .ThenInclude(i => i.Product)
                                      .FirstOrDefaultAsync();
+
+            cart.Voucher.IsUsed = true;
+
             var order = new Order
             {
                 UserId = cart.UserId,
@@ -889,6 +921,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 }).ToList()
             };
 
+            _db.Cart.Update(cart);
             await _db.Order.AddAsync(order);
             await _db.SaveChangesAsync();
         }

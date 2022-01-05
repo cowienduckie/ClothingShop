@@ -1,6 +1,7 @@
 ﻿using ClothingShop.Entity.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ClothingShop.Entity.Models
@@ -17,6 +18,7 @@ namespace ClothingShop.Entity.Models
 
         public string Value { get; set; }
 
+        [Display(Name = "Trạng thái")]
         public bool IsUsed { get; set; }
     }
 }

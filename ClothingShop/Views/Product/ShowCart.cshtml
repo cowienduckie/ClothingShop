@@ -77,10 +77,35 @@ else
                                placeholder="Nhập mã ưu đãi" />
                     </div>
                     <a class="btn btn-block btn-light text-left">
-                        Ví voucher của bạn &#8250;
+
+                        Ví ưu đãi của bạn &#8250;
                     </a>
                 </div>
             </div>
+            @if (Model.VoucherId != null)
+            {
+                <br />
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6><strong>@Model.Voucher.Discount.Name.ToUpper()</strong></h6>
+                        <hr />
+                        <dl class="row">
+                            <dt class="col-md-7">
+                                @Html.DisplayNameFor(m => Model.Voucher.Discount.Code)
+                            </dt>
+                            <dd class="col-md-5">
+                                @Html.DisplayFor(m => Model.Voucher.Discount.Code)
+                            </dd>
+                            <dt class="col-md-7">
+                                @Html.DisplayNameFor(m => Model.Voucher.Discount.Percentage)
+                            </dt>
+                            <dd class="col-md-5">
+                                @Html.DisplayFor(m => Model.Voucher.Discount.Percentage)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>                
+            }
             <br />
             <div class="card bg-light">
                 <div class="card-body">
@@ -95,12 +120,12 @@ else
                                     @(String.Format("{0:#,#VND}", Model.OriginalPrice))
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="text-danger">
                                 <td>
                                     -
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:-#,#VND;;0VND}", Model.Discount))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.Discount))
                                 </td>
                             </tr>
                             <tr class="border-top">
@@ -116,15 +141,15 @@ else
                 </div>
             </div>
             <br />
-            <a class="btn btn-block btn-danger"               
+            <a class="btn btn-block btn-danger"
                asp-controller="Product"
                asp-action="CheckOut">
-            Thanh toán
+                Thanh toán
             </a>
             <a class="btn btn-block btn-outline-dark"
                asp-controller="Product"
                asp-action="Index">
-               Tiếp tục mua sắm
+                Tiếp tục mua sắm
             </a>
         </div>
     </div>

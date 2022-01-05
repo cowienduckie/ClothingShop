@@ -26,7 +26,7 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var user = await GetLoggedUser();
             var model = new MembershipModel
             {
                 UserId = user.Id,
@@ -37,10 +37,34 @@ namespace ClothingShop.Controllers
                 TotalPoint = user.TotalPoint,
                 Rank = _shopRepository.GetRank(user.RankId.Value),
                 RankList = _shopRepository.GetAllRanks(),
-                VoucherList = _shopRepository.GetVoucherListByUser(user.Id)
+                VoucherList = _shopRepository.GetVoucherListByUser(user.Id, 2)
             };
 
             return View(model);
+        }
+
+        [Route("VoucherList")]
+        [HttpGet]
+        public async Task<IActionResult> VoucherList()
+        {
+            var user = await GetLoggedUser();
+            var model = _shopRepository.GetVoucherListByUser(user.Id);
+
+            return PartialView(model);
+        }
+
+        public async Task<IActionResult> RedeemVoucher(int VoucherId)
+        {
+            var user = await GetLoggedUser();
+
+            await _shopRepository.AddVoucher(user.Id, VoucherId);
+
+            return RedirectToAction("ShowCart", "Product");
+        }
+
+        private async Task<Users> GetLoggedUser()
+        {
+            return await _userManager.FindByNameAsync(User.Identity.Name);
         }
     }
 }

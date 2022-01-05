@@ -23,12 +23,12 @@ namespace ClothingShop.Entity.Models
 
         public List<RankModel> RankList { get; set; }
 
-        public List<VoucherModel> VoucherList { get; set; }
+        public List<Voucher> VoucherList { get; set; }
 
         public MembershipModel()
         {
             RankList = new List<RankModel>();
-            VoucherList = new List<VoucherModel>();
+            VoucherList = new List<Voucher>();
         }
     }
 }
