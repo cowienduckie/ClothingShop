@@ -72,7 +72,7 @@ namespace ClothingShop.Controllers
 
         //POST: Product/AddToCart
         [Authorize]
-        [Route("Product/AddToCart/")]
+        [Route("Product/AddToCart")]
         public async Task<IActionResult> AddToCart(int? SkuId, int Quantity = 1)
         {
             if (SkuId == null) return RedirectToAction("Index", "Product");

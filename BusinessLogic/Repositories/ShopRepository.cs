@@ -850,7 +850,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                      .FirstOrDefaultAsync();
 
             cart.OriginalPrice = cart.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
-            cart.Discount = (int)Math.Ceiling(cart.OriginalPrice * ((double)cart.Voucher.Discount.Percentage / 100));
+            cart.Discount = cart.VoucherId == null ? 0 : (int)Math.Ceiling(cart.OriginalPrice * ((double)cart.Voucher.Discount.Percentage / 100));
             cart.TotalPrice = cart.OriginalPrice - cart.Discount;
             cart.LastModified = now;
 
@@ -878,8 +878,9 @@ namespace ClothingShop.BusinessLogic.Repositories
             var cart = await _db.Cart.Where(c => c.CartId == CartId)
                                      .Include(c => c.CartItems)
                                      .FirstOrDefaultAsync();
-
             var items = cart.CartItems;
+
+            cart.VoucherId = null;
             cart.LastModified = now;
 
             _db.Cart.Update(cart);

@@ -37,7 +37,7 @@ else
                             <td class="align-middle">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border"/>
+                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border" />
                                     </div>
                                     <div class="col-md-8">
                                         <p class="mb-2 mt-3">
@@ -54,9 +54,9 @@ else
                             <td class="align-middle" align="center">@item.Quantity</td>
                             <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
                             <td class="align-middle" align="center">
-                                <a class="btn btn-sm btn-secondary" 
-                                   asp-controller="Product" 
-                                   asp-action="RemoveFromCart" 
+                                <a class="btn btn-sm btn-secondary"
+                                   asp-controller="Product"
+                                   asp-action="RemoveFromCart"
                                    asp-route-ItemId="@item.CartItemId"
                                    data-toggle="tooltip" data-placement="bottom" title="Xóa">
                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -76,10 +76,33 @@ else
                         <input class="form-control" type="text" id="discount-code" name="discount-code"
                                placeholder="Nhập mã ưu đãi" />
                     </div>
-                    <a class="btn btn-block btn-light text-left">
-
+                    <a id="voucher-list-btn"
+                       class="btn btn-block btn-light text-left">
                         Ví ưu đãi của bạn &#8250;
                     </a>
+                </div>
+            </div>
+            <div id="voucher-list-modal"
+                 class="modal fade"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="voucher-list-label"
+                 aria-hidden="true"
+                 data-url='@Url.Action("VoucherList", "Membership")'>
+                <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="voucher-list-modal">Ví ưu đãi</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="voucher-list-body" class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             @if (Model.VoucherId != null)
@@ -104,7 +127,7 @@ else
                             </dd>
                         </dl>
                     </div>
-                </div>                
+                </div>
             }
             <br />
             <div class="card bg-light">
@@ -153,4 +176,23 @@ else
             </a>
         </div>
     </div>
+}
+
+
+@section Scripts
+{
+    <script>
+        // Voucher list modal
+        $('#voucher-list-btn').click(function () {
+            var url = $('#voucher-list-modal').data('url');
+
+            console.log(url);
+
+            $.get(url, function (data) {
+                $('#voucher-list-body').html(data);
+
+                $('#voucher-list-modal').modal('show');
+            });
+        });
+    </script>
 }
