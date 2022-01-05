@@ -2,9 +2,6 @@
 
 @{
     ViewData["Title"] = "Giỏ hàng";
-
-    var OriginalPrice = Model.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
-    var Discount = 0;
 }
 <br />
 <h3><i class="fa fa-shopping-cart" aria-hidden="true"></i> <strong>GIỎ HÀNG CỦA BẠN</strong></h3>
@@ -95,7 +92,7 @@ else
                                 <td>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", OriginalPrice))
+                                    @(String.Format("{0:#,#VND}", Model.OriginalPrice))
                                 </td>
                             </tr>
                             <tr>
@@ -103,7 +100,7 @@ else
                                     -
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:-#,#VND;;0VND}", Discount))
+                                    @(String.Format("{0:-#,#VND;;0VND}", Model.Discount))
                                 </td>
                             </tr>
                             <tr class="border-top">
@@ -111,7 +108,7 @@ else
                                     <strong>Tổng</strong>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", OriginalPrice - Discount))
+                                    @(String.Format("{0:#,#VND}", Model.TotalPrice))
                                 </td>
                             </tr>
                         </tbody>

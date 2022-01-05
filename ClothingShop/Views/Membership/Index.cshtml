@@ -83,27 +83,52 @@
                      aria-valuenow="@Model.TotalPoint"
                      aria-valuemin="@Model.Rank.MinimumPoint"
                      aria-valuemax="@Model.Rank.NextRank.MinimumPoint">@Model.TotalPoint / @Model.Rank.NextRank.MinimumPoint</div>
-            </div>
-            <br />
-            <p>
-                Cần thêm @PointToRankUp Điểm ~ @String.Format("{0:#,#VND}", PointToRankUp * 1000m / Model.Rank.ConvertPointPercentage) để thăng hạng @Model.Rank.NextRank.Name.
-            </p>
-            <br />
-            <h5><strong>PHIẾU ƯU ĐÃI CỦA BẠN</strong></h5>
-            <hr />
-            @if(Model.VoucherList.Count == 0)
-            {
-                <p class="text-center">Bạn chưa có phiếu ưu đãi nào. <a asp-controller="Product" asp-action="Index">Mua sắm ngay</a>.</p>
-            }
-            else
-            {
-                <div class="card">
-                    <div class="card-body">
-                        
-                    </div>
                 </div>
-            }
-        </div>
+                <br />
+                <p>
+                    Cần thêm @PointToRankUp Điểm ~ @String.Format("{0:#,#VND}", PointToRankUp * 1000m / Model.Rank.ConvertPointPercentage) để thăng hạng @Model.Rank.NextRank.Name.
+                </p>
+                <br />
+                <h5><strong>PHIẾU ƯU ĐÃI CỦA BẠN</strong></h5>
+                <hr />
+                @if (Model.VoucherList.Count == 0)
+                {
+                    <p class="text-center">Bạn chưa có phiếu ưu đãi nào. <a asp-controller="Product" asp-action="Index">Mua sắm ngay</a>.</p>
+                }
+                else
+                {
+                    @foreach (var voucher in Model.VoucherList)
+                    {
+                        <a class="card bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 align-middle">
+                                        <img src="~/img/voucher-icon.png" class="img-fluid"/>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h6><strong>@voucher.Discount.Name.ToUpper()</strong></h6>
+                                        <hr />
+                                        <dl class="row">
+                                            <dt class="col-md-5">
+                                                @Html.DisplayNameFor(m => voucher.Discount.Code)
+                                            </dt>
+                                            <dd class="col-md-7">
+                                                @Html.DisplayFor(m => voucher.Discount.Code)
+                                            </dd>
+                                            <dt class="col-md-5">
+                                                @Html.DisplayNameFor(m => voucher.Discount.Percentage)
+                                            </dt>
+                                            <dd class="col-md-7">
+                                                @Html.DisplayFor(m => voucher.Discount.Percentage)
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
     </div>    
 </div>
 

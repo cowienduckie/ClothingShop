@@ -18,7 +18,7 @@ namespace ClothingShop.Entity.Entities
         public string Code { get; set; }
 
         [Range(0, 100), Required]
-        [DisplayFormat(DataFormatString = "{0:#%")]
+        [DisplayFormat(DataFormatString = @"{0:#\%}")]
         public int Percentage { get; set; }
 
         [Required]

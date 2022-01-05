@@ -222,8 +222,11 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                     .ToList()
             };
 
-            await _db.Product.AddAsync(product);
-            await _db.SaveChangesAsync();
+            if (product.ProductEntries.Count != 0)
+            {
+                await _db.Product.AddAsync(product);
+                await _db.SaveChangesAsync();
+            }
         }
 
         public async Task<ProductDetailModel> EditProduct(ProductDetailModel model)
@@ -759,37 +762,54 @@ namespace ClothingShop.BusinessLogic.Repositories
             var user = await _db.Users.Where(u => u.Id == UserId)
                                       .Include(u => u.Cart)
                                         .ThenInclude(c => c.CartItems)
+                                            .ThenInclude(i => i.SKU)
                                       .FirstOrDefaultAsync();
 
             if (user != null)
             {
                 var cart = user.Cart ?? await CreateCart(user.Id);
                 var now = DateTime.Now;
-
+                var success = false;
                 var item = cart.CartItems.FirstOrDefault(i => i.SkuId == SkuId);
 
                 if (item == null)
                 {
-                    item = new CartItem
+                    var sku = await _db.ProductEntry.FirstOrDefaultAsync(pe => pe.SkuId == SkuId);
+
+                    if (sku != null && sku.Quantity >= Quantity)
                     {
-                        SkuId = SkuId,
-                        CartId = cart.CartId,
-                        Quantity = Quantity,
-                        CreateTime = now,
-                        LastModified = now
-                    };
-                    await _db.CartItem.AddAsync(item);
+                        item = new CartItem
+                        {
+                            SkuId = SkuId,
+                            SKU = sku,
+                            CartId = cart.CartId,
+                            Quantity = Quantity,
+                            CreateTime = now,
+                            LastModified = now
+                        };
+                        await _db.CartItem.AddAsync(item);
+
+                        success = true;
+                    }
                 }
                 else
                 {
-                    item.Quantity += Quantity;
-                    item.LastModified = now;
+                    if (item.Quantity + Quantity <= item.SKU.Quantity)
+                    {
+                        item.Quantity += Quantity;
+                        item.LastModified = now;
 
-                    _db.CartItem.Update(item);
+                        _db.CartItem.Update(item);
+
+                        success = true;
+                    }
                 }
 
-                cart.LastModified = now;
-                await _db.SaveChangesAsync();
+                if (success)
+                {
+                    cart.LastModified = now;
+                    await _db.SaveChangesAsync();
+                }
             }
         }
 
@@ -802,7 +822,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                             .ThenInclude(i => i.Product)
                                      .FirstOrDefaultAsync();
 
-            cart.OriginalPrice = cart.CartItems.Select(i => i.SKU.Product.Price).ToList().Sum();
+            cart.OriginalPrice = cart.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
             cart.TotalPrice = cart.OriginalPrice - cart.Discount;
             cart.LastModified = now;
 
