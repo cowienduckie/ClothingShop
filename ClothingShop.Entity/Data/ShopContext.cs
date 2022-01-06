@@ -1,10 +1,13 @@
 ﻿using ClothingShop.Entity.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingShop.Entity.Data
 {
-    public class ShopContext : IdentityDbContext<Users, Roles, string>
+    public class ShopContext : IdentityDbContext<Users, Roles, string, IdentityUserClaim<string>,
+                                                 UserRoles, IdentityUserLogin<string>,
+                                                 IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
@@ -195,6 +198,17 @@ namespace ClothingShop.Entity.Data
                 .WithOne(a => a.User)
                 .HasForeignKey(a => a.UserId);
 
+            //UserRole
+            modelBuilder.Entity<UserRoles>(userRole =>
+            {
+                userRole.HasOne(ur => ur.Role)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId);
+
+                userRole.HasOne(ur => ur.User)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.UserId);
+            });
         }
     }
 }

@@ -16,6 +16,8 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "ID Tài khoản")]
         public string UserId { get; set; }
 
+        public int? VoucherId { get; set; }
+
         [Display(Name = "Giá gốc")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int OriginalPrice { get; set; }
@@ -45,6 +47,8 @@ namespace ClothingShop.Entity.Entities
 
         //
         public Users User { get; set; }
+
+        public Voucher Voucher { get; set; }
 
         public IList<CartItem> CartItems { get; set; }
 

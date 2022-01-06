@@ -2,9 +2,6 @@
 
 @{
     ViewData["Title"] = "Giỏ hàng";
-
-    var OriginalPrice = Model.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
-    var Discount = 0;
 }
 <br />
 <h3><i class="fa fa-shopping-cart" aria-hidden="true"></i> <strong>GIỎ HÀNG CỦA BẠN</strong></h3>
@@ -40,7 +37,7 @@ else
                             <td class="align-middle">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border"/>
+                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border" />
                                     </div>
                                     <div class="col-md-8">
                                         <p class="mb-2 mt-3">
@@ -57,9 +54,9 @@ else
                             <td class="align-middle" align="center">@item.Quantity</td>
                             <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
                             <td class="align-middle" align="center">
-                                <a class="btn btn-sm btn-secondary" 
-                                   asp-controller="Product" 
-                                   asp-action="RemoveFromCart" 
+                                <a class="btn btn-sm btn-secondary"
+                                   asp-controller="Product"
+                                   asp-action="RemoveFromCart"
                                    asp-route-ItemId="@item.CartItemId"
                                    data-toggle="tooltip" data-placement="bottom" title="Xóa">
                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -79,11 +76,59 @@ else
                         <input class="form-control" type="text" id="discount-code" name="discount-code"
                                placeholder="Nhập mã ưu đãi" />
                     </div>
-                    <a class="btn btn-block btn-light text-left">
-                        Ví voucher của bạn &#8250;
+                    <a id="voucher-list-btn"
+                       class="btn btn-block btn-light text-left">
+                        Ví ưu đãi của bạn &#8250;
                     </a>
                 </div>
             </div>
+            <div id="voucher-list-modal"
+                 class="modal fade"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="voucher-list-label"
+                 aria-hidden="true"
+                 data-url='@Url.Action("VoucherList", "Membership")'>
+                <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="voucher-list-modal">Ví ưu đãi</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="voucher-list-body" class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.VoucherId != null)
+            {
+                <br />
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6><strong>@Model.Voucher.Discount.Name.ToUpper()</strong></h6>
+                        <hr />
+                        <dl class="row">
+                            <dt class="col-md-7">
+                                @Html.DisplayNameFor(m => Model.Voucher.Discount.Code)
+                            </dt>
+                            <dd class="col-md-5">
+                                @Html.DisplayFor(m => Model.Voucher.Discount.Code)
+                            </dd>
+                            <dt class="col-md-7">
+                                @Html.DisplayNameFor(m => Model.Voucher.Discount.Percentage)
+                            </dt>
+                            <dd class="col-md-5">
+                                @Html.DisplayFor(m => Model.Voucher.Discount.Percentage)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            }
             <br />
             <div class="card bg-light">
                 <div class="card-body">
@@ -95,15 +140,15 @@ else
                                 <td>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", OriginalPrice))
+                                    @(String.Format("{0:#,#VND}", Model.OriginalPrice))
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="text-danger">
                                 <td>
                                     -
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:-#,#VND;;0VND}", Discount))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.Discount))
                                 </td>
                             </tr>
                             <tr class="border-top">
@@ -111,7 +156,7 @@ else
                                     <strong>Tổng</strong>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", OriginalPrice - Discount))
+                                    @(String.Format("{0:#,#VND}", Model.TotalPrice))
                                 </td>
                             </tr>
                         </tbody>
@@ -119,16 +164,35 @@ else
                 </div>
             </div>
             <br />
-            <a class="btn btn-block btn-danger"               
+            <a class="btn btn-block btn-danger"
                asp-controller="Product"
                asp-action="CheckOut">
-            Thanh toán
+                Thanh toán
             </a>
             <a class="btn btn-block btn-outline-dark"
                asp-controller="Product"
                asp-action="Index">
-               Tiếp tục mua sắm
+                Tiếp tục mua sắm
             </a>
         </div>
     </div>
+}
+
+
+@section Scripts
+{
+    <script>
+        // Voucher list modal
+        $('#voucher-list-btn').click(function () {
+            var url = $('#voucher-list-modal').data('url');
+
+            console.log(url);
+
+            $.get(url, function (data) {
+                $('#voucher-list-body').html(data);
+
+                $('#voucher-list-modal').modal('show');
+            });
+        });
+    </script>
 }

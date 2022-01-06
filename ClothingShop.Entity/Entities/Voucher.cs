@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,8 +15,10 @@ namespace ClothingShop.Entity.Entities
 
         public string UserId { get; set; }
 
+        [Display(Name = "Mã voucher")]
         public string Value { get; set; }
 
+        [Display(Name = "Trạng thái")]
         public bool IsUsed { get; set; }
 
         //
