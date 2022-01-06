@@ -40,10 +40,13 @@ namespace ClothingShop.Entity.Models
 
         public int UnUsedVoucherNumber { get; set; }
 
+        public int OwnedVoucherNumber { get; set; }
+
         public DiscountModel()
         {
             UsedVoucherNumber = 0;
             UnUsedVoucherNumber = 0;
+            OwnedVoucherNumber = 0;
             EndTime = DateTime.MaxValue;
         }
     }

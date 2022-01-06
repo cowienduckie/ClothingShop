@@ -57,7 +57,7 @@ namespace ClothingShop.Controllers
         {
             var user = await GetLoggedUser();
 
-            await _shopRepository.AddVoucher(user.Id, VoucherId);
+            await _shopRepository.RedeemVoucher(user.Id, VoucherId);
 
             return RedirectToAction("ShowCart", "Product");
         }

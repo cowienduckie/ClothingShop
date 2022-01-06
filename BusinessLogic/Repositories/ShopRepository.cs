@@ -465,7 +465,8 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         StartTime = d.StartTime,
                                         EndTime = d.EndTime,
                                         UsedVoucherNumber = d.Vouchers.Count(v => v.IsUsed),
-                                        UnUsedVoucherNumber = d.Vouchers.Count(v => !v.IsUsed)
+                                        UnUsedVoucherNumber = d.Vouchers.Count(v => !v.IsUsed),
+                                        OwnedVoucherNumber = d.Vouchers.Count(v => !v.IsUsed && v.UserId != null)
                                     }).FirstOrDefaultAsync();
         }
 
@@ -608,13 +609,18 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
         }
 
-        public async Task AddVoucher(string UserId, int VoucherId)
+        public async Task RedeemVoucher(string UserId, int VoucherId)
         {
             var Voucher = await _db.Voucher.Where(v => v.VoucherId == VoucherId)
                                            .Include(v => v.Discount)
                                            .FirstOrDefaultAsync();
 
-            if (Voucher != null && !string.IsNullOrEmpty(UserId) && Voucher.UserId == UserId)
+            Console.WriteLine(DateTime.Today);
+
+            if (Voucher != null && 
+                !string.IsNullOrEmpty(UserId) && 
+                Voucher.UserId == UserId && 
+                Voucher.Discount.EndTime >= DateTime.Today)
             {
                 var Cart = await GetCart(await GetCartId(UserId));
 
@@ -627,6 +633,46 @@ namespace ClothingShop.BusinessLogic.Repositories
                 _db.Cart.Update(Cart);
                 await _db.SaveChangesAsync();
             }
+        }
+
+        public async Task SendVoucher(int DiscountId, string UserName)
+        {
+            var vouchers = await _db.Voucher.Where(v => v.DiscountId == DiscountId && v.UserId == null && !v.IsUsed)
+                                            .ToListAsync();
+            if (vouchers.Count != 0)
+            {
+                Console.WriteLine(UserName);
+                var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == UserName);
+
+                if (user != null)
+                {
+                    var item = vouchers[0];
+                    item.UserId = user.Id;
+                    item.User = user;
+                    
+                    _db.Voucher.Update(item);
+                    await _db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task SendVoucherToAllUser(int DiscountId)
+        {
+            var vouchers = await _db.Voucher.Where(v => v.DiscountId == DiscountId && v.UserId == null && !v.IsUsed)
+                                            .ToListAsync();
+            var users = await _db.UserRoles.Where(ur => ur.Role.Name == "User")
+                                           .Select(ur => ur.User)
+                                           .OrderByDescending(u => u.TotalPoint)
+                                           .ToListAsync();
+            var sendNumber = Math.Min(vouchers.Count, users.Count);
+            for (int i = 0; i < sendNumber; ++i)
+            {
+                vouchers[i].UserId = users[i].Id;
+                vouchers[i].User = users[i];
+            }
+
+            _db.Voucher.UpdateRange(vouchers);
+            await _db.SaveChangesAsync();
         }
 
         public RankModel GetRank(int RankId)

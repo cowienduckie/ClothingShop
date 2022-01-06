@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Chỉnh sửa khuyến mãi";
     var VoucherNumber = 0;
+    var SendVoucherUserName = "";
 }
 
 <h4>Chỉnh sửa khuyến mãi</h4>
@@ -99,10 +100,58 @@
                     </a>
                 </div>
             </div>
+            <p class="mb-2">Gửi voucher</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" type="text" asp-for="@SendVoucherUserName" value=""
+                               placeholder="Username" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <a id="send-voucher-btn"
+                       class="btn btn-block btn-outline-primary"
+                       asp-controller="Admin"
+                       asp-action="SendVoucher"
+                       asp-route-SendVoucherUserName="0"
+                       asp-route-DiscountId="@Model.DiscountId">
+                        <i class="fa fa-paper-plane-o" aria-hidden="true"></i> Gửi cho Username
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-block btn-outline-warning"
+                       asp-controller="Admin"
+                       asp-action="SendVoucherToAllUser"
+                       asp-route-DiscountId="@Model.DiscountId">
+                        <i class="fa fa-paper-plane-o" aria-hidden="true"></i> Gửi toàn bộ User
+                    </a>
+                </div>
+            </div>
             <div>
-                <p class="text-justify">
-                    Hiện tại trong kho đang có <strong>@Model.UsedVoucherNumber</strong> voucher đã sử dụng và <strong>@Model.UnUsedVoucherNumber</strong> voucher chưa sử dụng.
-                </p>
+                <p class="mb-2">Kho voucher</p>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="align-middle" style="text-align: center" rowspan="2">Đã sử dụng</th>
+                        <th class="align-middle" style="text-align: center" colspan="3">Chưa sử dụng</th>
+                        <th class="align-middle" style="text-align: center" rowspan="2">Đã phát hành</th>
+                    </tr>
+                    <tr>
+                        <th class="align-middle" style="text-align: center">Đã sở hữu</th>
+                        <th class="align-middle" style="text-align: center">Chưa sở hữu</th>
+                        <th class="align-middle" style="text-align: center">Tổng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="align-middle" style="text-align: center">@Model.UsedVoucherNumber</td>
+                        <td class="align-middle" style="text-align: center">@Model.OwnedVoucherNumber</td>
+                        <td class="align-middle" style="text-align: center">@(Model.UnUsedVoucherNumber - Model.OwnedVoucherNumber)</td>
+                        <td class="align-middle" style="text-align: center">@Model.UnUsedVoucherNumber</td>
+                        <td class="align-middle" style="text-align: center">@(Model.UnUsedVoucherNumber + Model.UsedVoucherNumber)</td>
+                    </tr>
+                </tbody>
+            </table>                
             </div>
         </div>
     </div>
@@ -136,6 +185,11 @@
                 $('#VoucherNumber').on('change', function () {
                     var newValue = 'VoucherNumber=' + this.value;
                     $("#create-voucher-btn").attr("href", $("#create-voucher-btn").attr('href').replace(/VoucherNumber=\d+/, newValue));
+                });
+
+                $('#SendVoucherUserName').on('change', function () {
+                    var newValue = 'SendVoucherUserName=' + this.value + '&';
+                    $("#send-voucher-btn").attr("href", $("#send-voucher-btn").attr('href').replace(/SendVoucherUserName=[a-zA-Z0-9-._@("@")+ ]+&/, newValue));
                 });
             });
         </script>
