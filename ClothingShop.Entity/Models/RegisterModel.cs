@@ -30,5 +30,15 @@ namespace ClothingShop.Entity.Models
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Email có độ dài 3 - 200 ký tự.")]
         [Required(ErrorMessage = "Vui lòng nhập Email.")]
         public string Email { get; set; }
+
+        [Display(Name = "Tên")]
+        [StringLength(50, ErrorMessage = "Tên có độ dài tối đa 50 ký tự.")]
+        [Required(ErrorMessage = "Vui lòng nhập Tên")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Họ và tên đệm")]
+        [StringLength(50, ErrorMessage = "Họ và tên đệm có độ dài tối đa 50 ký tự.")]
+        [Required(ErrorMessage = "Vui lòng nhập Họ và tên đệm")]
+        public string LastName { get; set; }
     }
 }
