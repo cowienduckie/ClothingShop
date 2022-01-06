@@ -4,7 +4,6 @@
     ViewData["Title"] = "Thanh Toán";
 
     var OriginalPrice = Model.Cart.CartItems.Select(i => i.SKU.Product.Price * i.Quantity).ToList().Sum();
-    var Discount = 0;
 }
 <br />
 <h3><i class="fa fa-credit-card" aria-hidden="true"></i> <strong>THANH TOÁN</strong></h3>

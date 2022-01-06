@@ -438,8 +438,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                 IsExpired = d.IsExpired,
                 StartTime = d.StartTime,
                 EndTime = d.EndTime,
-                CreateTime = d.CreateTime,
-                LastModified = d.LastModified,
             }).ToList();
 
             return new PaginationModel<DiscountModel>()
@@ -466,8 +464,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         IsExpired = d.IsExpired,
                                         StartTime = d.StartTime,
                                         EndTime = d.EndTime,
-                                        CreateTime = d.CreateTime,
-                                        LastModified = d.LastModified,
                                         UsedVoucherNumber = d.Vouchers.Count(v => v.IsUsed),
                                         UnUsedVoucherNumber = d.Vouchers.Count(v => !v.IsUsed)
                                     }).FirstOrDefaultAsync();
@@ -486,7 +482,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 Description = model.Description,
                 IsExpired = model.IsExpired,
                 StartTime = model.StartTime,
-                EndTime = model.EndTime,
+                EndTime = model.IsExpired ? model.EndTime : DateTime.MaxValue,
                 CreateTime = now,
                 LastModified = now,
             };
@@ -512,7 +508,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 discount.Percentage = model.Percentage;
                 discount.IsExpired = model.IsExpired;
                 discount.StartTime = model.StartTime;
-                discount.EndTime = model.EndTime;
+                discount.EndTime = discount.IsExpired ? model.EndTime : DateTime.MaxValue;
 
                 discount.LastModified = DateTime.Now;
 

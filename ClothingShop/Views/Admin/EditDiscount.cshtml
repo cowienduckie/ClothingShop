@@ -8,7 +8,7 @@
 <h4>Chỉnh sửa khuyến mãi</h4>
 <hr />
 <br />
-<form asp-action="EditDiscount" method="post">
+<form asp-action="EditDiscount" asp-controller="Admin" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
@@ -46,17 +46,19 @@
             </div>
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" type="text" onfocus="this.type = 'date'" />
+                <input asp-for="StartTime" class="form-control"  value="@Model.StartTime.ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
 
             <div class="form-group" id="endTime" style="display:none">
                 <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" type="text" onfocus="this.type = 'date'" />
+                <input asp-for="EndTime" class="form-control" value="@Model.EndTime.ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
 
             @Html.HiddenFor(m => m.DiscountId)
+            @Html.HiddenFor(m => m.UnUsedVoucherNumber)
+            @Html.HiddenFor(m => m.UsedVoucherNumber)
 
             <div class="row">
                 <div class="col-md-6">
@@ -70,11 +72,12 @@
         <div class="col-md-8">
             <h5><strong>TẠO VOUCHER</strong></h5>
             <hr />
+            <p class="mb-2">Tạo voucher</p>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <input class="form-control" type="number" asp-for="@VoucherNumber" value=""
-                               placeholder="Số lượng thêm"/>
+                        <input class="form-control" type="number" asp-for="@VoucherNumber" value="0"
+                               placeholder="Số lượng thêm" />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -92,7 +95,7 @@
                        asp-controller="Admin"
                        asp-action="DeleteAllVoucher"
                        asp-route-DiscountId="@Model.DiscountId">
-                        <i class="fa fa-trash-o" aria-hidden="true"></i> Xoá toàn bộ Voucher 
+                        <i class="fa fa-trash-o" aria-hidden="true"></i> Xoá toàn bộ Voucher
                     </a>
                 </div>
             </div>
@@ -108,18 +111,26 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-                integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
-                crossorigin="anonymous"></script>
         <script>
             $(document).ready(function () {
-                if ($('#isExpired').is(':checked'))
-                {
+                if ($('#isExpired').is(':checked')) {
                     $("#endTime").toggle();
                 }
 
                 $('#isExpired').click(function () {
+
                     $("#endTime").toggle(this.checked);
+
+                    if (this.checked) {
+
+                        $(this).attr('value', true);
+                        $(this).attr('data-val', true);
+                    }
+                    else {
+
+                        $(this).attr('value', false);
+                        $(this).attr('data-val', false);
+                    }
                 });
 
                 $('#VoucherNumber').on('change', function () {
