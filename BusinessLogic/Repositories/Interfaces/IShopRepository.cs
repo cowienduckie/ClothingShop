@@ -50,6 +50,12 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task DeleteAllVoucher(int DiscountId);
 
+        Task RedeemVoucher(string UserId, int VoucherId);
+
+        Task SendVoucher(int DiscountId, string UserName);
+
+        Task SendVoucherToAllUser(int DiscountId);
+
         RankModel GetRank(int RankId);
 
         List<RankModel> GetAllRanks();
@@ -58,7 +64,9 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task<Point> AddPoint(string UserId, int OrderId, int value);
 
-        List<VoucherModel> GetVoucherListByUser(string UserId);
+        List<Voucher> GetVoucherListByUser(string UserId);
+
+        List<Voucher> GetVoucherListByUser(string UserId, int number);
 
         Task AddToCart(int SkuId, int Quantity, string UserId);
 

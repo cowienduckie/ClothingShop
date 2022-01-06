@@ -367,6 +367,36 @@ namespace ClothingShop.Controllers
             }
         }
 
+        public async Task<IActionResult> SendVoucherToAllUser(int DiscountId)
+        {
+            try
+            {
+                await _shopRepository.SendVoucherToAllUser(DiscountId);
+
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
+        public async Task<IActionResult> SendVoucher(int DiscountId, string SendVoucherUserName)
+        {
+            try
+            {
+                await _shopRepository.SendVoucher(DiscountId, SendVoucherUserName);
+
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
+            }
+        }
+
         //GET: Admin/CreateVoucher
         public async Task<IActionResult> DeleteVoucher(int VoucherId, int DiscountId)
         {
