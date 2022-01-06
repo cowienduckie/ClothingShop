@@ -97,7 +97,11 @@ namespace ClothingShop.Controllers
                 Users user = new Users
                 {
                     UserName = model.UserName,
-                    Email = model.Email
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    RankId = 2,
+                    TotalPoint = 0
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
