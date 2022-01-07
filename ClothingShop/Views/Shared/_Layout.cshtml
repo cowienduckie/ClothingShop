@@ -7,8 +7,8 @@
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
 
 @{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-        var actionName = this.ViewContext.RouteData.Values["action"].ToString();
-        var controllers = new List<(string name, string text)>{
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    var controllers = new List<(string name, string text)>{
         ("Home", "Trang chủ"),
         ("Product", "Sản phẩm"),
         ("Admin", "Quản trị viên"),

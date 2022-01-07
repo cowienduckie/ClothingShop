@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using ClothingShop.Entity.Models;
+﻿using ClothingShop.Entity.Models;
+using System.Threading.Tasks;
 
 namespace ClothingShop.BusinessLogic.Services.Interfaces
 {

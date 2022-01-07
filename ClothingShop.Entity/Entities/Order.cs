@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -24,11 +21,9 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int OriginalPrice { get; set; }
 
-
         [Display(Name = "Chiết khấu")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int Discount { get; set; }
-
 
         [Display(Name = "Tổng giá")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]

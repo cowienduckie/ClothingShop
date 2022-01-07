@@ -11,7 +11,6 @@ namespace ClothingShop.Entity.Entities
 
         public string LastName { get; set; }
 
-
         [AllowNull]
         public DateTime? DateOfBirth { get; set; }
 

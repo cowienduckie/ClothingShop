@@ -1,6 +1,5 @@
 ﻿using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

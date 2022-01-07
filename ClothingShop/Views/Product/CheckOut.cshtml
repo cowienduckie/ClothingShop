@@ -87,15 +87,15 @@ else
             </h5>
             <hr />
             <ul class="list-group mb-3">
-               @foreach (var item in Model.Cart.CartItems)
+                @foreach (var item in Model.Cart.CartItems)
                 {
-                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">@item.SKU.Product.Name</h6>
-                        <small class="text-muted">Màu @item.SKU.Color.Value - Cỡ @item.SKU.Size.Value - Số lượng @item.Quantity</small>
-                    </div>
-                    <span class="text-muted">@String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price)</span>
-                </li>
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">@item.SKU.Product.Name</h6>
+                            <small class="text-muted">Màu @item.SKU.Color.Value - Cỡ @item.SKU.Size.Value - Số lượng @item.Quantity</small>
+                        </div>
+                        <span class="text-muted">@String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price)</span>
+                    </li>
                 }
                 <li class="list-group-item d-flex justify-content-between bg-light">
                     <div class="text-success">
@@ -109,6 +109,6 @@ else
                     <strong>@Html.DisplayFor(m => m.Cart.TotalPrice)</strong>
                 </li>
             </ul>
-        </div>            
+        </div>
     </div>
 }

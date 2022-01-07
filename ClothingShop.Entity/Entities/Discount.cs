@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -52,6 +49,7 @@ namespace ClothingShop.Entity.Entities
 
         //
         public IList<ProductDiscount> ProductDiscounts { get; set; }
+
         public IList<Voucher> Vouchers { get; set; }
     }
 }

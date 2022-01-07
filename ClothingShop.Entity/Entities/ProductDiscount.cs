@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -17,6 +14,7 @@ namespace ClothingShop.Entity.Entities
 
         //
         public Product Product { get; set; }
+
         public Discount Discount { get; set; }
     }
 }

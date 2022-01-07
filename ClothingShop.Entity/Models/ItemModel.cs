@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Models
 {
@@ -15,7 +12,7 @@ namespace ClothingShop.Entity.Models
 
         [Display(Name = "Màu sắc")]
         public string ColorValue { get; set; }
-        
+
         public string ColorHexCode { get; set; }
 
         [Display(Name = "Kích cỡ")]

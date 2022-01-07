@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ClothingShop.Entity.Data;
+﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
-using ClothingShop.BusinessLogic.Repositories.Interfaces;
-using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using ClothingShop.Entity.Entities;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
@@ -41,7 +38,6 @@ namespace ClothingShop.Controllers
                 ViewBag.Categories = _shopRepository.GetAllCategories();
 
                 return View(model);
-
             }
             catch (Exception e)
             {

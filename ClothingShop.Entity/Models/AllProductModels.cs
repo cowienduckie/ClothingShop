@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ClothingShop.Entity.Entities;
+﻿using System.Collections.Generic;
 
 namespace ClothingShop.Entity.Models
 {

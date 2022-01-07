@@ -20,14 +20,12 @@ namespace ClothingShop.Entity.Migrations
                 oldClrType: typeof(int),
                 oldType: "int");
 
-
             migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "Color",
                 nullable: false,
                 oldClrType: typeof(int),
                 oldType: "int");
-
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductEntry_ColorId",
@@ -139,7 +137,6 @@ namespace ClothingShop.Entity.Migrations
                 type: "int",
                 nullable: false,
                 oldClrType: typeof(string));
-
         }
     }
 }

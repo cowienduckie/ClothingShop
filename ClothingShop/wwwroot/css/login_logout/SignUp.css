@@ -26,11 +26,10 @@
     color: white;
 }
 
-
-.registerForm > label {
-     margin: 10px 0;
-     font-size:16px;
-}
+    .registerForm > label {
+        margin: 10px 0;
+        font-size: 16px;
+    }
 
 .registerInput {
     padding: 10px;
@@ -39,9 +38,9 @@
     border-radius: 10px;
 }
 
-.registerInput:focus {
-    outline: none;
-}
+    .registerInput:focus {
+        outline: none;
+    }
 
 .registerButton {
     margin-top: 20px;
@@ -56,10 +55,10 @@
     text-align: center;
 }
 
-.registerButton:hover{
-    background-color: #a5ef0a;
-    font-weight: 700;
-}
+    .registerButton:hover {
+        background-color: #a5ef0a;
+        font-weight: 700;
+    }
 
 .registerForm > p {
     margin-top: 16px;
@@ -71,9 +70,9 @@
     color: white;
 }
 
-.registerLoginButton:hover{
-    text-decoration:none;
-    color: white;
-    color: #ff6a00;
-    font-weight:700;
-}
+    .registerLoginButton:hover {
+        text-decoration: none;
+        color: white;
+        color: #ff6a00;
+        font-weight: 700;
+    }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace ClothingShop.Entity.Models
 {
     public class UserDetailModel

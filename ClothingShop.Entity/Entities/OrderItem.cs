@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -20,7 +18,7 @@ namespace ClothingShop.Entity.Entities
 
         [Display(Name = "Đơn giấ")]
         public int Price { get; set; }
-      
+
         [Required]
         [Display(Name = "Create Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -33,6 +31,7 @@ namespace ClothingShop.Entity.Entities
 
         //
         public ProductEntry SKU { get; set; }
+
         public Order Order { get; set; }
     }
 }

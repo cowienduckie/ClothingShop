@@ -1,6 +1,5 @@
 ﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
-using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,6 @@ namespace ClothingShop.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
 

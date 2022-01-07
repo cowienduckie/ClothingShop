@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -23,6 +18,7 @@ namespace ClothingShop.Entity.Entities
 
         //
         public Discount Discount { get; set; }
+
         public Users User { get; set; }
     }
 }

@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ClothingShop.Entity.Data;
+﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Models;
-using ClothingShop.BusinessLogic.Repositories.Interfaces;
-using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
@@ -123,7 +120,7 @@ namespace ClothingShop.Controllers
             {
                 var returnModel = await _shopRepository.EditProduct(model);
 
-                if (returnModel == null)    
+                if (returnModel == null)
                     return View(model);
 
                 return RedirectToAction(nameof(ProductList));
@@ -172,7 +169,6 @@ namespace ClothingShop.Controllers
                 var model = _shopRepository.GetCategoryList(pageNumber, pageSize);
 
                 return View(model);
-
             }
             catch (Exception e)
             {
@@ -266,7 +262,6 @@ namespace ClothingShop.Controllers
                 var model = _shopRepository.GetDiscountList(name, pageNumber, pageSize);
 
                 return View(model);
-
             }
             catch (Exception e)
             {
@@ -358,7 +353,7 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.CreateVoucher(VoucherNumber, DiscountId);
-                return RedirectToAction(nameof(EditDiscount), new {id = DiscountId} );
+                return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
@@ -411,6 +406,7 @@ namespace ClothingShop.Controllers
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
+
         //POST: Admin/CreateVoucher
         public async Task<IActionResult> DeleteAllVoucher(int DiscountId)
         {

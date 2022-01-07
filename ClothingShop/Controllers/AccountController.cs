@@ -1,18 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ClothingShop.BusinessLogic.Repositories;
-using System.Security.Cryptography;
-using System.Text;
-using ClothingShop.Entity.Data;
-using ClothingShop.Entity.Models;
-using ClothingShop.Entity.Entities;
-using ClothingShop.BusinessLogic.Repositories.Interfaces;
-using System.Text.Json;
 
 namespace ClothingShop.Controllers
 {
