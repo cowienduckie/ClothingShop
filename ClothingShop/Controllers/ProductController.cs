@@ -1,4 +1,5 @@
-﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,12 +14,15 @@ namespace ClothingShop.Controllers
     {
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
+        private readonly INotyfService _notyf;
 
         public ProductController(IShopRepository shopRepository,
-                                 UserManager<Users> userManager)
+                                 UserManager<Users> userManager, 
+                                 INotyfService notyf)
         {
             _shopRepository = shopRepository;
             _userManager = userManager;
+            _notyf = notyf;
         }
 
         //GET: Product
@@ -42,6 +46,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy danh sách sản phẩm");
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -51,17 +56,28 @@ namespace ClothingShop.Controllers
         [Route("Product/Details")]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(Index));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã sản phẩm");
+                return RedirectToAction(nameof(Index));
+            }
 
             try
             {
                 var model = await _shopRepository.GetProductDetails(id);
+
+                if (model == null)
+                {
+                    _notyf.Error("Không tìm thấy sản phẩm");
+                    return RedirectToAction(nameof(Index));
+                }
 
                 return View(model);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy chi tiết sản phẩm");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -78,12 +94,13 @@ namespace ClothingShop.Controllers
                 var user = await GetLoggedUser();
 
                 await _shopRepository.AddToCart(SkuId.Value, Quantity, user.Id);
-
+                _notyf.Success("Thêm sản phẩm thành công");
                 return RedirectToAction("UpdateCart", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi thêm sản phẩm");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -93,17 +110,22 @@ namespace ClothingShop.Controllers
         [Route("Product/RemoveFromCart")]
         public async Task<IActionResult> RemoveFromCart(int? ItemId)
         {
-            if (ItemId == null) return RedirectToAction("Index", "Product");
+            if (ItemId == null)
+            {
+                _notyf.Error("Không có mã sản phẩm");
+                return RedirectToAction("Index", "Product");
+            }
 
             try
             {
                 await _shopRepository.RemoveFromCart(ItemId.Value);
-
+                _notyf.Success("Xóa sản phẩm thành công");
                 return RedirectToAction("UpdateCart", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi xóa sản phẩm");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -117,12 +139,13 @@ namespace ClothingShop.Controllers
             {
                 var user = await GetLoggedUser();
                 await _shopRepository.UpdateCart(await _shopRepository.GetCartId(user.Id));
-
+                _notyf.Success("Cập nhật giỏ hàng thành công");
                 return RedirectToAction("ShowCart", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi cập nhật giỏ hàng");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -142,6 +165,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi làm trống giỏ hàng");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -162,6 +186,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy giỏ hàng");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -192,6 +217,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy thông tin thanh toán");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -202,18 +228,23 @@ namespace ClothingShop.Controllers
         [Route("Product/CheckOut")]
         public async Task<IActionResult> CheckOut(CheckOutModel model)
         {
-            if (!ModelState.IsValid) return RedirectToAction("ShowCart", "Product");
+            if (!ModelState.IsValid)
+            {
+                _notyf.Error("Thông tin thanh toán không hợp lệ");
+                return RedirectToAction("ShowCart", "Product");
+            }
 
             try
             {
                 await _shopRepository.CreateOrder(model.Cart.CartId, model.Address);
                 await _shopRepository.EmptyCart(model.Cart.CartId);
-
+                _notyf.Success("Thanh toán thành công");
                 return RedirectToAction("Index", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi thanh toán");
                 return RedirectToAction("Index", "Product");
             }
         }
