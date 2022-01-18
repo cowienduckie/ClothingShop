@@ -1,4 +1,5 @@
-﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,12 +14,15 @@ namespace ClothingShop.Controllers
     {
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
+        private readonly INotyfService _notyf;
 
         public OrderController(IShopRepository shopRepository,
-                               UserManager<Users> userManager)
+                               UserManager<Users> userManager,
+                               INotyfService notyf)
         {
             _shopRepository = shopRepository;
             _userManager = userManager;
+            _notyf = notyf;
         }
 
         public async Task<IActionResult> OrderHistory(int? pageNumber, int? pageSize)
@@ -33,6 +37,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Xảy ra lỗi khi lấy lịch sử giao dịch");
                 return RedirectToAction("Index", "Product");
             }
         }
@@ -48,6 +53,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Xảy ra lỗi khi lấy chi tiết giao dịch");
                 return RedirectToAction("Index");
             }
         }

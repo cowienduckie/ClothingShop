@@ -1,4 +1,6 @@
-﻿using ClothingShop.BusinessLogic.Repositories;
+﻿using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
+using ClothingShop.BusinessLogic.Repositories;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.BusinessLogic.Services;
 using ClothingShop.BusinessLogic.Services.Interfaces;
@@ -100,6 +102,9 @@ namespace ClothingShop
             var mailSettings = Configuration.GetSection("MailSettings");
             services.Configure<MailSettings>(mailSettings);
             services.AddTransient<IEmailService, EmailService>();
+
+            //Notyf
+            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,6 +145,8 @@ namespace ClothingShop
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<ShopContext>();
             context.Database.EnsureCreated();
+
+            app.UseNotyf();
         }
     }
 }

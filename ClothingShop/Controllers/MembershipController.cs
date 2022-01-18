@@ -1,4 +1,5 @@
-﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +15,15 @@ namespace ClothingShop.Controllers
     {
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
+        private readonly INotyfService _notyf;
 
         public MembershipController(IShopRepository shopRepository,
-                                    UserManager<Users> userManager)
+                                    UserManager<Users> userManager,
+                                    INotyfService notyf)
         {
             _shopRepository = shopRepository;
             _userManager = userManager;
+            _notyf = notyf;
         }
 
         public async Task<IActionResult> Index()
@@ -45,19 +49,40 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> VoucherList()
         {
-            var user = await GetLoggedUser();
-            var model = _shopRepository.GetVoucherListByUser(user.Id);
+            try
+            {
+                var user = await GetLoggedUser();
+                var model = _shopRepository.GetVoucherListByUser(user.Id);
 
-            return PartialView(model);
+                return PartialView(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                _notyf.Error("Xảy ra lỗi khi lấy danh sách voucher");
+                return RedirectToAction("Index", "Product");
+            }
         }
 
         public async Task<IActionResult> RedeemVoucher(int VoucherId)
         {
-            var user = await GetLoggedUser();
+            try
+            {
 
-            await _shopRepository.RedeemVoucher(user.Id, VoucherId);
+                var user = await GetLoggedUser();
 
-            return RedirectToAction("ShowCart", "Product");
+                await _shopRepository.RedeemVoucher(user.Id, VoucherId);
+
+                _notyf.Success("Áp dụng voucher thành công");
+
+                return RedirectToAction("ShowCart", "Product");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                _notyf.Error("Xảy ra lỗi khi áp dụng voucher");
+                return RedirectToAction("Index", "Product");
+            }
         }
 
         [HttpGet]
@@ -70,11 +95,14 @@ namespace ClothingShop.Controllers
 
                 await _shopRepository.CancelApplyingVoucher(user.Id);
 
+                _notyf.Success("Hủy áp dụng voucher thành công");
+
                 return RedirectToAction("ShowCart", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Xảy ra lỗi khi hủy áp dụng voucher");
                 return RedirectToAction("Index", "Product");
             }
         }

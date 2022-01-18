@@ -1,4 +1,5 @@
-﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace ClothingShop.Controllers
     public class AdminController : Controller
     {
         private readonly IShopRepository _shopRepository;
+        private readonly INotyfService _notyf;
 
-        public AdminController(IShopRepository shopRepository)
+        public AdminController(IShopRepository shopRepository, INotyfService notyf)
         {
             _shopRepository = shopRepository;
+            _notyf = notyf;
         }
 
         //GET: Admin/Index
@@ -30,6 +33,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy danh sách sản phẩm");
                 return View();
             }
         }
@@ -55,6 +59,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy danh sách sản phẩm");
                 return RedirectToAction("ProductList");
             }
         }
@@ -63,9 +68,19 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductDetails(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(ProductList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
+
             var product = await _shopRepository.GetProductDetails(id);
-            if (product == null) return NotFound();
+
+            if (product == null)
+            {
+                _notyf.Error("Không tìm thấy sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
 
             return View(product);
         }
@@ -84,16 +99,22 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct(ProductDetailModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                return View(model);
+            }
 
             try
             {
                 await _shopRepository.CreateProduct(model);
+                _notyf.Success("Thêm sản phẩm thành công");
                 return RedirectToAction(nameof(ProductList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi thêm sản phẩm");
                 return View(model);
             }
         }
@@ -102,9 +123,19 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProduct(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(ProductList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
+
             var product = await _shopRepository.GetProductDetails(id);
-            if (product == null) return NotFound();
+
+            if (product == null)
+            {
+                _notyf.Error("Không tìm thấy sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
 
             return View(product);
         }
@@ -114,20 +145,29 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(ProductDetailModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                return View(model);
+            }
 
             try
             {
                 var returnModel = await _shopRepository.EditProduct(model);
 
                 if (returnModel == null)
+                {
+                    _notyf.Error("Thông tin sản phẩm không hợp lệ");
                     return View(model);
+                }
 
+                _notyf.Success("Chỉnh sửa sản phẩm thành công");
                 return RedirectToAction(nameof(ProductList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi thay đổi sản phẩm");
                 return View(model);
             }
         }
@@ -136,9 +176,19 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteProduct(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(ProductList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
+
             var product = await _shopRepository.GetProductDetails(id);
-            if (product == null) return NotFound();
+
+            if (product == null)
+            {
+                _notyf.Error("Không tìm thấy sản phẩm");
+                return RedirectToAction(nameof(ProductList));
+            }
 
             return View(product);
         }
@@ -151,11 +201,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.DeleteProduct(id);
+                _notyf.Success("Xóa sản phẩm thành công");
                 return RedirectToAction(nameof(ProductList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi xóa sản phẩm");
                 return View();
             }
         }
@@ -173,6 +225,8 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+
+                _notyf.Error("Có lỗi xảy ra khi lấy danh sách danh mục");
                 return View();
             }
         }
@@ -189,16 +243,21 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoryModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) {
+                _notyf.Error("Thông tin danh mục không hợp lệ");
+                return View(model);
+            }
 
             try
             {
                 await _shopRepository.CreateCategory(model);
+                _notyf.Success("Thêm danh mục thành công");
                 return RedirectToAction(nameof(CategoryList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi thêm danh mục");
                 return View(model);
             }
         }
@@ -207,9 +266,19 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCategory(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(CategoryList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã danh mục");
+                return RedirectToAction(nameof(CategoryList));
+            }
+
             var category = await _shopRepository.GetCategoryDetails(id);
-            if (category == null) return NotFound();
+
+            if (category == null)
+            {
+                _notyf.Error("Không tìm thấy danh mục");
+                return RedirectToAction(nameof(CategoryList));
+            }
 
             return View(category);
         }
@@ -219,20 +288,27 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCategory(CategoryModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) {
+                _notyf.Error("Thông tin danh mục không hợp lệ");
+                return View(model);
+            }
 
             try
             {
                 var returnModel = await _shopRepository.EditCategory(model);
 
                 if (returnModel == null)
+                {
+                    _notyf.Error("Thông tin danh mục không hợp lệ");
                     return View(model);
-
+                }
+                _notyf.Success("Chỉnh sửa danh mục thành công");
                 return RedirectToAction(nameof(CategoryList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi chỉnh sửa danh mục");
                 return View(model);
             }
         }
@@ -245,11 +321,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.DeleteCategory(id.Value);
+                _notyf.Success("Xóa danh mục thành công");
                 return RedirectToAction(nameof(CategoryList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra xóa thêm danh mục");
                 return View();
             }
         }
@@ -282,7 +360,10 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateDiscount(DiscountModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) {
+                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                return View(model);
+            }
 
             try
             {
@@ -312,14 +393,20 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditDiscount(DiscountModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid) {
+                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                return View(model);
+            }
 
             try
             {
                 var returnModel = await _shopRepository.EditDiscount(model);
 
                 if (returnModel == null)
+                    {
+                    _notyf.Error("Thông tin sản phẩm không hợp lệ");
                     return View(model);
+                }
 
                 return RedirectToAction(nameof(DiscountList));
             }
