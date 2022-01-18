@@ -4,6 +4,7 @@ using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
@@ -57,6 +58,25 @@ namespace ClothingShop.Controllers
             await _shopRepository.RedeemVoucher(user.Id, VoucherId);
 
             return RedirectToAction("ShowCart", "Product");
+        }
+
+        [HttpGet]
+        [Route("CancelApplyingVoucher")]
+        public async Task<IActionResult> CancelApplyingVoucher()
+        {
+            try
+            {
+                var user = await GetLoggedUser();
+
+                await _shopRepository.CancelApplyingVoucher(user.Id);
+
+                return RedirectToAction("ShowCart", "Product");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return RedirectToAction("Index", "Product");
+            }
         }
 
         private async Task<Users> GetLoggedUser()

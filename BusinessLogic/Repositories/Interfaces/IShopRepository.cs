@@ -51,6 +51,8 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task RedeemVoucher(string UserId, int VoucherId);
 
+        Task CancelApplyingVoucher(string UserId);
+
         Task SendVoucher(int DiscountId, string UserName);
 
         Task SendVoucherToAllUser(int DiscountId);

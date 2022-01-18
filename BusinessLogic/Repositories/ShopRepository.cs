@@ -628,6 +628,20 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
         }
 
+        public async Task CancelApplyingVoucher(string UserId)
+        {
+            var Cart = await GetCart(await GetCartId(UserId));
+
+            Cart.VoucherId = null;
+            Cart.Voucher = null;
+            Cart.Discount = 0;
+            Cart.TotalPrice = Cart.OriginalPrice - Cart.Discount;
+            Cart.LastModified = DateTime.Now;
+
+            _db.Cart.Update(Cart);
+            await _db.SaveChangesAsync();
+        }
+
         public async Task SendVoucher(int DiscountId, string UserName)
         {
             var vouchers = await _db.Voucher.Where(v => v.DiscountId == DiscountId && v.UserId == null && !v.IsUsed)
@@ -936,7 +950,10 @@ namespace ClothingShop.BusinessLogic.Repositories
                                             .ThenInclude(i => i.Product)
                                      .FirstOrDefaultAsync();
 
-            cart.Voucher.IsUsed = true;
+            if (cart.Voucher != null)
+            {
+                cart.Voucher.IsUsed = true;
+            }
 
             var order = new Order
             {

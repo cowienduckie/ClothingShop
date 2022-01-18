@@ -97,13 +97,17 @@ else
                         <span class="text-muted">@String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price)</span>
                     </li>
                 }
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Chiết Khấu</h6>
-                        <small>@Model.Cart.Voucher.Discount.Code</small>
-                    </div>
-                    <span class="text-success">-@Html.DisplayFor(m => m.Cart.Discount)</span>
-                </li>
+                @if (!string.IsNullOrEmpty(Model.DiscountCode))
+                {
+
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">Chiết Khấu</h6>
+                            <small>@Model.DiscountCode</small>
+                        </div>
+                        <span class="text-success">-@Html.DisplayFor(m => m.Cart.Discount)</span>
+                    </li>
+                }
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Tổng cộng</span>
                     <strong>@Html.DisplayFor(m => m.Cart.TotalPrice)</strong>

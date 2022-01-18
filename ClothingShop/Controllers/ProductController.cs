@@ -182,6 +182,11 @@ namespace ClothingShop.Controllers
                     Cart = await _shopRepository.GetCart(cartId)
                 };
 
+                if (model.Cart.Voucher != null)
+                {
+                    model.DiscountCode = model.Cart.Voucher.Discount.Code;
+                }
+
                 return View(model);
             }
             catch (Exception e)
