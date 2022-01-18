@@ -327,7 +327,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                _notyf.Error("Có lỗi xảy ra xóa thêm danh mục");
+                _notyf.Error("Có lỗi xảy ra khi xóa danh mục");
                 return View();
             }
         }
@@ -344,6 +344,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi tải danh sách khuyến mãi");
                 return View();
             }
         }
@@ -361,18 +362,21 @@ namespace ClothingShop.Controllers
         public async Task<IActionResult> CreateDiscount(DiscountModel model)
         {
             if (!ModelState.IsValid) {
-                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                _notyf.Error("Thông tin khuyến mãi không hợp lệ");
                 return View(model);
             }
 
             try
             {
                 await _shopRepository.CreateDiscount(model);
+                _notyf.Success("Thêm khuyến mãi thành công");
                 return RedirectToAction(nameof(DiscountList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+
+                _notyf.Error("Có lỗi xảy ra thêm khuyến mãi");
                 return View(model);
             }
         }
@@ -381,9 +385,19 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> EditDiscount(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(DiscountList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã khuyến mãi");
+                return RedirectToAction(nameof(DiscountList));
+            }
+
             var discount = await _shopRepository.GetDiscountDetails(id);
-            if (discount == null) return NotFound();
+
+            if (discount == null)
+            {
+                _notyf.Error("Không tìm thấy khuyến mãi");
+                return RedirectToAction(nameof(DiscountList));
+            }
 
             return View(discount);
         }
@@ -394,7 +408,7 @@ namespace ClothingShop.Controllers
         public async Task<IActionResult> EditDiscount(DiscountModel model)
         {
             if (!ModelState.IsValid) {
-                _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                _notyf.Error("Thông tin khuyến mãi không hợp lệ");
                 return View(model);
             }
 
@@ -403,16 +417,17 @@ namespace ClothingShop.Controllers
                 var returnModel = await _shopRepository.EditDiscount(model);
 
                 if (returnModel == null)
-                    {
-                    _notyf.Error("Thông tin sản phẩm không hợp lệ");
+                {
+                    _notyf.Error("Thông tin khuyến mãi không hợp lệ");
                     return View(model);
                 }
-
+                _notyf.Success("Chỉnh sửa khuyến mãi thành công");
                 return RedirectToAction(nameof(DiscountList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi chỉnh sửa khuyến mãi");
                 return View(model);
             }
         }
@@ -421,15 +436,22 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteDiscount(int? id)
         {
-            if (id == null) return RedirectToAction(nameof(ProductList));
+            if (id == null)
+            {
+                _notyf.Error("Không có mã khuyến mãi");
+                return RedirectToAction(nameof(DiscountList));
+            }
+
             try
             {
                 await _shopRepository.DeleteDiscount(id.Value);
+                _notyf.Success("Xoá khuyến mãi thành công");
                 return RedirectToAction(nameof(DiscountList));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi xoá khuyến mãi");
                 return View();
             }
         }
@@ -440,11 +462,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.CreateVoucher(VoucherNumber, DiscountId);
+                _notyf.Success("Tạo phiếu ưu đãi thành công");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi tạo phiếu ưu đãi");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
@@ -454,12 +478,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.SendVoucherToAllUser(DiscountId);
-
+                _notyf.Success("Gửi phiếu ưu đãi thành công");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi gửi phiếu ưu đãi");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
@@ -469,12 +494,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.SendVoucher(DiscountId, SendVoucherUserName);
-
+                _notyf.Success("Gửi phiếu ưu đãi thành công");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi gửi phiếu ưu đãi");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
@@ -485,11 +511,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.DeleteVoucher(VoucherId);
+                _notyf.Success("Xoá phiếu ưu đãi thành công");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi xoá phiếu ưu đãi");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
@@ -500,11 +528,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.DeleteAllVoucher(DiscountId);
+                _notyf.Success("Xoá phiếu ưu đãi thành công");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi xoá phiếu ưu đãi");
                 return RedirectToAction(nameof(EditDiscount), new { id = DiscountId });
             }
         }
@@ -525,6 +555,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy dánh sách đơn hàng");
                 return RedirectToAction("ProductList");
             }
         }
@@ -540,6 +571,7 @@ namespace ClothingShop.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Có lỗi xảy ra khi lấy chi tiết đơn hàng");
                 return RedirectToAction("OrderList");
             }
         }
@@ -549,12 +581,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.AcceptOrder(orderId);
-
+                _notyf.Success("Chấp nhận đơn hàng thành công");
                 return RedirectToAction("OrderList");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Chấp nhận đơn hàng thất bại");
                 return RedirectToAction("ProductList");
             }
         }
@@ -564,12 +597,13 @@ namespace ClothingShop.Controllers
             try
             {
                 await _shopRepository.CancelOrder(orderId);
-
+                _notyf.Warning("Huỷ đơn hàng thành công");
                 return RedirectToAction("OrderList");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                _notyf.Error("Huỷ đơn hàng thất bại");
                 return RedirectToAction("ProductList");
             }
         }
