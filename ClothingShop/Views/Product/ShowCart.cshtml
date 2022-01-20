@@ -52,7 +52,7 @@ else
                                 </div>
                             </td>
                             <td class="align-middle" align="center">@item.Quantity</td>
-                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
+                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND;;0VND}", item.Quantity * item.SKU.Product.Price))</td>
                             <td class="align-middle" align="center">
                                 <a class="btn btn-sm btn-secondary"
                                    asp-controller="Product"
@@ -73,11 +73,20 @@ else
                     <h5 class="text-center"><strong>ƯU ĐÃI</strong></h5>
                     <hr />
                     <div class="form-group">
-                        <input class="form-control" type="text" id="discount-code" name="discount-code"
-                               placeholder="Nhập mã ưu đãi" />
+                        @if (Model.VoucherId != null)
+                        {
+                            <input class="form-control disabled" type="text" id="discount-code" name="discount-code"
+                                   value="@Model.Voucher.Discount.Code" disabled/>
+                        }
+                        else
+                        {
+                            <input class="form-control" type="text" id="discount-code" name="discount-code"
+                                   placeholder="Nhập mã ưu đãi" />
+                        }
                     </div>
                     <a id="voucher-list-btn"
-                       class="btn btn-block btn-light text-left">
+                       class="btn btn-block btn-light text-left"
+                       style="cursor:pointer">
                         Ví ưu đãi của bạn &#8250;
                     </a>
                 </div>
@@ -110,7 +119,15 @@ else
                 <br />
                 <div class="card bg-light">
                     <div class="card-body">
-                        <h6><strong>@Model.Voucher.Discount.Name.ToUpper()</strong></h6>
+                        <div>
+                            <h6 class="d-inline"><strong>@Model.Voucher.Discount.Name.ToUpper()</strong></h6>
+                            <a class="close d-inline align-top"
+                               aria-label="Close"
+                               asp-controller="Membership"
+                               asp-action="CancelApplyingVoucher">
+                                <span aria-hidden="true">&times;</span>
+                            </a>
+                        </div>
                         <hr />
                         <dl class="row">
                             <dt class="col-md-7">
@@ -140,7 +157,7 @@ else
                                 <td>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", Model.OriginalPrice))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.OriginalPrice))
                                 </td>
                             </tr>
                             <tr class="text-danger">
@@ -156,7 +173,7 @@ else
                                     <strong>Tổng</strong>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", Model.TotalPrice))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.TotalPrice))
                                 </td>
                             </tr>
                         </tbody>
@@ -177,7 +194,6 @@ else
         </div>
     </div>
 }
-
 
 @section Scripts
 {

@@ -104,12 +104,12 @@
                         <a id="@($"voucher-{i}")"
                            class="card bg-light"
                            data-toggle="modal"
-                           data-target="@($"#modal-voucher-{i}")" 
+                           data-target="@($"#modal-voucher-{i}")"
                            style="cursor: pointer">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4 align-middle">
-                                        <img src="~/img/voucher-icon.png" class="img-fluid" />
+                                        <img src="~/assets/voucher-icon.png" class="img-fluid" />
                                     </div>
                                     <div class="col-md-8">
                                         <h6><strong>@voucher.Discount.Name.ToUpper()</strong></h6>
@@ -132,13 +132,13 @@
                                 </div>
                             </div>
                         </a>
-                        <div class="modal fade" 
-                             id="@($"modal-voucher-{i}")" 
-                             tabindex="-1" 
-                             role="dialog" 
-                             aria-labelledby="@($"modal-voucher-{i}-label")" 
+                        <div class="modal fade"
+                             id="@($"modal-voucher-{i}")"
+                             tabindex="-1"
+                             role="dialog"
+                             aria-labelledby="@($"modal-voucher-{i}-label")"
                              aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" 
+                            <div class="modal-dialog modal-dialog-centered modal-lg"
                                  role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -193,9 +193,8 @@
                                         <a class="btn btn-success"
                                            asp-action="RedeemVoucher"
                                            asp-controller="Membership"
-                                           asp-route-VoucherId="@voucher.VoucherId"
-                                           >
-                                             Áp dụng
+                                           asp-route-VoucherId="@voucher.VoucherId">
+                                            Áp dụng
                                         </a>
                                     </div>
                                 </div>
@@ -237,13 +236,13 @@
                     </div>
                 }
             </div>
-    </div>    
-</div>
+        </div>
+    </div>
 
-@section Scripts
+    @section Scripts
 {
-    <script src="~/js/JsBarcode.all.min.js"></script>
-    <script>
+        <script src="~/js/JsBarcode.all.min.js"></script>
+        <script>
         // User's barcode
         JsBarcode("#barcode", "@Model.UserName",
         {
@@ -267,5 +266,5 @@
                 $('#voucher-list-modal').modal('show');
             });
         });
-    </script>  
-}
+        </script>
+    }

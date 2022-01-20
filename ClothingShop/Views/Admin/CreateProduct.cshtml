@@ -60,7 +60,6 @@
                                 </div>
                             </div>
                         }
-
                     </div>
                     <br />
                     <h5><strong>MÀU SẮC - KÍCH CỠ</strong></h5>
@@ -98,26 +97,26 @@
                                             @{var count = 0;}
                                             @foreach (var color in Model.Colors)
                                             {
-                                            <tr>
-                                                <th scope="row" style="text-align:center" class="text-wrap">
-                                                    @(color.Value)<br />
-                                                    <i class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @color.ColorHexCode"> </i>
-                                                </th>
-                                                @{
-                                                    @for (int i = count; i < count + Model.Sizes.Count; ++i)
-                                                    {
-                                                        <td scope="col" style="text-align:center">
-                                                            <div class="form-group">
-                                                                <input asp-for="@Model.Items[i].Quantity" class="form-control" />
-                                                                <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
-                                                            </div>
-                                                        </td>
-                                                        @Html.HiddenFor(m => Model.Items[i].ColorId)
-                                                        @Html.HiddenFor(m => Model.Items[i].SizeId)
+                                                <tr>
+                                                    <th scope="row" style="text-align:center" class="text-wrap">
+                                                        @(color.Value)<br />
+                                                        <i class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @color.ColorHexCode"> </i>
+                                                    </th>
+                                                    @{
+                                                        @for (int i = count; i < count + Model.Sizes.Count; ++i)
+                                                        {
+                                                            <td scope="col" style="text-align:center">
+                                                                <div class="form-group">
+                                                                    <input asp-for="@Model.Items[i].Quantity" class="form-control" />
+                                                                    <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                                                                </div>
+                                                            </td>
+                                                            @Html.HiddenFor(m => Model.Items[i].ColorId)
+                                                            @Html.HiddenFor(m => Model.Items[i].SizeId)
+                                                        }
+                                                        count += Model.Sizes.Count;
                                                     }
-                                                    count += Model.Sizes.Count;
-                                                }
-                                            </tr>
+                                                </tr>
                                             }
                                         </tbody>
                                     </table>
@@ -127,13 +126,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                   
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <hr />
-    @Html.HiddenFor(m => m.Image) 
+    @Html.HiddenFor(m => m.Image)
     <div class="row justify-content-center">
         <div class="col-md-2">
             <a class="btn btn-block btn-danger" asp-action="ProductList">Quay lại</a>

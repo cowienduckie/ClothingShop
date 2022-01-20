@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using ClothingShop.BusinessLogic.Services.Interfaces;
+using ClothingShop.Entity.Models;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using ClothingShop.BusinessLogic.Services.Interfaces;
-using ClothingShop.Entity.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace ClothingShop.BusinessLogic.Services
 {

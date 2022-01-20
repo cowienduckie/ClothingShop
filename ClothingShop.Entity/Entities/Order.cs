@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -24,11 +21,9 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int OriginalPrice { get; set; }
 
-
         [Display(Name = "Chiết khấu")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int Discount { get; set; }
-
 
         [Display(Name = "Tổng giá")]
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
@@ -37,10 +32,18 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Trạng thái")]
         public string Status { get; set; }
 
+        [Display(Name = "Ghi chú đơn hàng")]
+        [MaxLength(500)]
+        public string Note { get; set; }
+
         [Required]
-        [Display(Name = "Create Date"), DataType(DataType.Date)]
+        [Display(Name = "Ngày tạo đơn hàng"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
+
+        [Display(Name = "Ngày duyệt đơn hàng"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? ApprovalTime { get; set; }
 
         //
         public Address Address { get; set; }

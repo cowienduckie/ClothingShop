@@ -1,7 +1,4 @@
 ﻿using ClothingShop.Entity.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClothingShop.Entity.Models
 {
@@ -12,6 +9,8 @@ namespace ClothingShop.Entity.Models
         public Address Address { get; set; }
 
         public string DiscountCode { get; set; }
+
+        public string Note { get; set; }
 
         public CheckOutModel()
         {

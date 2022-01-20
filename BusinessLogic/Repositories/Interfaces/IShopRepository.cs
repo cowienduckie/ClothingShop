@@ -1,6 +1,5 @@
 ﻿using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -52,6 +51,8 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task RedeemVoucher(string UserId, int VoucherId);
 
+        Task CancelApplyingVoucher(string UserId);
+
         Task SendVoucher(int DiscountId, string UserName);
 
         Task SendVoucherToAllUser(int DiscountId);
@@ -80,7 +81,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task<int> GetCartId(string UserId);
 
-        Task CreateOrder(int CartId, Address Address);
+        Task CreateOrder(int CartId, Address Address, string Note);
 
         Task AcceptOrder(int OrderId);
 
@@ -91,5 +92,8 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task<Order> GetOrder(int OrderId);
 
         PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize);
+
+        Task<ReportBillingModel> GetBillingReport(ReportBillingModel report);
+        Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model);
     }
 }

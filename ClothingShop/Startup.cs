@@ -1,4 +1,6 @@
-﻿using ClothingShop.BusinessLogic.Repositories;
+﻿using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
+using ClothingShop.BusinessLogic.Repositories;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.BusinessLogic.Services;
 using ClothingShop.BusinessLogic.Services.Interfaces;
@@ -7,7 +9,6 @@ using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -101,6 +102,9 @@ namespace ClothingShop
             var mailSettings = Configuration.GetSection("MailSettings");
             services.Configure<MailSettings>(mailSettings);
             services.AddTransient<IEmailService, EmailService>();
+
+            //Notyf
+            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,11 +140,16 @@ namespace ClothingShop
                 endpoints.MapControllerRoute(
                     name: "VoucherList",
                     pattern: "{controller=Membership}/{action=VoucherList}");
+                endpoints.MapControllerRoute(
+                    name: "Report",
+                    pattern: "{controller=Report}/{action=Billing}");
             });
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<ShopContext>();
             context.Database.EnsureCreated();
+
+            app.UseNotyf();
         }
     }
 }

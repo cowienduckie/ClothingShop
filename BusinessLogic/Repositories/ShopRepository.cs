@@ -1,15 +1,13 @@
-﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+﻿using ClothingShop.BusinessLogic.Helpers;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Data;
+using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClothingShop.BusinessLogic.Helpers;
-using ClothingShop.Entity.Entities;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.BusinessLogic.Repositories
 {
@@ -191,11 +189,7 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             if (model.UploadImage != null && model.UploadImage.Length != 0)
             {
-                Console.WriteLine("ok");
-
                 model.Image = ImageHelper.UploadImage(model.UploadImage);
-
-                Console.WriteLine(model.Image);
             }
 
             var product = new Product
@@ -407,14 +401,14 @@ namespace ClothingShop.BusinessLogic.Repositories
                                         TotalPrice = o.TotalPrice,
                                         ListItem = o.OrderItems.Where(ot => ot.OrderId == orderID)
                                                                 .Select(ot => new OrderItemModel
-                                        {
-                                            OrderItemId = ot.OrderItemId,
-                                            SkuId = ot.SkuId,
-                                            Quantity = ot.Quantity                                            
-                                        }).ToList()
+                                                                {
+                                                                    OrderItemId = ot.OrderItemId,
+                                                                    SkuId = ot.SkuId,
+                                                                    Quantity = ot.Quantity
+                                                                }).ToList()
                                     }).FirstOrDefaultAsync();
         }
-        //Discount
+
         public PaginationModel<DiscountModel> GetDiscountList(string code, int? pageNumber, int? pageSize)
         {
             var discounts = _db.Discount.AsQueryable();
@@ -615,11 +609,9 @@ namespace ClothingShop.BusinessLogic.Repositories
                                            .Include(v => v.Discount)
                                            .FirstOrDefaultAsync();
 
-            Console.WriteLine(DateTime.Today);
-
-            if (Voucher != null && 
-                !string.IsNullOrEmpty(UserId) && 
-                Voucher.UserId == UserId && 
+            if (Voucher != null &&
+                !string.IsNullOrEmpty(UserId) &&
+                Voucher.UserId == UserId &&
                 Voucher.Discount.EndTime >= DateTime.Today)
             {
                 var Cart = await GetCart(await GetCartId(UserId));
@@ -633,6 +625,20 @@ namespace ClothingShop.BusinessLogic.Repositories
                 _db.Cart.Update(Cart);
                 await _db.SaveChangesAsync();
             }
+        }
+
+        public async Task CancelApplyingVoucher(string UserId)
+        {
+            var Cart = await GetCart(await GetCartId(UserId));
+
+            Cart.VoucherId = null;
+            Cart.Voucher = null;
+            Cart.Discount = 0;
+            Cart.TotalPrice = Cart.OriginalPrice - Cart.Discount;
+            Cart.LastModified = DateTime.Now;
+
+            _db.Cart.Update(Cart);
+            await _db.SaveChangesAsync();
         }
 
         public async Task SendVoucher(int DiscountId, string UserName)
@@ -649,7 +655,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                     var item = vouchers[0];
                     item.UserId = user.Id;
                     item.User = user;
-                    
+
                     _db.Voucher.Update(item);
                     await _db.SaveChangesAsync();
                 }
@@ -725,23 +731,28 @@ namespace ClothingShop.BusinessLogic.Repositories
                                       .Include(u => u.Rank)
                                       .Include(u => u.Points)
                                       .FirstOrDefaultAsync();
-            var nextRank = await _db.Rank.FirstOrDefaultAsync(r => r.RankId == user.Rank.NextRankId);
+
             user.TotalPoint = user.Points.Select(p => p.Value).Sum();
-            if (user.TotalPoint >= nextRank.MinimumPoint)
+
+            _db.Rank.ToList().ForEach(r =>
             {
-                user.RankId = user.Rank.NextRankId;
-            }
+                if (user.TotalPoint >= r.MinimumPoint)
+                {
+                    user.RankId = r.RankId;
+                }
+            });
+
             _db.Users.Update(user);
             await _db.SaveChangesAsync();
         }
 
         public List<Voucher> GetVoucherListByUser(string UserId)
         {
-
             return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId)
                               .Include(v => v.Discount)
                               .ToList();
         }
+
         public List<Voucher> GetVoucherListByUser(string UserId, int number)
         {
             return _db.Voucher.Where(v => !v.IsUsed && v.UserId == UserId)
@@ -815,7 +826,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 user.CartId = cart.CartId;
                 _db.Users.Update(user);
                 await _db.SaveChangesAsync();
-                
+
                 return cart.CartId;
             }
             else
@@ -930,10 +941,10 @@ namespace ClothingShop.BusinessLogic.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task CreateOrder(int CartId, Address Address)
+        public async Task CreateOrder(int CartId, Address Address, string Note)
         {
             await _db.Address.AddAsync(Address);
-             _db.SaveChanges();
+            _db.SaveChanges();
 
             var now = DateTime.Now;
             var cart = await _db.Cart.Where(c => c.CartId == CartId)
@@ -943,7 +954,10 @@ namespace ClothingShop.BusinessLogic.Repositories
                                             .ThenInclude(i => i.Product)
                                      .FirstOrDefaultAsync();
 
-            cart.Voucher.IsUsed = true;
+            if (cart.Voucher != null)
+            {
+                cart.Voucher.IsUsed = true;
+            }
 
             var order = new Order
             {
@@ -954,6 +968,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 TotalPrice = cart.TotalPrice,
                 Status = "Chờ nhận hàng",
                 CreateTime = now,
+                Note = Note,
                 OrderItems = cart.CartItems.Select(i => new OrderItem
                 {
                     SkuId = i.SkuId,
@@ -982,6 +997,7 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             order.Status = "Thành công";
             order.PointId = point.PointId;
+            order.ApprovalTime = DateTime.Now;
 
             _db.ProductEntry.UpdateRange(skus);
             _db.Order.Update(order);
@@ -999,6 +1015,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                        .FirstOrDefaultAsync();
 
             order.Status = "Hủy";
+            order.ApprovalTime = DateTime.Now;
 
             _db.Order.Update(order);
             await _db.SaveChangesAsync();
@@ -1076,6 +1093,84 @@ namespace ClothingShop.BusinessLogic.Repositories
                 PageSize = PageSize,
                 PageNumber = PageNumber
             };
+        }
+
+        public async Task<ReportBillingModel> GetBillingReport(ReportBillingModel model)
+        {
+            var orders = _db.Order.Where(o => model.FromDate <= o.CreateTime && o.CreateTime <= model.ToDate)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .AsQueryable();
+
+            if (model.OrderId.HasValue)
+            {
+                orders = orders.Where(o => o.OrderId == model.OrderId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(model.UserId))
+            {
+                orders = orders.Where(o => o.UserId == model.UserId);
+            }
+
+            model.Total = orders.Count();
+
+            model.ItemList = await orders.Skip((model.PageNumber - 1) * model.PageSize)
+                                            .Take(model.PageSize)
+                                            .Select(o => new ReportBillingResultModel
+                                            {
+                                                OrderId = o.OrderId,
+                                                UserId = o.UserId,
+                                                CustomerName = o.User.LastName + " " + o.User.FirstName,
+                                                ReceiverName = o.Address.Receiver,
+                                                Address = o.Address.Detail,
+                                                PhoneNumber = o.Address.PhoneNumber,
+                                                OriginalPrice = o.OriginalPrice,
+                                                DiscountAmount = o.Discount,
+                                                TotalPrice = o.TotalPrice,
+                                                CreateTime = o.CreateTime,
+                                                ApprovalTime = o.ApprovalTime,
+                                                OrderStatus = o.Status,
+                                                Note = o.Note
+                                            })
+                                            .ToListAsync();
+
+            return model;
+        }
+
+        public async Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model)
+        {
+            var orders = _db.Order.Where(o => model.FromDate <= o.CreateTime && o.CreateTime <= model.ToDate)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .AsQueryable();
+
+            if (model.OrderId.HasValue)
+            {
+                orders = orders.Where(o => o.OrderId == model.OrderId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(model.UserId))
+            {
+                orders = orders.Where(o => o.UserId == model.UserId);
+            }
+
+            return await orders.Select(o => new ReportBillingResultModel
+                               {
+                                    OrderId = o.OrderId,
+                                    UserId = o.UserId,
+                                    CustomerName = o.User.LastName + " " + o.User.FirstName,
+                                    ReceiverName = o.Address.Receiver,
+                                    Address = o.Address.Detail,
+                                    PhoneNumber = o.Address.PhoneNumber,
+                                    OriginalPrice = o.OriginalPrice,
+                                    DiscountAmount = o.Discount,
+                                    TotalPrice = o.TotalPrice,
+                                    CreateTime = o.CreateTime,
+                                    ApprovalTime = o.ApprovalTime,
+                                    OrderStatus = o.Status,
+                                    Note = o.Note
+                               })
+                               .ToListAsync();
         }
     }
 }

@@ -79,11 +79,11 @@
 
                 @foreach (var item in Model.Items)
                 {
-                <tr>
-                    <td class="align-middle" align="center">@item.ColorValue</td>
-                    <td class="align-middle" align="center">@item.SizeValue</td>
-                    <td class="align-middle" align="center">@item.Quantity</td>
-                </tr>
+                    <tr>
+                        <td class="align-middle" align="center">@item.ColorValue</td>
+                        <td class="align-middle" align="center">@item.SizeValue</td>
+                        <td class="align-middle" align="center">@item.Quantity</td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -97,6 +97,6 @@
     <div class="col-sm-2">
         <a class="btn btn-success btn-block" asp-action="EditProduct" asp-route-id="@Model.ProductId">
             Chỉnh sửa
-        </a>        
+        </a>
     </div>
 </div>

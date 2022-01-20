@@ -1,10 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ClothingShop.Entity.Entities
 {

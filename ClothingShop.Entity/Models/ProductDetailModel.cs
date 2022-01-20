@@ -1,10 +1,8 @@
-﻿using System;
+﻿using ClothingShop.Entity.Validation;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using ClothingShop.Entity.Entities;
-using ClothingShop.Entity.Validation;
-using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.Entity.Models
 {

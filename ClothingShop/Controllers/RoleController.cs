@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ClothingShop.Entity.Entities;
-using ClothingShop.Entity.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
@@ -29,7 +27,6 @@ namespace ClothingShop.Controllers
         {
             try
             {
-
                 var PageSize = pageSize ?? 20;
                 var PageNumber = pageNumber ?? 1;
                 var roles = roleManager.Roles.AsQueryable();
@@ -116,7 +113,7 @@ namespace ClothingShop.Controllers
                 Roles role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
                 if (role != null)
                 {
-                    return View(new RoleDetailModel { Id = role.Id, RoleName = role.Name }) ;
+                    return View(new RoleDetailModel { Id = role.Id, RoleName = role.Name });
                 }
             }
 

@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.ComponentModel.DataAnnotations;
-using ClothingShop.Entity.Entities;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -38,6 +35,7 @@ namespace ClothingShop.Entity.Entities
 
         //
         public IList<CartItem> CartItems { get; set; }
+
         public IList<OrderItem> OrderItems { get; set; }
 
         public ProductEntry Buy(int quantity)

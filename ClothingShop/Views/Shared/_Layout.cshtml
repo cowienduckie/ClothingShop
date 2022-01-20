@@ -7,8 +7,8 @@
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
 
 @{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-        var actionName = this.ViewContext.RouteData.Values["action"].ToString();
-        var controllers = new List<(string name, string text)>{
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    var controllers = new List<(string name, string text)>{
         ("Home", "Trang chủ"),
         ("Product", "Sản phẩm"),
         ("Admin", "Quản trị viên"),
@@ -17,6 +17,7 @@
         ("User", "Người dùng"),
         ("Membership", "Khách hàng thân thiết"),
         ("Order", "Đơn hàng"),
+        ("Report", "Báo cáo")
     };
     var actions = new List<(string name, string text)>
 {
@@ -42,7 +43,8 @@
         ("ShowCart", "Giỏ hàng"),
         ("CheckOut", "Thanh toán"),
         ("OrderList", "Quản lý đơn hàng"),
-        ("OrderDetails", "Chi tiết đơn hàng")
+        ("OrderDetails", "Chi tiết đơn hàng"),
+        ("Billing", "Kế toán"),
    };
 }
 <!DOCTYPE html>
@@ -119,6 +121,8 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" asp-controller="Admin" asp-action="OrderList">Quản lý đơn hàng</a>
                                     <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-controller="Report" asp-action="Billing">Quản lý báo cáo</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" asp-controller="User" asp-action="Index">Quản lý tài khoản</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" asp-controller="Role" asp-action="Index">Quản lý vai trò</a>
@@ -154,7 +158,7 @@
         <svg class="bi" width="20" height="20"><use xlink:href="#arrow-up" /></svg>
     </button>
 
-    <div class="container">
+    <div class="@(controllerName == "Report" ? "container-fluid pl-5 pr-5" : "container")">
         @if (actionName == "Index")
         {
             <nav aria-label="breadcrumb bg-light">
@@ -219,6 +223,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)
 </body>
 </html>

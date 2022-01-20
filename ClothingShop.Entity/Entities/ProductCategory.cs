@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClothingShop.Entity.Entities
@@ -17,6 +15,5 @@ namespace ClothingShop.Entity.Entities
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
-
     }
 }

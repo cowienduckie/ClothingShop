@@ -1,18 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ClothingShop.BusinessLogic.Repositories;
-using System.Security.Cryptography;
-using System.Text;
-using ClothingShop.Entity.Data;
-using ClothingShop.Entity.Models;
-using ClothingShop.Entity.Entities;
-using ClothingShop.BusinessLogic.Repositories.Interfaces;
-using System.Text.Json;
 
 namespace ClothingShop.Controllers
 {
@@ -22,16 +16,19 @@ namespace ClothingShop.Controllers
         private readonly UserManager<Users> _userManager;
         private readonly RoleManager<Roles> _roleManager;
         private readonly IShopRepository _shopRepository;
+        private readonly INotyfService _notyf;
 
         public AccountController(SignInManager<Users> signInManager,
                                  UserManager<Users> userManager,
                                  RoleManager<Roles> roleManager,
-                                 IShopRepository shopRepository)
+                                 IShopRepository shopRepository,
+                                 INotyfService notyf)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _shopRepository = shopRepository;
             _roleManager = roleManager;
+            _notyf = notyf;
         }
 
         public IActionResult AccessDenied()
@@ -65,11 +62,13 @@ namespace ClothingShop.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
+                    _notyf.Success("Đăng nhập thành công");
                     return RedirectToLocal(returnUrl);
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    _notyf.Error("Đăng nhập thất bại");
                     return View(model);
                 }
             }
@@ -91,7 +90,12 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                _notyf.Error("Đăng ký thất bại");
+                return View(model);
+            }
+
             try
             {
                 Users user = new Users
@@ -114,16 +118,20 @@ namespace ClothingShop.Controllers
                         IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
                         if (roleResult.Succeeded)
                         {
+                            _notyf.Success("Đăng ký thành công");
                             return RedirectToAction(nameof(Login));
                         }
                     }
                 }
+
+                _notyf.Error("Đăng ký thất bại");
 
                 return View(model);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                _notyf.Error("Có lỗi xảy ra khi đăng ký");
                 return View(model);
             }
         }
@@ -134,6 +142,7 @@ namespace ClothingShop.Controllers
         public async Task<IActionResult> SignOff()
         {
             await _signInManager.SignOutAsync().ConfigureAwait(false);
+            _notyf.Success("Đăng xuất thành công");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 

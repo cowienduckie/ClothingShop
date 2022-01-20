@@ -1,17 +1,14 @@
-﻿
-.topbar{
-    position:fixed;
-    top:0;
+﻿.topbar {
+    position: fixed;
+    top: 0;
     width: 100%;
-    height:50px;
-    z-index:999;
+    height: 50px;
+    z-index: 999;
 }
 
-
-.container-app{
-    margin-top:50px;
+.container-app {
+    margin-top: 50px;
 }
-
 
 .list-icon {
     display: flex;
@@ -22,26 +19,26 @@
     width: 15%;
 }
 
-.list-icon > i{
-    cursor:pointer;
+    .list-icon > i {
+        cursor: pointer;
+    }
+
+        .list-icon > i:hover {
+            padding: 10px;
+            background-color: #221f1f;
+            color: white;
+            border-radius: 5px;
+        }
+
+.nav-list {
+    font-weight: 500;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    width: 20%;
 }
 
-.list-icon > i:hover{
-    padding:10px;
-    background-color: #221f1f;
-    color: white;
-    border-radius: 5px;
-}
-
-.nav-list{
-    font-weight:500;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size:20px;
-    width:20%;
-}
-
-.list-nav-item > li > a:hover{
-    -webkit-text-fill-color:#8a34bd;
+.list-nav-item > li > a:hover {
+    -webkit-text-fill-color: #8a34bd;
 }
 
 .logo-page {
@@ -52,14 +49,14 @@
     background-color: transparent;
 }
 
-.logo-page:hover{
-    -webkit-text-fill-color:#2c9fa3;
-}
+    .logo-page:hover {
+        -webkit-text-fill-color: #2c9fa3;
+    }
 
-.nav-left{
-    width:30%;
+.nav-left {
+    width: 30%;
     margin-left: 5%;
-    margin-right:5%;
+    margin-right: 5%;
 }
 
 .serach-ipnut {
@@ -71,37 +68,37 @@
     width: 50%;
 }
 
-.btn-search{
-    border:none;
+.btn-search {
+    border: none;
     outline: none;
     background-color: transparent;
 }
 
-.link-login{
-    margin-left:5%;
+.link-login {
+    margin-left: 5%;
     text-decoration: none;
-    color:#221f1f;
-    font-weight:500;
-    font-size:20px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #221f1f;
+    font-weight: 500;
+    font-size: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.link-login:hover{
-    text-decoration:none;
-}
+    .link-login:hover {
+        text-decoration: none;
+    }
 
-.link-cart{
-    cursor:pointer;
-    font-size:20px;
+.link-cart {
+    cursor: pointer;
+    font-size: 20px;
     margin-left: 5%;
 }
 
-.link-cart:hover{
-    padding:10px;
-    background-color:#4b4040;
-    border-radius:5px;
-}
+    .link-cart:hover {
+        padding: 10px;
+        background-color: #4b4040;
+        border-radius: 5px;
+    }
 
-.link-cart:hover > i{
-    color:white;
-}
+        .link-cart:hover > i {
+            color: white;
+        }

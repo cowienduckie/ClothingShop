@@ -85,6 +85,10 @@ namespace ClothingShop.Entity.Migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
                     b.Property<int>("OriginalPrice")
                         .HasColumnType("int");
 
@@ -238,11 +242,18 @@ namespace ClothingShop.Entity.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("ApprovalTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
 
                     b.Property<int>("OriginalPrice")
                         .HasColumnType("int");
