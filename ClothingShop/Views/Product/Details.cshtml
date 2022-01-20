@@ -56,7 +56,7 @@
                             if (item.ColorHexCode == hexCode)
                             {
                                 <div class="col-md-2">
-                                    <button class="size-btn btn btn-block btn-outline-dark" value="@item.SkuId">@item.SizeValue</button>
+                                    <button class="size-btn btn btn-block btn-outline-dark" value="@item.SkuId" @(item.Quantity <= 0 ? "disabled" : "")>@item.SizeValue</button>
                                 </div>
                             }
                         }

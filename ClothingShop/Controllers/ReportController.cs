@@ -64,27 +64,6 @@ namespace ClothingShop.Controllers
 
             DataTable table = ExportExcelHelper.ToDataTable(rs);
 
-            var serviceDescription = String.Empty;
-
-            foreach (var billing in rs)
-            {
-                table.Rows.Add(
-                    billing.OrderId, 
-                    billing.UserId,
-                    billing.CustomerName,
-                    billing.ReceiverName,
-                    billing.Address,
-                    billing.PhoneNumber,
-                    billing.OriginalPrice,
-                    billing.DiscountAmount,
-                    billing.TotalPrice,
-                    billing.CreateTime,
-                    billing.AcceptTime,
-                    billing.OrderStatus,
-                    billing.Note
-                );
-            }
-
             string[] columnsTake = table.Columns.Cast<DataColumn>()
                                                 .Select(x => x.ColumnName)
                                                 .ToArray();

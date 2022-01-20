@@ -81,7 +81,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task<int> GetCartId(string UserId);
 
-        Task CreateOrder(int CartId, Address Address);
+        Task CreateOrder(int CartId, Address Address, string Note);
 
         Task AcceptOrder(int OrderId);
 

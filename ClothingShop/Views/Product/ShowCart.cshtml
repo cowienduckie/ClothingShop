@@ -52,7 +52,7 @@ else
                                 </div>
                             </td>
                             <td class="align-middle" align="center">@item.Quantity</td>
-                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND}", item.Quantity * item.SKU.Product.Price))</td>
+                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND;;0VND}", item.Quantity * item.SKU.Product.Price))</td>
                             <td class="align-middle" align="center">
                                 <a class="btn btn-sm btn-secondary"
                                    asp-controller="Product"
@@ -157,7 +157,7 @@ else
                                 <td>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", Model.OriginalPrice))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.OriginalPrice))
                                 </td>
                             </tr>
                             <tr class="text-danger">
@@ -173,7 +173,7 @@ else
                                     <strong>Tổng</strong>
                                 </td>
                                 <td class="text-right">
-                                    @(String.Format("{0:#,#VND}", Model.TotalPrice))
+                                    @(String.Format("{0:#,#VND;;0VND}", Model.TotalPrice))
                                 </td>
                             </tr>
                         </tbody>

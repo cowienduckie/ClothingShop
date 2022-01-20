@@ -10,6 +10,8 @@ namespace ClothingShop.Entity.Models
 
         public string DiscountCode { get; set; }
 
+        public string Note { get; set; }
+
         public CheckOutModel()
         {
             Address = new Address();

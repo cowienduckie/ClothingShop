@@ -26,12 +26,15 @@ namespace ClothingShop.Entity.Models
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Giá gốc")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int OriginalPrice { get; set; }
 
         [Display(Name = "Chiết khấu")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int DiscountAmount { get; set; }
 
         [Display(Name = "Tổng giá")]
+        [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int TotalPrice { get; set; }
 
         [Display(Name = "Lập đơn hàng")]
@@ -40,7 +43,7 @@ namespace ClothingShop.Entity.Models
 
         [Display(Name = "Duyệt đơn hàng")]
         [DataType(DataType.Time), DisplayFormat(DataFormatString = "{0:dd-MM-yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
-        public DateTime? AcceptTime { get; set; }
+        public DateTime? ApprovalTime { get; set; }
 
         [Display(Name = "Trạng thái đơn hàng")]
         public string OrderStatus { get; set; }

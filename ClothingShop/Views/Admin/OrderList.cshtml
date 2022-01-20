@@ -70,6 +70,7 @@ else
                 <th scope="col">@Html.DisplayNameFor(model => model.ItemList[0].User.UserName)</th>
                 <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].TotalPrice)</th>
                 <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Status)</th>
+                <th scope="col" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Note)</th>
                 <th scope="col" style="text-align:center"></th>
             </tr>
         </thead>
@@ -82,6 +83,7 @@ else
                     <td class="align-middle">@Model.ItemList[i].User.UserName</td>
                     <td class="align-middle" align="center">@Model.ItemList[i].TotalPrice</td>
                     <td class="align-middle" align="center">@Model.ItemList[i].Status</td>
+                    <td class="align-middle" align="center">@Model.ItemList[i].Note</td>
                     <td class="align-middle" align="center">
                         <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="OrderDetails" asp-route-orderId="@Model.ItemList[i].OrderId"
                            data-toggle="tooltip" data-placement="bottom" title="Chi tiết">

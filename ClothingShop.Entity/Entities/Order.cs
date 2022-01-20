@@ -43,7 +43,7 @@ namespace ClothingShop.Entity.Entities
 
         [Display(Name = "Ngày duyệt đơn hàng"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? AcceptTime { get; set; }
+        public DateTime? ApprovalTime { get; set; }
 
         //
         public Address Address { get; set; }

@@ -409,7 +409,6 @@ namespace ClothingShop.BusinessLogic.Repositories
                                     }).FirstOrDefaultAsync();
         }
 
-        //Discount
         public PaginationModel<DiscountModel> GetDiscountList(string code, int? pageNumber, int? pageSize)
         {
             var discounts = _db.Discount.AsQueryable();
@@ -732,12 +731,17 @@ namespace ClothingShop.BusinessLogic.Repositories
                                       .Include(u => u.Rank)
                                       .Include(u => u.Points)
                                       .FirstOrDefaultAsync();
-            var nextRank = await _db.Rank.FirstOrDefaultAsync(r => r.RankId == user.Rank.NextRankId);
+
             user.TotalPoint = user.Points.Select(p => p.Value).Sum();
-            if (user.TotalPoint >= nextRank.MinimumPoint)
+
+            _db.Rank.ToList().ForEach(r =>
             {
-                user.RankId = user.Rank.NextRankId;
-            }
+                if (user.TotalPoint >= r.MinimumPoint)
+                {
+                    user.RankId = r.RankId;
+                }
+            });
+
             _db.Users.Update(user);
             await _db.SaveChangesAsync();
         }
@@ -937,7 +941,7 @@ namespace ClothingShop.BusinessLogic.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task CreateOrder(int CartId, Address Address)
+        public async Task CreateOrder(int CartId, Address Address, string Note)
         {
             await _db.Address.AddAsync(Address);
             _db.SaveChanges();
@@ -964,6 +968,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                 TotalPrice = cart.TotalPrice,
                 Status = "Chờ nhận hàng",
                 CreateTime = now,
+                Note = Note,
                 OrderItems = cart.CartItems.Select(i => new OrderItem
                 {
                     SkuId = i.SkuId,
@@ -992,6 +997,7 @@ namespace ClothingShop.BusinessLogic.Repositories
 
             order.Status = "Thành công";
             order.PointId = point.PointId;
+            order.ApprovalTime = DateTime.Now;
 
             _db.ProductEntry.UpdateRange(skus);
             _db.Order.Update(order);
@@ -1009,6 +1015,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                        .FirstOrDefaultAsync();
 
             order.Status = "Hủy";
+            order.ApprovalTime = DateTime.Now;
 
             _db.Order.Update(order);
             await _db.SaveChangesAsync();
@@ -1121,7 +1128,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                 DiscountAmount = o.Discount,
                                                 TotalPrice = o.TotalPrice,
                                                 CreateTime = o.CreateTime,
-                                                AcceptTime = o.AcceptTime,
+                                                ApprovalTime = o.ApprovalTime,
                                                 OrderStatus = o.Status,
                                                 Note = o.Note
                                             })
@@ -1159,7 +1166,7 @@ namespace ClothingShop.BusinessLogic.Repositories
                                     DiscountAmount = o.Discount,
                                     TotalPrice = o.TotalPrice,
                                     CreateTime = o.CreateTime,
-                                    AcceptTime = o.AcceptTime,
+                                    ApprovalTime = o.ApprovalTime,
                                     OrderStatus = o.Status,
                                     Note = o.Note
                                })

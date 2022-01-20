@@ -4,14 +4,16 @@ using ClothingShop.Entity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClothingShop.Entity.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20220120134533_Update-Cart")]
+    partial class UpdateCart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,11 +241,11 @@ namespace ClothingShop.Entity.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("AcceptTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("ApprovalTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");

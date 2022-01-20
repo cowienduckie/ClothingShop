@@ -236,15 +236,15 @@ namespace ClothingShop.Controllers
 
             try
             {
-                await _shopRepository.CreateOrder(model.Cart.CartId, model.Address);
+                await _shopRepository.CreateOrder(model.Cart.CartId, model.Address, model.Note);
                 await _shopRepository.EmptyCart(model.Cart.CartId);
-                _notyf.Success("Thanh toán thành công");
+                _notyf.Success("Đặt hàng thành công");
                 return RedirectToAction("Index", "Product");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                _notyf.Error("Có lỗi xảy ra khi thanh toán");
+                _notyf.Error("Có lỗi xảy ra khi đặt hàng");
                 return RedirectToAction("Index", "Product");
             }
         }
