@@ -140,6 +140,9 @@ namespace ClothingShop
                 endpoints.MapControllerRoute(
                     name: "VoucherList",
                     pattern: "{controller=Membership}/{action=VoucherList}");
+                endpoints.MapControllerRoute(
+                    name: "Report",
+                    pattern: "{controller=Report}/{action=Billing}");
             });
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();

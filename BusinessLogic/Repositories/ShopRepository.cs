@@ -1087,5 +1087,83 @@ namespace ClothingShop.BusinessLogic.Repositories
                 PageNumber = PageNumber
             };
         }
+
+        public async Task<ReportBillingModel> GetBillingReport(ReportBillingModel model)
+        {
+            var orders = _db.Order.Where(o => model.FromDate <= o.CreateTime && o.CreateTime <= model.ToDate)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .AsQueryable();
+
+            if (model.OrderId.HasValue)
+            {
+                orders = orders.Where(o => o.OrderId == model.OrderId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(model.UserId))
+            {
+                orders = orders.Where(o => o.UserId == model.UserId);
+            }
+
+            model.Total = orders.Count();
+
+            model.ItemList = await orders.Skip((model.PageNumber - 1) * model.PageSize)
+                                            .Take(model.PageSize)
+                                            .Select(o => new ReportBillingResultModel
+                                            {
+                                                OrderId = o.OrderId,
+                                                UserId = o.UserId,
+                                                CustomerName = o.User.LastName + " " + o.User.FirstName,
+                                                ReceiverName = o.Address.Receiver,
+                                                Address = o.Address.Detail,
+                                                PhoneNumber = o.Address.PhoneNumber,
+                                                OriginalPrice = o.OriginalPrice,
+                                                DiscountAmount = o.Discount,
+                                                TotalPrice = o.TotalPrice,
+                                                CreateTime = o.CreateTime,
+                                                AcceptTime = o.AcceptTime,
+                                                OrderStatus = o.Status,
+                                                Note = o.Note
+                                            })
+                                            .ToListAsync();
+
+            return model;
+        }
+
+        public async Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model)
+        {
+            var orders = _db.Order.Where(o => model.FromDate <= o.CreateTime && o.CreateTime <= model.ToDate)
+                                  .Include(o => o.User)
+                                  .Include(o => o.Address)
+                                  .AsQueryable();
+
+            if (model.OrderId.HasValue)
+            {
+                orders = orders.Where(o => o.OrderId == model.OrderId.Value);
+            }
+
+            if (!string.IsNullOrEmpty(model.UserId))
+            {
+                orders = orders.Where(o => o.UserId == model.UserId);
+            }
+
+            return await orders.Select(o => new ReportBillingResultModel
+                               {
+                                    OrderId = o.OrderId,
+                                    UserId = o.UserId,
+                                    CustomerName = o.User.LastName + " " + o.User.FirstName,
+                                    ReceiverName = o.Address.Receiver,
+                                    Address = o.Address.Detail,
+                                    PhoneNumber = o.Address.PhoneNumber,
+                                    OriginalPrice = o.OriginalPrice,
+                                    DiscountAmount = o.Discount,
+                                    TotalPrice = o.TotalPrice,
+                                    CreateTime = o.CreateTime,
+                                    AcceptTime = o.AcceptTime,
+                                    OrderStatus = o.Status,
+                                    Note = o.Note
+                               })
+                               .ToListAsync();
+        }
     }
 }

@@ -1,0 +1,182 @@
+﻿@model ClothingShop.Entity.Models.ReportBillingModel
+
+@{
+    ViewData["Title"] = "Quản lý báo cáo kế toán";
+    int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
+    int FirstPage = 1;
+    int CurrPage = Model.PageNumber;
+    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+
+}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="search-icon" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+    </symbol>
+    <symbol id="details-icon" viewBox="0 0 16 16">
+        <path d="m10.277 5.433-4.031.505-.145.67.794.145c.516.123.619.309.505.824L6.101 13.68c-.34 1.578.186 2.32 1.423 2.32.959 0 2.072-.443 2.577-1.052l.155-.732c-.35.31-.866.434-1.206.434-.485 0-.66-.34-.536-.939l1.763-8.278zm.122-3.673a1.76 1.76 0 1 1-3.52 0 1.76 1.76 0 0 1 3.52 0z" />
+    </symbol>
+</svg>
+
+
+<div class="container border p-5">
+    <form id="pagination-form" asp-controller="Report" asp-action="Billing" method="post">
+        <h5><strong>Tìm kiếm thông tin</strong></h5>
+        <hr />
+        <div class="row justify-content-center">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label asp-for="FromDate" class="control-label"></label>
+                    <input asp-for="FromDate" class="form-control" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label asp-for="ToDate" class="control-label"></label>
+                    <input asp-for="ToDate" class="form-control" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label asp-for="OrderId" class="control-label"></label>
+                    <input asp-for="OrderId" class="form-control" />
+                    <span asp-validation-for="OrderId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <input asp-for="UserId" class="form-control" />
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-3 mt-4">
+                <button class="btn btn-primary btn-block"
+                        type="submit"
+                        name="IsExport"
+                        value="false">
+                    Tìm kiếm thông tin <svg class="bi" width="16" height="16"><use xlink:href="#search-icon" /></svg>
+                </button>
+            </div>
+            <div class="col-sm-3 mt-4">
+                <button class="btn btn-success btn-block text-white"
+                        type="submit"
+                        name="IsExport"
+                        value="true">
+                    Xuất báo cáo <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<br />
+<div class="">
+    @if (Model.ItemList.Count == 0)
+    {
+        <hr />
+        <h5 class="text-center">Hiện tại không có đơn hàng nào phù hợp. <a asp-controller="Admin" asp-action="OrderList">Xem tất cả đơn hàng.</a></h5>
+    }
+    else
+    {
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" class="align-middle" style="text-align:center">STT</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].OrderId)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].UserId)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].CustomerName)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].ReceiverName)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Address)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].PhoneNumber)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].OriginalPrice)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].DiscountAmount)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].TotalPrice)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].CreateTime)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].AcceptTime)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].OrderStatus)</th>
+                    <th scope="col" class="align-middle" style="text-align:center">@Html.DisplayNameFor(model => model.ItemList[0].Note)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ItemList.Count; ++i)
+                {
+                    <tr>
+                        <th scope="row" class="align-middle" style="text-align:center">@(i + FirstID)</th>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].OrderId)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].UserId)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].CustomerName)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].ReceiverName)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].Address)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].PhoneNumber)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].OriginalPrice)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].DiscountAmount)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].TotalPrice)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].CreateTime)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].AcceptTime)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].OrderStatus)</td>
+                        <td class="align-middle" style="text-align:center">@Html.DisplayFor(model => model.ItemList[i].Note)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <form asp-controller="Report" asp-action="Billing" method="post">
+            <ul class="pagination justify-content-center">
+                <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                    <button class="page-link" type="submit" name="PageNumber" value="@FirstPage"
+                            data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
+                        &laquo;
+                    </button>
+                </li>
+                <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                    <button class="page-link" type="submit" name="PageNumber" value="@(Model.PageNumber-1)"
+                            data-toggle="tooltip" data-placement="bottom" title="Trang trước">
+                        &#8249;
+                    </button>
+                </li>
+
+                @{
+                    var TotalShowPage = 10;//Change this value to adjust code below
+                    var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                        FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                    var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                      LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
+
+                    for (var i = StartShowPage; i <= EndShowPage; ++i)
+                    {
+                        <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                            <button class="page-link" type="submit" name="PageNumber" value="@i">
+                                @i
+                            </button>
+                        </li>
+                    }
+                }
+
+                <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                    <button class="page-link" type="submit" name="PageNumber" value="@(Model.PageNumber+1)"
+                            data-toggle="tooltip" data-placement="bottom" title="Trang sau">
+                        &#8250;
+                    </button>
+                </li>
+                <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                    <button class="page-link" type="submit" name="PageNumber" value="@LastPage"
+                            data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
+                        &raquo;
+                    </button>
+                </li>
+            </ul>
+            @Html.HiddenFor(m => m.PageSize)
+            @Html.HiddenFor(m => m.Total)
+            @Html.HiddenFor(m => m.FromDate)
+            @Html.HiddenFor(m => m.ToDate)
+            @Html.HiddenFor(m => m.OrderId)
+            @Html.HiddenFor(m => m.UserId)
+        </form>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

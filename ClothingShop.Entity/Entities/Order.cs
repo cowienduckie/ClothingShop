@@ -32,10 +32,18 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Trạng thái")]
         public string Status { get; set; }
 
+        [Display(Name = "Ghi chú đơn hàng")]
+        [MaxLength(500)]
+        public string Note { get; set; }
+
         [Required]
-        [Display(Name = "Create Date"), DataType(DataType.Date)]
+        [Display(Name = "Ngày tạo đơn hàng"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
+
+        [Display(Name = "Ngày duyệt đơn hàng"), DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? AcceptTime { get; set; }
 
         //
         public Address Address { get; set; }
