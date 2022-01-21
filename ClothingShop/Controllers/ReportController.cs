@@ -88,7 +88,6 @@ namespace ClothingShop.Controllers
             {
                 for (int k = 0; k < table.Columns.Count; k++)
                 {
-
                     if (table.Columns[k].DataType == typeof(string))
                     {
                         var a = "" + table.Rows[i][k];
@@ -98,7 +97,6 @@ namespace ClothingShop.Controllers
                         }
                     }
                 }
-
             }
 
             // build in condition list

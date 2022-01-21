@@ -68,7 +68,6 @@ namespace ClothingShop.Controllers
         {
             try
             {
-
                 var user = await GetLoggedUser();
 
                 await _shopRepository.RedeemVoucher(user.Id, VoucherId);

@@ -1155,21 +1155,21 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
 
             return await orders.Select(o => new ReportBillingResultModel
-                               {
-                                    OrderId = o.OrderId,
-                                    UserId = o.UserId,
-                                    CustomerName = o.User.LastName + " " + o.User.FirstName,
-                                    ReceiverName = o.Address.Receiver,
-                                    Address = o.Address.Detail,
-                                    PhoneNumber = o.Address.PhoneNumber,
-                                    OriginalPrice = o.OriginalPrice,
-                                    DiscountAmount = o.Discount,
-                                    TotalPrice = o.TotalPrice,
-                                    CreateTime = o.CreateTime,
-                                    ApprovalTime = o.ApprovalTime,
-                                    OrderStatus = o.Status,
-                                    Note = o.Note
-                               })
+            {
+                OrderId = o.OrderId,
+                UserId = o.UserId,
+                CustomerName = o.User.LastName + " " + o.User.FirstName,
+                ReceiverName = o.Address.Receiver,
+                Address = o.Address.Detail,
+                PhoneNumber = o.Address.PhoneNumber,
+                OriginalPrice = o.OriginalPrice,
+                DiscountAmount = o.Discount,
+                TotalPrice = o.TotalPrice,
+                CreateTime = o.CreateTime,
+                ApprovalTime = o.ApprovalTime,
+                OrderStatus = o.Status,
+                Note = o.Note
+            })
                                .ToListAsync();
         }
     }

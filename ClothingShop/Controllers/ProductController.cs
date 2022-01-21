@@ -17,7 +17,7 @@ namespace ClothingShop.Controllers
         private readonly INotyfService _notyf;
 
         public ProductController(IShopRepository shopRepository,
-                                 UserManager<Users> userManager, 
+                                 UserManager<Users> userManager,
                                  INotyfService notyf)
         {
             _shopRepository = shopRepository;
