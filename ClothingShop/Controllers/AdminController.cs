@@ -330,7 +330,7 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 _notyf.Error("Có lỗi xảy ra khi xóa danh mục");
-                return View();
+                return RedirectToAction(nameof(CategoryList));
             }
         }
 
@@ -456,7 +456,7 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 _notyf.Error("Có lỗi xảy ra khi xoá khuyến mãi");
-                return View();
+                return RedirectToAction(nameof(DiscountList));
             }
         }
 

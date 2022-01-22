@@ -54,7 +54,7 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 _notyf.Error("Xảy ra lỗi khi lấy chi tiết giao dịch");
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
         }
 
