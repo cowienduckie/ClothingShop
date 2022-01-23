@@ -31,7 +31,7 @@ namespace ClothingShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ShopContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ClothingShopConnectionString")));
+                options.UseSqlite(Configuration.GetConnectionString("ClothingShopConnectionString")));
 
             services.AddScoped<IShopRepository, ShopRepository>();
 
