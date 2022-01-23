@@ -113,7 +113,10 @@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <div class="navbar-nav d-sm-inline-flex justify-content-end">
-                            <a class="@("nav-item nav-link "+(controllerName == "Product" && actionName =="ShowCart" ? "active" : ""))"
+                            <a class="nav-item nav-link btn-lg" asp-controller="Notification" asp-action="Index">
+                                <i class="fa fa-bell-o" aria-hidden="true"></i>
+                            </a>
+                            <a class="@("nav-item nav-link " + (controllerName == "Product" && actionName == "ShowCart" ? "active" : ""))"
                                asp-controller="Product" asp-action="ShowCart">
                                 Giỏ hàng @($"({await _shopRepository.GetCurrentCartAmount(userId)})")
                             </a>

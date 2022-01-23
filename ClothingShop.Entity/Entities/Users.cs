@@ -33,6 +33,8 @@ namespace ClothingShop.Entity.Entities
 
         public IList<Point> Points { get; set; }
 
+        public IList<Notification> Notifications { get; set; }
+
         public IList<Address> Addresses { get; set; }
 
         public IList<UserRoles> UserRoles { get; set; }

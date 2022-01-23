@@ -1,0 +1,85 @@
+﻿@model ClothingShop.Entity.Models.PaginationModel<Notification>
+
+@{
+    ViewData["Title"] = "Thông báo";
+    int FirstID = Model.PageSize * (Model.PageNumber - 1) + 1;
+    int FirstPage = 1;
+    int CurrPage = Model.PageNumber;
+    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+}
+<br />
+<h3><strong>THÔNG BÁO (@Model.Total)</strong></h3>
+<br />
+@if (Model.ItemList.Count == 0)
+{
+    <h5 class="text-center">Hiện tại không có thông báo nào. <a asp-controller="Home" asp-action="Index">Quay về trang chủ.</a></h5>
+}
+else
+{
+    <div class="row">
+        @foreach (var noti in Model.ItemList)
+        {
+            <div class="card mb-3 col-12">
+                <div class="row no-gutters">
+                    <div class="col-md-2">
+                        <img src="/assets/notification.png" class="card-img" alt="...">
+                    </div>
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong>@Html.DisplayFor(m => noti.Tittle)</strong></h5>
+                            <p class="card-text">@Html.Raw(noti.Message)</p>
+                            <p class="card-text"><small class="text-muted">@Html.DisplayFor(m => noti.SendTime)</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <form asp-controller="Notification" asp-action="Index" method="get">
+        <ul class="pagination justify-content-center">
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@FirstPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang đầu">
+                    &laquo;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber == FirstPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber-1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang trước">
+                    &#8249;
+                </button>
+            </li>
+
+            @{
+                var TotalShowPage = 10;//Change this value to adjust code below
+                var StartShowPage = FirstPage > CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2) ?
+                                    FirstPage : CurrPage - (int)Math.Ceiling((double)(TotalShowPage - 1) / 2);
+                var EndShowPage = LastPage < CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2) ?
+                                  LastPage : CurrPage + (int)Math.Floor((double)(TotalShowPage - 1) / 2);
+
+                for (var i = StartShowPage; i <= EndShowPage; ++i)
+                {
+                    <li class="@(i == CurrPage ? "page-item disabled": "page-item")">
+                        <button class="page-link" type="submit" name="pageNumber" value="@i">
+                            @i
+                        </button>
+                    </li>
+                }
+            }
+
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@(Model.PageNumber+1)"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang sau">
+                    &#8250;
+                </button>
+            </li>
+            <li class="@(Model.PageNumber >= LastPage ? "page-item disabled": "page-item")">
+                <button class="page-link" type="submit" name="pageNumber" value="@LastPage"
+                        data-toggle="tooltip" data-placement="bottom" title="Trang cuối">
+                    &raquo;
+                </button>
+            </li>
+        </ul>
+    </form>
+}
