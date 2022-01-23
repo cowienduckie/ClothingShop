@@ -6,10 +6,9 @@ namespace ClothingShop.Entity.Models
 {
     public class OrderDetailModel
     {
-        [Key]
-        public int OrderId { get; set; }
+        [Key] public int OrderId { get; set; }
 
-        public String UserId { get; set; }
+        public string UserId { get; set; }
 
         public int OriginalPrice { get; set; }
 
@@ -20,7 +19,8 @@ namespace ClothingShop.Entity.Models
         public string Status { get; set; }
 
         [Required]
-        [Display(Name = "Create Date"), DataType(DataType.Date)]
+        [Display(Name = "Create Date")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 

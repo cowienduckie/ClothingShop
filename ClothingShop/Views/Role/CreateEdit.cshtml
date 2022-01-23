@@ -1,9 +1,9 @@
 ﻿@model RoleDetailModel
-@{ ViewData["Title"] = "Thêm/Sửa vai trò";}
+@{ ViewData["Title"] = "Thêm/Sửa vai trò"; }
 
 <h1>THÊM/SỬA VAI TRÒ</h1>
-<hr />
-<br />
+<hr/>
+<br/>
 <form asp-action="CreateEdit" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="RoleName" class=" control-label"></label>
-                <input asp-for="RoleName" class="form-control" />
+                <input asp-for="RoleName" class="form-control"/>
                 <span asp-validation-for="RoleName" class="text-danger"></span>
             </div>
             @Html.HiddenFor(m => m.Id)
@@ -28,5 +28,5 @@
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

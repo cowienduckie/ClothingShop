@@ -1,5 +1,5 @@
-﻿using ClothingShop.Entity.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using ClothingShop.Entity.Entities;
 
 namespace ClothingShop.Entity.Models
 {
@@ -15,7 +15,6 @@ namespace ClothingShop.Entity.Models
 
         public string Value { get; set; }
 
-        [Display(Name = "Trạng thái")]
-        public bool IsUsed { get; set; }
+        [Display(Name = "Trạng thái")] public bool IsUsed { get; set; }
     }
 }

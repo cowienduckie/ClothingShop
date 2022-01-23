@@ -6,12 +6,17 @@ namespace ClothingShop.Entity.Entities
 {
     public class Cart
     {
-        [Required, Key]
+        public Cart()
+        {
+            CartItems = new List<CartItem>();
+        }
+
+        [Required]
+        [Key]
         [Display(Name = "ID Giỏ hàng")]
         public int CartId { get; set; }
 
-        [Display(Name = "ID Tài khoản")]
-        public string UserId { get; set; }
+        [Display(Name = "ID Tài khoản")] public string UserId { get; set; }
 
         public int? VoucherId { get; set; }
 
@@ -28,17 +33,18 @@ namespace ClothingShop.Entity.Entities
         public int TotalPrice { get; set; }
 
         [Required]
-        [Display(Name = "Create Time"), DataType(DataType.Date)]
+        [Display(Name = "Create Time")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [Display(Name = "Last Modified")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 
-        [Required]
-        public bool IsDelete { get; set; }
+        [Required] public bool IsDelete { get; set; }
 
         //
         public Users User { get; set; }
@@ -46,10 +52,5 @@ namespace ClothingShop.Entity.Entities
         public Voucher Voucher { get; set; }
 
         public IList<CartItem> CartItems { get; set; }
-
-        public Cart()
-        {
-            CartItems = new List<CartItem>();
-        }
     }
 }

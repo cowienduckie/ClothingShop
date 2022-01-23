@@ -39,7 +39,9 @@
 </div>
 <br/>
 <div class="m-5">
-    <h4><strong>DANH MỤC SẢN PHẨM</strong></h4>
+    <h4>
+        <strong>DANH MỤC SẢN PHẨM</strong>
+    </h4>
     <hr/>
     <div class="row card-deck">
         @foreach (var category in Categories)
@@ -51,7 +53,9 @@
                    asp-route-category="@category.CategoryId">
                     <div class="card bg-light text-dark">
                         <div class="card-body">
-                            <h5 class="card-text text-center"><strong>@category.Name</strong></h5>
+                            <h5 class="card-text text-center">
+                                <strong>@category.Name</strong>
+                            </h5>
                         </div>
                     </div>
                 </a>
@@ -62,7 +66,9 @@
                asp-controller="Product">
                 <div class="card bg-light text-dark">
                     <div class="card-body">
-                        <h5 class="card-text text-center"><strong>Toàn bộ sản phẩm</strong></h5>
+                        <h5 class="card-text text-center">
+                            <strong>Toàn bộ sản phẩm</strong>
+                        </h5>
                     </div>
                 </div>
             </a>
@@ -72,18 +78,22 @@
 @if (NewItems != null && NewItems.Count != 0)
 {
     <div class="m-5">
-        <h4><strong>SẢN PHẨM MỚI</strong></h4>
+        <h4>
+            <strong>SẢN PHẨM MỚI</strong>
+        </h4>
         <hr/>
         <div class="row card-deck">
             @foreach (var item in NewItems)
             {
-                <div class="col-md-2" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-md-2" style="margin-bottom: 15px; margin-top: 15px;">
                     <div class="card">
-                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="text-decoration: none; color:#000000">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="color: #000000; text-decoration: none;">
                             <img src="@Url.Content(item.Image)" class="card-img-top border-bottom" alt="@item.Name" style="margin: auto">
                             <div class="card-body">
-                                <h5 class="card-title"><strong>@item.Name</strong></h5>
-                                <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
+                                <h5 class="card-title">
+                                    <strong>@item.Name</strong>
+                                </h5>
+                                <h7 class="card-text">@string.Format("{0:#,#VND;;0VND}", item.Price)</h7>
                             </div>
                         </a>
                     </div>
@@ -96,18 +106,22 @@
 @if (HotItems != null && HotItems.Count != 0)
 {
     <div class="m-5">
-        <h4><strong>SẢN PHẨM BÁN CHẠY</strong></h4>
+        <h4>
+            <strong>SẢN PHẨM BÁN CHẠY</strong>
+        </h4>
         <hr/>
         <div class="row card-deck">
             @foreach (var item in HotItems)
             {
-                <div class="col-md-2" style="margin-top: 15px; margin-bottom: 15px">
+                <div class="col-md-2" style="margin-bottom: 15px; margin-top: 15px;">
                     <div class="card">
-                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="text-decoration: none; color:#000000">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="color: #000000; text-decoration: none;">
                             <img src="@Url.Content(item.Image)" class="card-img-top border-bottom" alt="@item.Name" style="margin: auto">
                             <div class="card-body">
-                                <h5 class="card-title"><strong>@item.Name</strong></h5>
-                                <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
+                                <h5 class="card-title">
+                                    <strong>@item.Name</strong>
+                                </h5>
+                                <h7 class="card-text">@string.Format("{0:#,#VND;;0VND}", item.Price)</h7>
                             </div>
                         </a>
                     </div>
@@ -116,4 +130,3 @@
         </div>
     </div>
 }
-

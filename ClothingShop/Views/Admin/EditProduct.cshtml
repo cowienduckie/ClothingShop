@@ -6,22 +6,24 @@
 
 <h1>@Model.Name.ToUpper()</h1>
 <h4>Chỉnh sửa sản phẩm</h4>
-<hr />
-<br />
+<hr/>
+<br/>
 <form asp-action="EditProduct" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-4">
-            <h5><strong>THÔNG SỐ</strong></h5>
-            <hr />
+            <h5>
+                <strong>THÔNG SỐ</strong>
+            </h5>
+            <hr/>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
+                <input asp-for="Price" class="form-control"/>
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,10 +44,12 @@
             @Html.HiddenFor(m => m.Image)
         </div>
         <div class="col-md-6">
-            <h5><strong>DANH MỤC PHÂN LOẠI</strong></h5>
-            <hr />
+            <h5>
+                <strong>DANH MỤC PHÂN LOẠI</strong>
+            </h5>
+            <hr/>
             <div class="row">
-                @for (int i = 0; i < Model.Categories.Count; ++i)
+                @for (var i = 0; i < Model.Categories.Count; ++i)
                 {
                     <div class="col-md-6">
                         <div class="form-group form-check">
@@ -63,5 +67,5 @@
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

@@ -1,19 +1,20 @@
-﻿using ClothingShop.BusinessLogic.Services.Interfaces;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using ClothingShop.BusinessLogic.Services.Interfaces;
 using ClothingShop.Entity.Models;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System;
-using System.Threading.Tasks;
 
 namespace ClothingShop.BusinessLogic.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly MailSettings mailSettings;
-
         private readonly ILogger<EmailService> logger;
+        private readonly MailSettings mailSettings;
 
         public EmailService(IOptions<MailSettings> _mailSettings, ILogger<EmailService> _logger)
         {
@@ -34,7 +35,7 @@ namespace ClothingShop.BusinessLogic.Services
             builder.HtmlBody = mailContent.Body;
             email.Body = builder.ToMessageBody();
 
-            using var smtp = new MailKit.Net.Smtp.SmtpClient();
+            using var smtp = new SmtpClient();
 
             try
             {
@@ -45,7 +46,7 @@ namespace ClothingShop.BusinessLogic.Services
             catch (Exception ex)
             {
                 //If sending mail is failed, mails is stored at mailsSave
-                System.IO.Directory.CreateDirectory("mailsSave");
+                Directory.CreateDirectory("mailsSave");
                 var emailsavefile = string.Format(@"mailsSave/{0}.eml", Guid.NewGuid());
                 await email.WriteToAsync(emailsavefile);
 
@@ -60,7 +61,7 @@ namespace ClothingShop.BusinessLogic.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            await SendMail(new MailContent()
+            await SendMail(new MailContent
             {
                 To = email,
                 Subject = subject,

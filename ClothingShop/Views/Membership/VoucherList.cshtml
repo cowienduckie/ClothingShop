@@ -15,11 +15,13 @@ else
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-4 align-middle">
-                                <img src="~/assets/voucher-icon.png" class="img-fluid" />
+                                <img src="~/assets/voucher-icon.png" class="img-fluid"/>
                             </div>
                             <div class="col-md-8">
-                                <h6><strong>@voucher.Discount.Name.ToUpper()</strong></h6>
-                                <hr />
+                                <h6>
+                                    <strong>@voucher.Discount.Name.ToUpper()</strong>
+                                </h6>
+                                <hr/>
                                 <dl class="row">
                                     <dt class="col-md-5">
                                         @Html.DisplayNameFor(m => voucher.Discount.Code)
@@ -64,7 +66,7 @@ else
                         </div>
                     </div>
                 </div>
-                <br />
+                <br/>
             </div>
         }
     </div>

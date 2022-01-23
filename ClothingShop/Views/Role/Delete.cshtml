@@ -1,9 +1,9 @@
 ﻿@model RoleDetailModel
-@{ ViewData["Title"] = "Xóa vai trò";}
+@{ ViewData["Title"] = "Xóa vai trò"; }
 
 <h1>XÓA VAI TRÒ</h1>
-<hr />
-<br />
+<hr/>
+<br/>
 <div class="row">
     <div class="col-md-4">
         <dl class="row">
@@ -22,7 +22,7 @@
         </dl>
     </div>
 </div>
-<hr />
+<hr/>
 <div class="row justify-content-center">
     <div class="col-sm-2">
         <a class="btn btn-secondary w-100" asp-action="Index">Quay lại</a>
@@ -46,8 +46,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                         <form asp-action="Delete">
-                            <input type="hidden" asp-for="Id" />
-                            <input type="submit" value="Xác nhận" class="btn btn-danger btn-block" />
+                            <input type="hidden" asp-for="Id"/>
+                            <input type="submit" value="Xác nhận" class="btn btn-danger btn-block"/>
                         </form>
                     </div>
                 </div>

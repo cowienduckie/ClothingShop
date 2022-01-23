@@ -1,10 +1,10 @@
-﻿@model ClothingShop.Entity.Models.ProductDetailModel
+﻿@model ProductDetailModel
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
 
     var ColorHexCode = Model.Items.Select(i => i.ColorHexCode).ToList().Distinct();
 }
-<br />
+<br/>
 <div class="row">
     <div class="col-md-6 justify-content-center">
         <!--Image Slider-->
@@ -36,18 +36,23 @@
         </div>
     </div>
     <div class="col-md-6">
-        <h2><strong>@Html.DisplayFor(m => m.Name)</strong></h2>
+        <h2>
+            <strong>@Html.DisplayFor(m => m.Name)</strong>
+        </h2>
         <h4>@Html.DisplayFor(m => m.Price)</h4>
-        <hr />
-        <h5><strong>Màu sắc</strong></h5>
-        <br />
+        <hr/>
+        <h5>
+            <strong>Màu sắc</strong>
+        </h5>
+        <br/>
         <div class="row">
             @foreach (var hexCode in ColorHexCode)
             {
                 <div class="col-md-2">
                     <button id="@hexCode.Trim().Substring(1)"
                             class="btn btn-outline-dark btn-circle btn-lg color"
-                            style="background-color: @hexCode"> </button>
+                            style="background-color: @hexCode">
+                    </button>
                 </div>
                 <div id="@(hexCode.Trim().Substring(1) + "-size")" style="display: none;">
                     <div class="row">
@@ -61,26 +66,30 @@
                 </div>
             }
         </div>
-        <br />
-        <h5><strong>Kích cỡ</strong></h5>
-        <br />
+        <br/>
+        <h5>
+            <strong>Kích cỡ</strong>
+        </h5>
+        <br/>
         <div id="size-div">
             <div></div>
         </div>
-        <br />
-        <h5><strong>Số lượng</strong></h5>
-        <br />
+        <br/>
+        <h5>
+            <strong>Số lượng</strong>
+        </h5>
+        <br/>
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
                     <input class="form-control" type="number" id="Quantity" name="Quantity" min="1"
                            placeholder="Số lượng"
-                           style="display: none;" />
+                           style="display: none;"/>
                 </div>
             </div>
         </div>
-        <br />
-        <br />
+        <br/>
+        <br/>
         <div class="row">
             <div class="col-sm-6">
                 <a class="btn btn-warning btn-block"
@@ -100,9 +109,11 @@
                 </a>
             </div>
         </div>
-        <hr />
+        <hr/>
         <div>
-            <h5><strong>Mô tả</strong></h5>
+            <h5>
+                <strong>Mô tả</strong>
+            </h5>
             <h6 class="text-justify">@Html.DisplayFor(model => model.Description)</h6>
         </div>
     </div>
@@ -114,27 +125,29 @@
             integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
             crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function ()
-        {
-            $(".color").click(function (e){
+        $(document).ready(function() {
+            $(".color").click(function(e) {
                 e.preventDefault();
-                var content = $("#" + this.id + "-size").first().html();
+                const content = $(`#${this.id}-size`).first().html();
                 $('#size-div div:first-child').first().replaceWith($.parseHTML(content));
             });
 
-            $(document).on('click', '.size-btn' ,function (e) {
-                e.preventDefault();
-                $('#Quantity').val("1");
-                $('#Quantity').css("display", "");
-                var SkuId = 'SkuId=' + this.value;
-                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/SkuId=\d+/, SkuId));
-                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, 'Quantity=1'));
-            });
+            $(document).on('click',
+                '.size-btn',
+                function(e) {
+                    e.preventDefault();
+                    $('#Quantity').val("1");
+                    $('#Quantity').css("display", "");
+                    const SkuId = `SkuId=${this.value}`;
+                    $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/SkuId=\d+/, SkuId));
+                    $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, 'Quantity=1'));
+                });
 
-            $('#Quantity').on('change', function () {
-                var newValue = 'Quantity=' + this.value;
-                $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, newValue));
-            });
+            $('#Quantity').on('change',
+                function() {
+                    const newValue = `Quantity=${this.value}`;
+                    $("#add-to-cart-btn").attr("href", $("#add-to-cart-btn").attr('href').replace(/Quantity=\d+/, newValue));
+                });
 
         });
     </script>

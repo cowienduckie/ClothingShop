@@ -1,17 +1,28 @@
-﻿using ClothingShop.Entity.Validation;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ClothingShop.Entity.Validation;
+using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.Entity.Models
 {
     public class ProductDetailModel
     {
-        [Display(Name = "ID")]
-        public int ProductId { get; set; }
+        public ProductDetailModel()
+        {
+            Image = "https://i.imgur.com/iQeIsmz.jpg";
+            Items = new List<ItemModel>();
+            Colors = new List<ColorModel>();
+            Sizes = new List<SizeModel>();
+            Categories = new List<CategoryModel>();
+            Description =
+                "Đây là một mô tả mẫu để thử nghiệm cho sản phẩm của cửa hàng thời trang Eva de Eva. Các thành viên phụ trách sản phẩm phải update lại mô tả này. Độ dài của mô tả này là 180 ký tự.";
+        }
 
-        [StringLength(50), Required]
+        [Display(Name = "ID")] public int ProductId { get; set; }
+
+        [StringLength(50)]
+        [Required]
         [Display(Name = "Tên sản phẩm")]
         public string Name { get; set; }
 
@@ -28,8 +39,7 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Mô tả")]
         public string Description { get; set; }
 
-        [Display(Name = "Số lượng")]
-        public int Stock { get; set; }
+        [Display(Name = "Số lượng")] public int Stock { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
@@ -47,22 +57,11 @@ namespace ClothingShop.Entity.Models
 
         public List<SizeModel> Sizes { get; set; }
 
-        [Display(Name = "Danh mục sản phẩm")]
-        public List<CategoryModel> Categories { get; set; }
+        [Display(Name = "Danh mục sản phẩm")] public List<CategoryModel> Categories { get; set; }
 
         [DataType(DataType.Upload)]
         [MaxFileSize(1 * 1024 * 1024)] //size = x * 1024 * 1024 MB
-        [AllowedExtensions(new string[] { ".jpg", ".png", ".jpeg" })]
+        [AllowedExtensions(new[] {".jpg", ".png", ".jpeg"})]
         public IFormFile UploadImage { get; set; }
-
-        public ProductDetailModel()
-        {
-            this.Image = "https://i.imgur.com/iQeIsmz.jpg";
-            this.Items = new List<ItemModel>();
-            this.Colors = new List<ColorModel>();
-            this.Sizes = new List<SizeModel>();
-            this.Categories = new List<CategoryModel>();
-            this.Description = "Đây là một mô tả mẫu để thử nghiệm cho sản phẩm của cửa hàng thời trang Eva de Eva. Các thành viên phụ trách sản phẩm phải update lại mô tả này. Độ dài của mô tả này là 180 ký tự.";
-        }
     }
 }

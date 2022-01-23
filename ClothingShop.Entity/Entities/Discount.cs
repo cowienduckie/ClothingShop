@@ -9,15 +9,18 @@ namespace ClothingShop.Entity.Entities
         public int DiscountId { get; set; }
 
         [Display(Name = "Tên")]
-        [StringLength(50), Required]
+        [StringLength(50)]
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "Mã giảm giá")]
-        [StringLength(50), Required]
+        [StringLength(50)]
+        [Required]
         public string Code { get; set; }
 
         [Display(Name = "Chiết khấu")]
-        [Range(0, 100), Required]
+        [Range(0, 100)]
+        [Required]
         [DisplayFormat(DataFormatString = @"{0:#\%}")]
         public int Percentage { get; set; }
 
@@ -29,21 +32,26 @@ namespace ClothingShop.Entity.Entities
         [Display(Name = "Mô tả")]
         public string Description { get; set; }
 
-        [Display(Name = "Ngày bắt đầu"), DataType(DataType.Date), Required]
+        [Display(Name = "Ngày bắt đầu")]
+        [DataType(DataType.Date)]
+        [Required]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 
-        [Display(Name = "Ngày kết thúc"), DataType(DataType.Date)]
+        [Display(Name = "Ngày kết thúc")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
 
         [Required]
-        [Display(Name = "Create Time"), DataType(DataType.Date)]
+        [Display(Name = "Create Time")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [Display(Name = "Last Modified")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 

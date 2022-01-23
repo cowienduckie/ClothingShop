@@ -6,13 +6,12 @@ namespace ClothingShop.Entity.Entities
 {
     public class Category
     {
-        [Required]
-        [Key]
-        public int CategoryId { get; set; }
+        [Required] [Key] public int CategoryId { get; set; }
 
         public int? ParentId { get; set; }
 
-        [Required, StringLength(50)]
+        [Required]
+        [StringLength(50)]
         [Display(Name = "Tên danh mục")]
         public string Name { get; set; }
 
@@ -21,12 +20,14 @@ namespace ClothingShop.Entity.Entities
         public string Description { get; set; }
 
         [Required]
-        [Display(Name = "Create Time"), DataType(DataType.Date)]
+        [Display(Name = "Create Time")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
         [Required]
-        [Display(Name = "Last Modified"), DataType(DataType.Date)]
+        [Display(Name = "Last Modified")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:HH:mm:ss dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime LastModified { get; set; }
 

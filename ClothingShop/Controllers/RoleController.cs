@@ -1,12 +1,12 @@
-﻿using ClothingShop.Entity.Entities;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
@@ -31,7 +31,7 @@ namespace ClothingShop.Controllers
                 var PageNumber = pageNumber ?? 1;
                 var roles = roleManager.Roles.AsQueryable();
 
-                var model = new PaginationModel<RoleDetailModel>()
+                var model = new PaginationModel<RoleDetailModel>
                 {
                     ItemList = roles.Select(r => new RoleDetailModel
                     {
@@ -60,7 +60,7 @@ namespace ClothingShop.Controllers
             var model = new RoleDetailModel();
             if (!string.IsNullOrEmpty(id))
             {
-                Roles role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
+                var role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
 
                 if (role != null)
                 {
@@ -68,6 +68,7 @@ namespace ClothingShop.Controllers
                     model.RoleName = role.Name;
                 }
             }
+
             return View(model);
         }
 
@@ -80,18 +81,16 @@ namespace ClothingShop.Controllers
             try
             {
                 var id = model.Id;
-                bool isExist = !string.IsNullOrEmpty(id);
+                var isExist = !string.IsNullOrEmpty(id);
 
-                Roles role = isExist ? await roleManager.FindByIdAsync(id) : new Roles();
+                var role = isExist ? await roleManager.FindByIdAsync(id) : new Roles();
 
                 role.Name = model.RoleName;
 
-                IdentityResult roleResult = isExist ? await roleManager.UpdateAsync(role).ConfigureAwait(false)
-                                                   : await roleManager.CreateAsync(role).ConfigureAwait(false);
-                if (roleResult.Succeeded)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+                var roleResult = isExist
+                    ? await roleManager.UpdateAsync(role).ConfigureAwait(false)
+                    : await roleManager.CreateAsync(role).ConfigureAwait(false);
+                if (roleResult.Succeeded) return RedirectToAction(nameof(Index));
 
                 return View(model);
             }
@@ -107,14 +106,11 @@ namespace ClothingShop.Controllers
         [Route("Role/Delete")]
         public async Task<IActionResult> Delete(string id)
         {
-            string name = string.Empty;
+            var name = string.Empty;
             if (!string.IsNullOrEmpty(id))
             {
-                Roles role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
-                if (role != null)
-                {
-                    return View(new RoleDetailModel { Id = role.Id, RoleName = role.Name });
-                }
+                var role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
+                if (role != null) return View(new RoleDetailModel {Id = role.Id, RoleName = role.Name});
             }
 
             return RedirectToAction(nameof(Index));
@@ -127,16 +123,14 @@ namespace ClothingShop.Controllers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                Roles role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
+                var role = await roleManager.FindByIdAsync(id).ConfigureAwait(false);
                 if (role != null)
                 {
-                    IdentityResult roleResult = roleManager.DeleteAsync(role).Result;
-                    if (roleResult.Succeeded)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
+                    var roleResult = roleManager.DeleteAsync(role).Result;
+                    if (roleResult.Succeeded) return RedirectToAction(nameof(Index));
                 }
             }
+
             return View();
         }
     }

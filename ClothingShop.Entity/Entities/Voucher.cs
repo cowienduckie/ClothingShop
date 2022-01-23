@@ -10,11 +10,9 @@ namespace ClothingShop.Entity.Entities
 
         public string UserId { get; set; }
 
-        [Display(Name = "Mã voucher")]
-        public string Value { get; set; }
+        [Display(Name = "Mã voucher")] public string Value { get; set; }
 
-        [Display(Name = "Trạng thái")]
-        public bool IsUsed { get; set; }
+        [Display(Name = "Trạng thái")] public bool IsUsed { get; set; }
 
         //
         public Discount Discount { get; set; }

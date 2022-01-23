@@ -1,270 +1,285 @@
-﻿@model ClothingShop.Entity.Models.MembershipModel
+﻿@model MembershipModel
 
 @{
     ViewData["Title"] = "Khách hàng thân thiết";
 
-    var ProgressPercentage = (Model.TotalPoint.Value * 100 / Model.Rank.NextRank.MinimumPoint);
+    var ProgressPercentage = Model.TotalPoint.Value * 100 / Model.Rank.NextRank.MinimumPoint;
     var PointToRankUp = Model.Rank.NextRank.MinimumPoint - Model.TotalPoint;
     if (PointToRankUp < 0) PointToRankUp = 0;
 }
-<br />
+<br/>
 <div>
-    <div class="row">
-        <div class="col-md-6 border-right">
-            <h5><strong>THỂ LỆ</strong></h5>
-            <hr />
-            <p class="text-center">
-                <em>
-                    Còn gì tuyệt vời hơn khi đến với Eva de Eva, không chỉ để mua sắm những món thời trang đơn giản và thời đại,
-                    bạn còn có thể tích lũy điểm để thăng hạng và nhận ngay những đặc quyền tuyệt vời chỉ dành riêng cho bạn.
-                </em>
-            </p>
-            <br />
-            <h5 class="text-center"><strong>Tích điểm thật dễ dàng</strong></h5>
-            <br />
-            <table class=" table table-hover table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col" style="text-align:center">Hạng</th>
-                        <th scope="col" style="text-align:center">Điểm đạt được</th>
-                        <th scope="col" style="text-align:center">Điểm tích lũy trên hóa đơn</th>
-                    </tr>
-                </thead>
-                <tbody>
+<div class="row">
+<div class="col-md-6 border-right">
+    <h5>
+        <strong>THỂ LỆ</strong>
+    </h5>
+    <hr/>
+    <p class="text-center">
+        <em>
+            Còn gì tuyệt vời hơn khi đến với Eva de Eva, không chỉ để mua sắm những món thời trang đơn giản và thời đại,
+            bạn còn có thể tích lũy điểm để thăng hạng và nhận ngay những đặc quyền tuyệt vời chỉ dành riêng cho bạn.
+        </em>
+    </p>
+    <br/>
+    <h5 class="text-center">
+        <strong>Tích điểm thật dễ dàng</strong>
+    </h5>
+    <br/>
+    <table class=" table table-hover table-striped table-bordered">
+        <thead>
+        <tr>
+            <th scope="col" style="text-align: center">Hạng</th>
+            <th scope="col" style="text-align: center">Điểm đạt được</th>
+            <th scope="col" style="text-align: center">Điểm tích lũy trên hóa đơn</th>
+        </tr>
+        </thead>
+        <tbody>
 
-                    @foreach (var item in Model.RankList)
-                    {
-                        <tr>
-                            <td class="align-middle" align="center">@item.Name</td>
-                            <td class="align-middle" align="center">@item.MinimumPoint</td>
-                            <td class="align-middle" align="center">@(item.ConvertPointPercentage * 100)%</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <br />
-            <h5 class="text-center"><strong>Quyền lợi siêu hấp dẫn</strong></h5>
-            <br />
-            <p class="text-center">
-                Khách hàng thăng hạng càng cao, tích điểm càng nhanh. Ngay khi bạn thăng hạng, những voucher siêu ưu đãi sẽ được gửi ngay vào tài khoản của bạn.<br /><br />
-                Ngoài ra, cửa hàng cũng sẽ gửi tặng bạn những sự kiện khuyến mãi cực kỳ hấp dẫn cùng vô vàn những voucher số lượng có hạn với ưu đãi độc quyền.<br /><br />
-                Điểm tích lũy vô hạn, bạn có thể sử dụng điểm của mình để đổi lấy những phần quà thú vị. Tính năng sẽ được cập nhật sớm thôi!
-            </p>
-            <br />
-            <div class=" row justify-content-center">
-                <div class="col-md-4">
-                    <a class="btn btn-block btn-warning" asp-controller="Product" asp-action="Index">Mua sắm ngay</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h5><strong>TÍCH ĐIỂM</strong></h5>
-            <hr />
-            <div class="card"
-                 style="background-color: #FBAB7E;
-                        background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%); ">
-                <div class="card-body" style="text-align: center">
-                    <h4>
-                        <strong>
-                            @Model.FirstName.ToUpper() @Model.LastName.ToUpper()
-                        </strong>
-                    </h4>
-                    <p>
-                        @Model.TotalPoint Điểm - Hạng @Model.Rank.Name
-                    </p>
-                    <svg id="barcode" style="fill-opacity:0.3"></svg>
-                </div>
-            </div>
-            <br />
-            <div class="progress" style="height: 30px">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
-                     role="progressbar"
-                     style="@("width: " + ProgressPercentage + "%;")"
-                     aria-valuenow="@Model.TotalPoint"
-                     aria-valuemin="@Model.Rank.MinimumPoint"
-                     aria-valuemax="@Model.Rank.NextRank.MinimumPoint">@Model.TotalPoint / @Model.Rank.NextRank.MinimumPoint</div>
-                </div>
-                <br />
-                <p>
-                    Cần thêm @PointToRankUp Điểm ~ @String.Format("{0:#,#VND}", PointToRankUp * 1000m / Model.Rank.ConvertPointPercentage) để thăng hạng @Model.Rank.NextRank.Name.
-                </p>
-                <br />
-                <h5><strong>PHIẾU ƯU ĐÃI CỦA BẠN</strong></h5>
-                <hr />
-                @if (Model.VoucherList.Count == 0)
-                {
-                    <p class="text-center">Bạn chưa có phiếu ưu đãi nào. <a asp-controller="Product" asp-action="Index">Mua sắm ngay</a>.</p>
-                }
-                else
-                {
-                    @for (var i = 0; i < Model.VoucherList.Count; ++i)
-                    {
-                        var voucher = Model.VoucherList[i];
-
-                        <a id="@($"voucher-{i}")"
-                           class="card bg-light"
-                           data-toggle="modal"
-                           data-target="@($"#modal-voucher-{i}")"
-                           style="cursor: pointer">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 align-middle">
-                                        <img src="~/assets/voucher-icon.png" class="img-fluid" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <h6><strong>@voucher.Discount.Name.ToUpper()</strong></h6>
-                                        <hr />
-                                        <dl class="row">
-                                            <dt class="col-md-5">
-                                                @Html.DisplayNameFor(m => voucher.Discount.Code)
-                                            </dt>
-                                            <dd class="col-md-7">
-                                                @Html.DisplayFor(m => voucher.Discount.Code)
-                                            </dd>
-                                            <dt class="col-md-5">
-                                                @Html.DisplayNameFor(m => voucher.Discount.Percentage)
-                                            </dt>
-                                            <dd class="col-md-7">
-                                                @Html.DisplayFor(m => voucher.Discount.Percentage)
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <div class="modal fade"
-                             id="@($"modal-voucher-{i}")"
-                             tabindex="-1"
-                             role="dialog"
-                             aria-labelledby="@($"modal-voucher-{i}-label")"
-                             aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg"
-                                 role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="@($"modal-voucher-{i}-label")">@voucher.Discount.Name.ToUpper()</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-4 align-middle">
-                                                <img src="~/assets/voucher-icon.png" class="img-fluid" />
-                                            </div>
-                                            <div class="col-md-8">
-                                                <dl class="row">
-                                                    <dt class="col-md-5">
-                                                        @Html.DisplayNameFor(m => voucher.Discount.Code)
-                                                    </dt>
-                                                    <dd class="col-md-7">
-                                                        @Html.DisplayFor(m => voucher.Discount.Code)
-                                                    </dd>
-                                                    <dt class="col-md-5">
-                                                        @Html.DisplayNameFor(m => voucher.Discount.Percentage)
-                                                    </dt>
-                                                    <dd class="col-md-7">
-                                                        @Html.DisplayFor(m => voucher.Discount.Percentage)
-                                                    </dd>
-                                                    <dt class="col-md-5">
-                                                        Thời gian
-                                                    </dt>
-                                                    <dd class="col-md-7">
-                                                        @Html.DisplayFor(m => voucher.Discount.StartTime) ~ @Html.DisplayFor(m => voucher.Discount.EndTime)
-                                                    </dd>
-                                                    <dt class="col-md-5">
-                                                        @Html.DisplayNameFor(m => voucher.IsUsed)
-                                                    </dt>
-                                                    <dd class="col-md-7">
-                                                        @(voucher.IsUsed ? "Đã sử dụng" : "Chưa sử dụng")
-                                                    </dd>
-                                                    <dt class="col-md-5">
-                                                        @Html.DisplayNameFor(m => voucher.Discount.Description)
-                                                    </dt>
-                                                    <dd class="col-md-7">
-                                                        @Html.DisplayFor(m => voucher.Discount.Description)
-                                                    </dd>
-                                                </dl>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
-                                        <a class="btn btn-success"
-                                           asp-action="RedeemVoucher"
-                                           asp-controller="Membership"
-                                           asp-route-VoucherId="@voucher.VoucherId">
-                                            Áp dụng
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-                    }
-
-                    <div class=" row justify-content-center">
-                        <div class="col-md-5">
-                            <button id="voucher-list-btn"
-                                    class="btn btn-block btn-outline-primary">
-                                Ví ưu đãi của bạn
-                            </button>
-                        </div>
-                    </div>
-                    <div id="voucher-list-modal"
-                         class="modal fade"
-                         tabindex="-1"
-                         role="dialog"
-                         aria-labelledby="voucher-list-label"
-                         aria-hidden="true"
-                         data-url='@Url.Action("VoucherList")'>
-                        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="voucher-list-modal">Ví ưu đãi</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div id="voucher-list-body" class="modal-body">
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
+        @foreach (var item in Model.RankList)
+        {
+            <tr>
+                <td class="align-middle" align="center">@item.Name</td>
+                <td class="align-middle" align="center">@item.MinimumPoint</td>
+                <td class="align-middle" align="center">@(item.ConvertPointPercentage * 100)%</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <br/>
+    <h5 class="text-center">
+        <strong>Quyền lợi siêu hấp dẫn</strong>
+    </h5>
+    <br/>
+    <p class="text-center">
+        Khách hàng thăng hạng càng cao, tích điểm càng nhanh. Ngay khi bạn thăng hạng, những voucher siêu ưu đãi sẽ được gửi ngay vào tài khoản của bạn.<br/><br/>
+        Ngoài ra, cửa hàng cũng sẽ gửi tặng bạn những sự kiện khuyến mãi cực kỳ hấp dẫn cùng vô vàn những voucher số lượng có hạn với ưu đãi độc quyền.<br/><br/>
+        Điểm tích lũy vô hạn, bạn có thể sử dụng điểm của mình để đổi lấy những phần quà thú vị. Tính năng sẽ được cập nhật sớm thôi!
+    </p>
+    <br/>
+    <div class=" row justify-content-center">
+        <div class="col-md-4">
+            <a class="btn btn-block btn-warning" asp-controller="Product" asp-action="Index">Mua sắm ngay</a>
         </div>
     </div>
-
-    @section Scripts
-{
-        <script src="~/js/JsBarcode.all.min.js"></script>
-        <script>
-        // User's barcode
-        JsBarcode("#barcode", "@Model.UserName",
+</div>
+<div class="col-md-6">
+    <h5>
+        <strong>TÍCH ĐIỂM</strong>
+    </h5>
+    <hr/>
+    <div class="card"
+         style="background-color: #FBAB7E; background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);">
+        <div class="card-body" style="text-align: center">
+            <h4>
+                <strong>
+                    @Model.FirstName.ToUpper() @Model.LastName.ToUpper()
+                </strong>
+            </h4>
+            <p>
+                @Model.TotalPoint Điểm - Hạng @Model.Rank.Name
+            </p>
+            <svg id="barcode" style="fill-opacity: 0.3"></svg>
+        </div>
+    </div>
+    <br/>
+    <div class="progress" style="height: 30px">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+             role="progressbar"
+             style="@("width: " + ProgressPercentage + "%;")"
+             aria-valuenow="@Model.TotalPoint"
+             aria-valuemin="@Model.Rank.MinimumPoint"
+             aria-valuemax="@Model.Rank.NextRank.MinimumPoint">
+            @Model.TotalPoint / @Model.Rank.NextRank.MinimumPoint
+        </div>
+    </div>
+    <br/>
+    <p>
+        Cần thêm @PointToRankUp Điểm ~ @string.Format("{0:#,#VND}", PointToRankUp * 1000m / Model.Rank.ConvertPointPercentage) để thăng hạng @Model.Rank.NextRank.Name.
+    </p>
+    <br/>
+    <h5>
+        <strong>PHIẾU ƯU ĐÃI CỦA BẠN</strong>
+    </h5>
+    <hr/>
+    @if (Model.VoucherList.Count == 0)
+    {
+        <p class="text-center">Bạn chưa có phiếu ưu đãi nào. <a asp-controller="Product" asp-action="Index">Mua sắm ngay</a>.</p>
+    }
+    else
+    {
+        @for (var i = 0; i < Model.VoucherList.Count; ++i)
         {
-            width: 3,
-            displayValue: true,
-        });
+            var voucher = Model.VoucherList[i];
 
-        $(document).ready(function () {
+            <a id="@($"voucher-{i}")"
+               class="card bg-light"
+               data-toggle="modal"
+               data-target="@($"#modal-voucher-{i}")"
+               style="cursor: pointer">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 align-middle">
+                            <img src="~/assets/voucher-icon.png" class="img-fluid"/>
+                        </div>
+                        <div class="col-md-8">
+                            <h6>
+                                <strong>@voucher.Discount.Name.ToUpper()</strong>
+                            </h6>
+                            <hr/>
+                            <dl class="row">
+                                <dt class="col-md-5">
+                                    @Html.DisplayNameFor(m => voucher.Discount.Code)
+                                </dt>
+                                <dd class="col-md-7">
+                                    @Html.DisplayFor(m => voucher.Discount.Code)
+                                </dd>
+                                <dt class="col-md-5">
+                                    @Html.DisplayNameFor(m => voucher.Discount.Percentage)
+                                </dt>
+                                <dd class="col-md-7">
+                                    @Html.DisplayFor(m => voucher.Discount.Percentage)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="modal fade"
+                 id="@($"modal-voucher-{i}")"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="@($"modal-voucher-{i}-label")"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg"
+                     role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="@($"modal-voucher-{i}-label")">@voucher.Discount.Name.ToUpper()</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-4 align-middle">
+                                    <img src="~/assets/voucher-icon.png" class="img-fluid"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <dl class="row">
+                                        <dt class="col-md-5">
+                                            @Html.DisplayNameFor(m => voucher.Discount.Code)
+                                        </dt>
+                                        <dd class="col-md-7">
+                                            @Html.DisplayFor(m => voucher.Discount.Code)
+                                        </dd>
+                                        <dt class="col-md-5">
+                                            @Html.DisplayNameFor(m => voucher.Discount.Percentage)
+                                        </dt>
+                                        <dd class="col-md-7">
+                                            @Html.DisplayFor(m => voucher.Discount.Percentage)
+                                        </dd>
+                                        <dt class="col-md-5">
+                                            Thời gian
+                                        </dt>
+                                        <dd class="col-md-7">
+                                            @Html.DisplayFor(m => voucher.Discount.StartTime) ~ @Html.DisplayFor(m => voucher.Discount.EndTime)
+                                        </dd>
+                                        <dt class="col-md-5">
+                                            @Html.DisplayNameFor(m => voucher.IsUsed)
+                                        </dt>
+                                        <dd class="col-md-7">
+                                            @(voucher.IsUsed ? "Đã sử dụng" : "Chưa sử dụng")
+                                        </dd>
+                                        <dt class="col-md-5">
+                                            @Html.DisplayNameFor(m => voucher.Discount.Description)
+                                        </dt>
+                                        <dd class="col-md-7">
+                                            @Html.DisplayFor(m => voucher.Discount.Description)
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                            <a class="btn btn-success"
+                               asp-action="RedeemVoucher"
+                               asp-controller="Membership"
+                               asp-route-VoucherId="@voucher.VoucherId">
+                                Áp dụng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+        }
+
+        <div class=" row justify-content-center">
+            <div class="col-md-5">
+                <button id="voucher-list-btn"
+                        class="btn btn-block btn-outline-primary">
+                    Ví ưu đãi của bạn
+                </button>
+            </div>
+        </div>
+        <div id="voucher-list-modal"
+             class="modal fade"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="voucher-list-label"
+             aria-hidden="true"
+             data-url='@Url.Action("VoucherList")'>
+            <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="voucher-list-modal">Ví ưu đãi</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="voucher-list-body" class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+</div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/JsBarcode.all.min.js"></script>
+    <script>
+        // User's barcode
+        JsBarcode("#barcode",
+            "@Model.UserName",
+            {
+                width: 3,
+                displayValue: true,
+            });
+
+        $(document).ready(function() {
             $("#barcode rect:first-child").first().css("opacity", "0.4");
         });
 
         // Voucher list modal
-        $('#voucher-list-btn').click(function () {
-            var url = $('#voucher-list-modal').data('url');
+        $('#voucher-list-btn').click(function() {
+            const url = $('#voucher-list-modal').data('url');
 
             console.log(url);
 
-            $.get(url, function (data) {
-                $('#voucher-list-body').html(data);
+            $.get(url,
+                function(data) {
+                    $('#voucher-list-body').html(data);
 
-                $('#voucher-list-modal').modal('show');
-            });
+                    $('#voucher-list-modal').modal('show');
+                });
         });
-        </script>
-    }
+    </script>
+}

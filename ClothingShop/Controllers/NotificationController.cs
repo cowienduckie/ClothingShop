@@ -12,9 +12,9 @@ namespace ClothingShop.Controllers
     [Authorize]
     public class NotificationController : Controller
     {
+        private readonly INotyfService _notyf;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
-        private readonly INotyfService _notyf;
 
         public NotificationController(IShopRepository shopRepository,
             UserManager<Users> userManager,
@@ -25,7 +25,7 @@ namespace ClothingShop.Controllers
             _notyf = notyf;
         }
 
-        public async Task<IActionResult> Index(int?pageNumber, int? pageSize)
+        public async Task<IActionResult> Index(int? pageNumber, int? pageSize)
         {
             try
             {

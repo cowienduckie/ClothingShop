@@ -4,6 +4,11 @@ namespace ClothingShop.Entity.Models
 {
     public class CheckOutModel
     {
+        public CheckOutModel()
+        {
+            Address = new Address();
+        }
+
         public Cart Cart { get; set; }
 
         public Address Address { get; set; }
@@ -11,10 +16,5 @@ namespace ClothingShop.Entity.Models
         public string DiscountCode { get; set; }
 
         public string Note { get; set; }
-
-        public CheckOutModel()
-        {
-            Address = new Address();
-        }
     }
 }

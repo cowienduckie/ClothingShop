@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClothingShop.Entity.Entities
 {
@@ -11,16 +11,13 @@ namespace ClothingShop.Entity.Entities
 
         public string LastName { get; set; }
 
-        [AllowNull]
-        public DateTime? DateOfBirth { get; set; }
+        [AllowNull] public DateTime? DateOfBirth { get; set; }
 
-        [AllowNull]
-        public int? RankId { get; set; }
+        [AllowNull] public int? RankId { get; set; }
 
         public int? CartId { get; set; }
 
-        [AllowNull]
-        public int? TotalPoint { get; set; }
+        [AllowNull] public int? TotalPoint { get; set; }
 
         //
         public Rank Rank { get; set; }

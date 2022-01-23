@@ -10,7 +10,7 @@ Cửa hàng thời trang thiết kế sẵn Eva de Eva muốn phát triển mộ
 
 ## Công cụ sử dụng
 
-Project sử dụng một số công cụ sau cho việc lập trình và q uản lý dự án
+Project sử dụng một số công cụ sau cho việc lập trình và quản lý dự án
 
 - [ASP.NET Core MVC] - Công cụ chính để xây dựng phần mềm ở cả Back-end và Front-end
 - [Microsoft SQL Server] - Sử dụng cho toàn bộ cơ sở dữ liệu
