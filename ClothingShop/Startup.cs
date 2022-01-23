@@ -1,4 +1,5 @@
-﻿using AspNetCoreHero.ToastNotification;
+﻿using System;
+using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using ClothingShop.BusinessLogic.Repositories;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
@@ -14,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+
 
 namespace ClothingShop
 {
@@ -31,7 +32,7 @@ namespace ClothingShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ShopContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ClothingShopConnectionString")));
+                options.UseSqlite(Configuration.GetConnectionString("ClothingShopConnectionString")));
 
             services.AddScoped<IShopRepository, ShopRepository>();
 
@@ -41,8 +42,8 @@ namespace ClothingShop
 
             //Identity Register
             services.AddIdentity<Users, Roles>()
-                    .AddEntityFrameworkStores<ShopContext>()
-                    .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<ShopContext>()
+                .AddDefaultTokenProviders();
 
             //Identity Options
             services.Configure<IdentityOptions>(options =>
@@ -87,14 +88,8 @@ namespace ClothingShop
             //Add authorization policy
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Admin", policy =>
-                {
-                    policy.RequireRole("Admin");
-                });
-                options.AddPolicy("User", policy =>
-                {
-                    policy.RequireRole("User");
-                });
+                options.AddPolicy("Admin", policy => { policy.RequireRole("Admin"); });
+                options.AddPolicy("User", policy => { policy.RequireRole("User"); });
             });
 
             //Send email service register
@@ -104,7 +99,12 @@ namespace ClothingShop
             services.AddTransient<IEmailService, EmailService>();
 
             //Notyf
-            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
+            services.AddNotyf(config =>
+            {
+                config.DurationInSeconds = 5;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.TopRight;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,17 +132,17 @@ namespace ClothingShop
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
-                    name: "MemberShip",
-                    pattern: "{controller=Membership}/{action=Index}");
+                    "MemberShip",
+                    "{controller=Membership}/{action=Index}");
                 endpoints.MapControllerRoute(
-                    name: "VoucherList",
-                    pattern: "{controller=Membership}/{action=VoucherList}");
+                    "VoucherList",
+                    "{controller=Membership}/{action=VoucherList}");
                 endpoints.MapControllerRoute(
-                    name: "Report",
-                    pattern: "{controller=Report}/{action=Billing}");
+                    "Report",
+                    "{controller=Report}/{action=Billing}");
             });
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
