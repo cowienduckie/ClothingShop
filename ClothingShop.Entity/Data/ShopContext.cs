@@ -25,11 +25,12 @@ namespace ClothingShop.Entity.Data
         public DbSet<Discount> Discount { get; set; }
         public DbSet<ProductDiscount> ProductDiscount { get; set; }
         public DbSet<Order> Order { get; set; }
-        public DbSet<OrderItem> OrederItem { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
         public DbSet<Point> Point { get; set; }
         public DbSet<Rank> Rank { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<Address> Address { get; set; }
+        public DbSet<Notification> Notification { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,18 @@ namespace ClothingShop.Entity.Data
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
+
+            //Notification
+            modelBuilder.Entity<Notification>()
+                .HasKey(n => new { n.NotificationId });
+            modelBuilder.Entity<Notification>()
+                .HasOne<Users>(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId);
+            modelBuilder.Entity<Users>()
+                .HasMany<Notification>(u => u.Notifications)
+                .WithOne(n => n.User)
+                .HasForeignKey(n => n.UserId);
 
             //Product_Category
             modelBuilder.Entity<ProductCategory>()

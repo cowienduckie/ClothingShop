@@ -685,6 +685,14 @@ namespace ClothingShop.BusinessLogic.Repositories
                     item.UserId = user.Id;
                     item.User = user;
 
+                    _db.Notification.Add(new Notification
+                    {
+                        UserId = user.Id,
+                        User = user,
+                        Tittle = "Voucher mới đã được thêm vào ví của bạn",
+                        Message = $"Chúc mừng bạn đã nhận được voucher mới! Để kiểm tra ví voucher <a href=\"Membership/\" target=\"_blank\">nhấn vào đây</a>.",
+                        SendTime = DateTime.Now
+                    });
                     _db.Voucher.Update(item);
                     await _db.SaveChangesAsync();
                 }
@@ -699,13 +707,23 @@ namespace ClothingShop.BusinessLogic.Repositories
                                            .Select(ur => ur.User)
                                            .OrderByDescending(u => u.TotalPoint)
                                            .ToListAsync();
+            var notifications = new List<Notification>();
             var sendNumber = Math.Min(vouchers.Count, users.Count);
             for (int i = 0; i < sendNumber; ++i)
             {
                 vouchers[i].UserId = users[i].Id;
                 vouchers[i].User = users[i];
+                notifications.Add(new Notification
+                {
+                    UserId = users[i].Id,
+                    User = users[i],
+                    Tittle = "Voucher mới đã được thêm vào ví của bạn",
+                    Message = $"Chúc mừng bạn đã nhận được voucher mới! Để kiểm tra ví voucher <a href=\"Membership/\" target=\"_blank\">nhấn vào đây</a>.",
+                    SendTime = DateTime.Now
+                });
             }
 
+            _db.Notification.AddRange(notifications);
             _db.Voucher.UpdateRange(vouchers);
             await _db.SaveChangesAsync();
         }
@@ -760,7 +778,8 @@ namespace ClothingShop.BusinessLogic.Repositories
                                       .Include(u => u.Rank)
                                       .Include(u => u.Points)
                                       .FirstOrDefaultAsync();
-
+            var oldRankId = user.RankId;
+            Rank newRank = null;
             user.TotalPoint = user.Points.Select(p => p.Value).Sum();
 
             _db.Rank.ToList().ForEach(r =>
@@ -768,8 +787,21 @@ namespace ClothingShop.BusinessLogic.Repositories
                 if (user.TotalPoint >= r.MinimumPoint)
                 {
                     user.RankId = r.RankId;
+                    newRank = r;
                 }
             });
+
+            if (user.RankId != oldRankId && newRank != null)
+            {
+                _db.Notification.Add(new Notification
+                {
+                    UserId = user.Id,
+                    User = user,
+                    Tittle = "Thăng hạng thành công",
+                    Message = $"Chúc mừng bạn đã thăng hạng {newRank.Name}! Để kiểm tra hạng thành viên <a href=\"Membership/\" target=\"_blank\">nhấn vào đây</a>.",
+                    SendTime = DateTime.Now
+                });
+            }
 
             _db.Users.Update(user);
             await _db.SaveChangesAsync();
@@ -1210,6 +1242,35 @@ namespace ClothingShop.BusinessLogic.Repositories
                                                     .ThenInclude(i => i.SKU)
                                             .FirstOrDefaultAsync();
             return user.Cart.CartItems.Count;
+        }
+
+        public async Task<List<Notification>> GetTop5Notification(string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                .Include(u => u.Notifications)
+                .FirstOrDefaultAsync();
+
+            return user.Notifications.OrderByDescending(n => n.SendTime)
+                .Take(5)
+                .ToList();
+        }
+
+        public PaginationModel<Notification> GetNotificationList(string UserId, int? pageNumber, int? pageSize)
+        {
+            var queryNotifications = _db.Notification.OrderByDescending(n => n.SendTime).AsQueryable();
+            var total = (queryNotifications?.Count()) ?? 0;
+            var PageSize = pageSize ?? 20;
+            var PageNumber = pageNumber ?? 1;
+
+            var notifications = queryNotifications?.Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList() ?? new List<Notification>();
+
+            return new PaginationModel<Notification>
+            {
+                ItemList = notifications,
+                Total = total,
+                PageSize = PageSize,
+                PageNumber = PageNumber
+            };
         }
     }
 }
