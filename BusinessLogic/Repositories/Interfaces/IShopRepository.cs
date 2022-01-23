@@ -96,5 +96,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         Task<ReportBillingModel> GetBillingReport(ReportBillingModel report);
 
         Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model);
+
+        Task<int>  GetCurrentCartAmount(string UserId);
     }
 }

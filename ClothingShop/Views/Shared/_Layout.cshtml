@@ -5,6 +5,7 @@
 @inject SignInManager<Users> SignInManager
 @inject UserManager<Users> UserManager
 @inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
+@inject ClothingShop.BusinessLogic.Repositories.Interfaces.IShopRepository _shopRepository
 
 @{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
     var actionName = this.ViewContext.RouteData.Values["action"].ToString();
@@ -46,6 +47,8 @@
         ("OrderDetails", "Chi tiết đơn hàng"),
         ("Billing", "Kế toán"),
    };
+    Users user = SignInManager.IsSignedIn(User) ? await UserManager.FindByNameAsync(User.Identity.Name) : null;
+    var userId = user != null ? user.Id : "";
 }
 <!DOCTYPE HTML>
 <html lang="en">
@@ -112,7 +115,7 @@
                         <div class="navbar-nav d-sm-inline-flex justify-content-end">
                             <a class="@("nav-item nav-link "+(controllerName == "Product" && actionName =="ShowCart" ? "active" : ""))"
                                asp-controller="Product" asp-action="ShowCart">
-                                Giỏ hàng
+                                Giỏ hàng @($"({await _shopRepository.GetCurrentCartAmount(userId)})")
                             </a>
                             <a class="nav-link nav-item"
                                asp-controller="Account" asp-action="SignOff">

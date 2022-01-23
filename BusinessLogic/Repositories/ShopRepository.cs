@@ -1201,5 +1201,15 @@ namespace ClothingShop.BusinessLogic.Repositories
             })
                                .ToListAsync();
         }
+
+        public async Task<int> GetCurrentCartAmount(string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                                            .Include(u => u.Cart)
+                                                .ThenInclude(c => c.CartItems)
+                                                    .ThenInclude(i => i.SKU)
+                                            .FirstOrDefaultAsync();
+            return user.Cart.CartItems.Count;
+        }
     }
 }

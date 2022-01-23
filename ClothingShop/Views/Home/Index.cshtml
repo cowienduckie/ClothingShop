@@ -79,13 +79,13 @@
             {
                 <div class="col-md-2" style="margin-top: 15px; margin-bottom: 15px">
                     <div class="card">
-                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="text-decoration: none; color:#000000">
                             <img src="@Url.Content(item.Image)" class="card-img-top border-bottom" alt="@item.Name" style="margin: auto">
+                            <div class="card-body">
+                                <h5 class="card-title"><strong>@item.Name</strong></h5>
+                                <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
+                            </div>
                         </a>
-                        <div class="card-body">
-                            <h5 class="card-title"><strong>@item.Name</strong></h5>
-                            <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
-                        </div>
                     </div>
                 </div>
             }
@@ -103,13 +103,13 @@
             {
                 <div class="col-md-2" style="margin-top: 15px; margin-bottom: 15px">
                     <div class="card">
-                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@item.ProductId" style="text-decoration: none; color:#000000">
                             <img src="@Url.Content(item.Image)" class="card-img-top border-bottom" alt="@item.Name" style="margin: auto">
+                            <div class="card-body">
+                                <h5 class="card-title"><strong>@item.Name</strong></h5>
+                                <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
+                            </div>
                         </a>
-                        <div class="card-body">
-                            <h5 class="card-title"><strong>@item.Name</strong></h5>
-                            <h7 class="card-text">@String.Format("{0:#,#VND;;0VND}", item.Price)</h7>
-                        </div>
                     </div>
                 </div>
             }
