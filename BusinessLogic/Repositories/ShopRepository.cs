@@ -1257,7 +1257,9 @@ namespace ClothingShop.BusinessLogic.Repositories
 
         public PaginationModel<Notification> GetNotificationList(string UserId, int? pageNumber, int? pageSize)
         {
-            var queryNotifications = _db.Notification.OrderByDescending(n => n.SendTime).AsQueryable();
+            var queryNotifications = _db.Notification.Where(n => n.UserId == UserId)
+                .OrderByDescending(n => n.SendTime)
+                .AsQueryable();
             var total = (queryNotifications?.Count()) ?? 0;
             var PageSize = pageSize ?? 20;
             var PageNumber = pageNumber ?? 1;
