@@ -135,7 +135,7 @@ namespace ClothingShop
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
-                    name: "MemrberShip",
+                    name: "MemberShip",
                     pattern: "{controller=Membership}/{action=Index}");
                 endpoints.MapControllerRoute(
                     name: "VoucherList",

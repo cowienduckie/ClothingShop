@@ -57,22 +57,19 @@ namespace ClothingShop.Controllers
         public async Task<IActionResult> Login(LoginModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
-                if (result.Succeeded)
-                {
-                    _notyf.Success("Đăng nhập thành công");
-                    return RedirectToLocal(returnUrl);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    _notyf.Error("Đăng nhập thất bại");
-                    return View(model);
-                }
+                _notyf.Success("Đăng nhập thành công");
+                return RedirectToLocal(returnUrl);
             }
-            return View(model);
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                _notyf.Error("Đăng nhập thất bại");
+                return View(model);
+            }
         }
 
         //Register

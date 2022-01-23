@@ -1,28 +1,32 @@
-﻿using ClothingShop.Entity.Models;
+﻿using ClothingShop.BusinessLogic.Repositories.Interfaces;
+using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IShopRepository _shopRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IShopRepository shopRepository)
         {
             _logger = logger;
+            _shopRepository = shopRepository;
         }
 
         public IActionResult Index()
         {
-            return RedirectToAction("Index", "Product");
+            ViewBag.Categories = _shopRepository.GetAllCategories();
+            ViewBag.HotItems = _shopRepository.GetProductList("", "", 19, null, null);
+            ViewBag.NewItems = _shopRepository.GetProductList("", "", 20, null, null);
+
+            return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return RedirectToAction("Index", "Product");
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

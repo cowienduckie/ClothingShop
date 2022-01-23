@@ -94,6 +94,9 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
         PaginationModel<Order> GetOrderHistory(string UserId, int? pageNumber, int? pageSize);
 
         Task<ReportBillingModel> GetBillingReport(ReportBillingModel report);
+
         Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model);
+
+        Task<int>  GetCurrentCartAmount(string UserId);
     }
 }

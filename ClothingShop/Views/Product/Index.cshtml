@@ -108,13 +108,13 @@ else
         {
             <div class="col-md-4" style="margin-top: 15px; margin-bottom: 15px">
                 <div class="card">
-                    <img src="@Url.Content(item.Image)" class="card-img-top" alt="@item.Name" style="margin: auto">
-                    <div class="card-body">
-                        <h5 class="card-title"><strong>@item.Name</strong></h5>
-                        <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
-                        <hr />
-                        <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ProductId">Xem chi tiết</a>
-                    </div>
+                    <a asp-action="Details" asp-route-id="@item.ProductId" style="text-decoration: none; color:#000000">
+                        <img src="@Url.Content(item.Image)" class="card-img-top border-bottom" alt="@item.Name" style="margin: auto">
+                        <div class="card-body">
+                            <h5 class="card-title"><strong>@item.Name</strong></h5>
+                            <h7 class="card-text">@Html.DisplayFor(m => item.Price)</h7>
+                        </div>
+                    </a>
                 </div>
             </div>
         }

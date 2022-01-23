@@ -51,14 +51,11 @@
                 </div>
                 <div id="@(hexCode.Trim().Substring(1) + "-size")" style="display: none;">
                     <div class="row">
-                        @foreach (var item in Model.Items)
+                        @foreach (var item in Model.Items.Where(item => item.ColorHexCode == hexCode))
                         {
-                            if (item.ColorHexCode == hexCode)
-                            {
-                                <div class="col-md-2">
-                                    <button class="size-btn btn btn-block btn-outline-dark" value="@item.SkuId" @(item.Quantity <= 0 ? "disabled" : "")>@item.SizeValue</button>
-                                </div>
-                            }
+                            <div class="col-md-2">
+                                <button class="size-btn btn btn-block btn-outline-dark" value="@item.SkuId" @(item.Quantity <= 0 ? "disabled" : "")>@item.SizeValue</button>
+                            </div>
                         }
                     </div>
                 </div>

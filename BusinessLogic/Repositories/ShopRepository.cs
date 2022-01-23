@@ -151,35 +151,57 @@ namespace ClothingShop.BusinessLogic.Repositories
         {
             if (id == null) return null;
 
-            return await _db.Product.Where(p => p.ProductId == id)
-                                    .Select(p => new ProductDetailModel()
-                                    {
-                                        ProductId = p.ProductId,
-                                        Name = p.Name,
-                                        Image = p.Image,
-                                        Price = p.Price,
-                                        Description = p.Description,
-                                        Stock = p.ProductEntries.Sum(pe => pe.Quantity),
-                                        CreateTime = p.CreateTime,
-                                        LastModified = p.LastModified,
-                                        Items = p.ProductEntries.Select(pe => new ItemModel()
-                                        {
-                                            ColorId = pe.ColorId,
-                                            ColorValue = pe.Color.Value,
-                                            SkuId = pe.SkuId,
-                                            ColorHexCode = pe.Color.ColorHexCode,
-                                            SizeId = pe.SizeId,
-                                            SizeValue = pe.Size.Value,
-                                            SKU = pe.SKU,
-                                            Quantity = pe.Quantity
-                                        }).ToList(),
-                                        Categories = p.ProductCategories.Select(pc => new CategoryModel
-                                        {
-                                            CategoryId = pc.Category.CategoryId,
-                                            Name = pc.Category.Name,
-                                            Description = pc.Category.Description
-                                        }).ToList()
-                                    }).FirstOrDefaultAsync();
+            var product = await _db.Product.Where(p => p.ProductId == id)
+                                            .Include(p => p.ProductCategories)
+                                                .ThenInclude(pc => pc.Category)
+                                            .Include(p => p.ProductEntries)
+                                                .ThenInclude(pe => pe.Color)
+                                            .Include(p => p.ProductEntries)
+                                                .ThenInclude(pe => pe.Size)
+                                            .FirstOrDefaultAsync();
+            var result = new ProductDetailModel
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Image = product.Image,
+                Price = product.Price,
+                Description = product.Description,
+                Stock = product.ProductEntries.Sum(pe => pe.Quantity),
+                CreateTime = product.CreateTime,
+                LastModified = product.LastModified,
+                Items = product.ProductEntries.Select(pe => new ItemModel
+                {
+                    ColorId = pe.ColorId,
+                    ColorValue = pe.Color.Value,
+                    SkuId = pe.SkuId,
+                    ColorHexCode = pe.Color.ColorHexCode,
+                    SizeId = pe.SizeId,
+                    SizeValue = pe.Size.Value,
+                    SKU = pe.SKU,
+                    Quantity = pe.Quantity
+                }).ToList(),
+                Categories = product.ProductCategories.Select(pc => new CategoryModel
+                {
+                    CategoryId = pc.Category.CategoryId,
+                    Name = pc.Category.Name,
+                    Description = pc.Category.Description,
+                    IsSelected = true
+                }).ToList()
+            };
+
+            var categories = await _db.Category.ToListAsync();
+            var uncheck = categories.Except(product.ProductCategories.Select(pc => pc.Category))
+                                      .Select(c => new CategoryModel
+                                      {
+                                          CategoryId = c.CategoryId,
+                                          Name = c.Name,
+                                          Description = c.Description,
+                                          IsSelected = false
+                                      })
+                                      .ToList();
+            result.Categories.AddRange(uncheck);
+
+            return result;
         }
 
         public async Task CreateProduct(ProductDetailModel model)
@@ -228,7 +250,8 @@ namespace ClothingShop.BusinessLogic.Repositories
             try
             {
                 var product = await _db.Product.Where(p => p.ProductId == model.ProductId)
-                                               .Select(p => p)
+                                               .Include(p => p.ProductCategories)
+                                               .ThenInclude(pc => pc.Category)
                                                .FirstOrDefaultAsync();
                 if (product == null) return null;
 
@@ -236,6 +259,12 @@ namespace ClothingShop.BusinessLogic.Repositories
                 product.Name = model.Name;
                 product.Price = model.Price;
                 product.Description = model.Description;
+                product.ProductCategories = model.Categories.Where(c => c.IsSelected)
+                    .Select(c => new ProductCategory
+                    {
+                        CategoryId = c.CategoryId
+                    })
+                    .ToList();
 
                 product.LastModified = DateTime.Now;
 
@@ -1155,22 +1184,32 @@ namespace ClothingShop.BusinessLogic.Repositories
             }
 
             return await orders.Select(o => new ReportBillingResultModel
-                               {
-                                    OrderId = o.OrderId,
-                                    UserId = o.UserId,
-                                    CustomerName = o.User.LastName + " " + o.User.FirstName,
-                                    ReceiverName = o.Address.Receiver,
-                                    Address = o.Address.Detail,
-                                    PhoneNumber = o.Address.PhoneNumber,
-                                    OriginalPrice = o.OriginalPrice,
-                                    DiscountAmount = o.Discount,
-                                    TotalPrice = o.TotalPrice,
-                                    CreateTime = o.CreateTime,
-                                    ApprovalTime = o.ApprovalTime,
-                                    OrderStatus = o.Status,
-                                    Note = o.Note
-                               })
+            {
+                OrderId = o.OrderId,
+                UserId = o.UserId,
+                CustomerName = o.User.LastName + " " + o.User.FirstName,
+                ReceiverName = o.Address.Receiver,
+                Address = o.Address.Detail,
+                PhoneNumber = o.Address.PhoneNumber,
+                OriginalPrice = o.OriginalPrice,
+                DiscountAmount = o.Discount,
+                TotalPrice = o.TotalPrice,
+                CreateTime = o.CreateTime,
+                ApprovalTime = o.ApprovalTime,
+                OrderStatus = o.Status,
+                Note = o.Note
+            })
                                .ToListAsync();
+        }
+
+        public async Task<int> GetCurrentCartAmount(string UserId)
+        {
+            var user = await _db.Users.Where(u => u.Id == UserId)
+                                            .Include(u => u.Cart)
+                                                .ThenInclude(c => c.CartItems)
+                                                    .ThenInclude(i => i.SKU)
+                                            .FirstOrDefaultAsync();
+            return user.Cart.CartItems.Count;
         }
     }
 }

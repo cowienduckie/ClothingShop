@@ -243,7 +243,8 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoryModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _notyf.Error("Thông tin danh mục không hợp lệ");
                 return View(model);
             }
@@ -288,7 +289,8 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCategory(CategoryModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _notyf.Error("Thông tin danh mục không hợp lệ");
                 return View(model);
             }
@@ -328,7 +330,7 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 _notyf.Error("Có lỗi xảy ra khi xóa danh mục");
-                return View();
+                return RedirectToAction(nameof(CategoryList));
             }
         }
 
@@ -361,7 +363,8 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateDiscount(DiscountModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _notyf.Error("Thông tin khuyến mãi không hợp lệ");
                 return View(model);
             }
@@ -407,7 +410,8 @@ namespace ClothingShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditDiscount(DiscountModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 _notyf.Error("Thông tin khuyến mãi không hợp lệ");
                 return View(model);
             }
@@ -452,7 +456,7 @@ namespace ClothingShop.Controllers
             {
                 Console.WriteLine(e.ToString());
                 _notyf.Error("Có lỗi xảy ra khi xoá khuyến mãi");
-                return View();
+                return RedirectToAction(nameof(DiscountList));
             }
         }
 
