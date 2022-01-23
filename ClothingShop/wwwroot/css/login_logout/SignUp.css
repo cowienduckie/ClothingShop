@@ -1,78 +1,76 @@
 ﻿.register {
-    height: 120vh;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     background-image: url("https://demo.w3layouts.com/demos_new/template_demo/15-12-2017/shopping_signin_form-demo_Free/521159917/web/images/bg1.jpg");
     background-size: contain;
+    display: flex;
+    flex-direction: column;
+    height: 120vh;
 }
 
 .registerTitle {
-    font-size: 60px;
-    font-family: 'Varela Round', sans-serif;
     color: #000000;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 60px;
     text-shadow: 2px 2px 0 #bcbcbc, 4px 4px 0 #9c9c9c;
 }
 
 .registerForm {
-    margin-top: 8px;
-    display: flex;
-    width: 30%;
-    padding: 40px;
-    flex-direction: column;
+    background-color: rgba(44, 44, 44, 0.8);
     border-radius: 10px;
     box-shadow: #808080 0px 3px 8px;
-    background-color: rgba(44,44,44,0.8);
     color: white;
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+    padding: 40px;
+    width: 30%;
 }
 
-    .registerForm > label {
-        margin: 10px 0;
-        font-size: 16px;
-    }
+.registerForm > label {
+    font-size: 16px;
+    margin: 10px 0;
+}
 
 .registerInput {
-    padding: 10px;
     background-color: white;
     border: none;
     border-radius: 10px;
+    padding: 10px;
 }
 
-    .registerInput:focus {
-        outline: none;
-    }
+.registerInput:focus { outline: none; }
 
 .registerButton {
-    margin-top: 20px;
-    cursor: pointer;
-    margin-left: 25%;
-    width: 50%;
     background-color: #8ce122;
-    color: white;
-    padding: 10px;
     border: none;
     border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    margin-left: 25%;
+    margin-top: 20px;
+    padding: 10px;
     text-align: center;
+    width: 50%;
 }
 
-    .registerButton:hover {
-        background-color: #a5ef0a;
-        font-weight: 700;
-    }
+.registerButton:hover {
+    background-color: #a5ef0a;
+    font-weight: 700;
+}
 
 .registerForm > p {
-    margin-top: 16px;
     font-size: 16px;
+    margin-top: 16px;
 }
 
 .registerLoginButton {
-    cursor: pointer;
     color: white;
+    cursor: pointer;
 }
 
-    .registerLoginButton:hover {
-        text-decoration: none;
-        color: white;
-        color: #ff6a00;
-        font-weight: 700;
-    }
+.registerLoginButton:hover {
+    color: white;
+    color: #ff6a00;
+    font-weight: 700;
+    text-decoration: none;
+}

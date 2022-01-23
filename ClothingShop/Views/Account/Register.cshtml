@@ -6,49 +6,49 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="panel panel-primary">
-            <div class="panel-heading">ĐĂNG KÝ</div><br />
+            <div class="panel-heading">ĐĂNG KÝ</div><br/>
             <div class="panel-body">
                 <section>
                     <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                         <h4>Đăng ký tài khoản để có nhiều lợi ích hơn</h4>
-                        <hr />
+                        <hr/>
                         <div class="form-group">
                             <label asp-for="UserName" class="col-md-10 control-label"></label>
                             <div class="col-md-10">
-                                <input asp-for="UserName" class="form-control" />
+                                <input asp-for="UserName" class="form-control"/>
                                 <span asp-validation-for="UserName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-10 justify-content-between row pr-0">
                             <div class="col-md-6 form-group">
                                 <label asp-for="FirstName" class="control-label"></label>
-                                <input asp-for="FirstName" class="form-control" />
+                                <input asp-for="FirstName" class="form-control"/>
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 form-group mr-0 pr-0">
                                 <label asp-for="LastName" class="control-label"></label>
-                                <input asp-for="LastName" class="form-control mr-0" />
+                                <input asp-for="LastName" class="form-control mr-0"/>
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label asp-for="Email" class="col-md-10 control-label"></label>
                             <div class="col-md-10">
-                                <input asp-for="Email" class="form-control" />
+                                <input asp-for="Email" class="form-control"/>
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label asp-for="Password" class="col-md-10 control-label"></label>
                             <div class="col-md-10">
-                                <input asp-for="Password" class="form-control" />
+                                <input asp-for="Password" class="form-control"/>
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label asp-for="ConfirmPassword" class="col-md-10 control-label"></label>
                             <div class="col-md-10">
-                                <input asp-for="ConfirmPassword" class="form-control" />
+                                <input asp-for="ConfirmPassword" class="form-control"/>
                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                             </div>
                         </div>
@@ -67,5 +67,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

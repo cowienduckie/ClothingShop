@@ -6,12 +6,9 @@ namespace ClothingShop.Entity.Entities
 {
     public class Order
     {
-        [Key]
-        [Display(Name = "ID Đơn hàng")]
-        public int OrderId { get; set; }
+        [Key] [Display(Name = "ID Đơn hàng")] public int OrderId { get; set; }
 
-        [Display(Name = "ID Tài khoản")]
-        public string UserId { get; set; }
+        [Display(Name = "ID Tài khoản")] public string UserId { get; set; }
 
         public int PointId { get; set; }
 
@@ -29,19 +26,20 @@ namespace ClothingShop.Entity.Entities
         [DisplayFormat(DataFormatString = "{0:#,#VND;;0VND}")]
         public int TotalPrice { get; set; }
 
-        [Display(Name = "Trạng thái")]
-        public string Status { get; set; }
+        [Display(Name = "Trạng thái")] public string Status { get; set; }
 
         [Display(Name = "Ghi chú đơn hàng")]
         [MaxLength(500)]
         public string Note { get; set; }
 
         [Required]
-        [Display(Name = "Ngày tạo đơn hàng"), DataType(DataType.Date)]
+        [Display(Name = "Ngày tạo đơn hàng")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime CreateTime { get; set; }
 
-        [Display(Name = "Ngày duyệt đơn hàng"), DataType(DataType.Date)]
+        [Display(Name = "Ngày duyệt đơn hàng")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? ApprovalTime { get; set; }
 

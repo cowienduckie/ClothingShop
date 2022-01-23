@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.Entity.Validation
 {
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.All)]
     public class AllowedExtensionsAttribute : ValidationAttribute
     {
         private readonly string[] _extensions;
@@ -17,16 +17,13 @@ namespace ClothingShop.Entity.Validation
         }
 
         protected override ValidationResult IsValid(
-        object value, ValidationContext validationContext)
+            object value, ValidationContext validationContext)
         {
             var file = value as IFormFile;
             if (file != null && file.Length != 0)
             {
                 var extension = Path.GetExtension(file.FileName);
-                if (!_extensions.Contains(extension.ToLower()))
-                {
-                    return new ValidationResult(GetErrorMessage());
-                }
+                if (!_extensions.Contains(extension.ToLower())) return new ValidationResult(GetErrorMessage());
             }
 
             return ValidationResult.Success;
@@ -34,14 +31,12 @@ namespace ClothingShop.Entity.Validation
 
         public string GetErrorMessage()
         {
-            string message = "Ảnh đại diện chỉ chấp nhận đuôi";
+            var message = "Ảnh đại diện chỉ chấp nhận đuôi";
             for (var i = 0; i < _extensions.Length; ++i)
-            {
                 if (i != _extensions.Length - 1)
                     message += $" {_extensions[i]},";
                 else
                     message += $" {_extensions[i]}";
-            }
             return message;
         }
     }

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace ClothingShop.Entity.Validation
 {
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.All)]
     public class MaxFileSizeAttribute : ValidationAttribute
     {
         private readonly int _maxFileSize;
@@ -15,20 +15,17 @@ namespace ClothingShop.Entity.Validation
         }
 
         protected override ValidationResult IsValid(
-        object value, ValidationContext validationContext)
+            object value, ValidationContext validationContext)
         {
             var file = value as IFormFile;
-            if (file != null && file.Length > _maxFileSize)
-            {
-                return new ValidationResult(GetErrorMessage());
-            }
+            if (file != null && file.Length > _maxFileSize) return new ValidationResult(GetErrorMessage());
 
             return ValidationResult.Success;
         }
 
         public string GetErrorMessage()
         {
-            return $"Dung lượng file tối đa là { _maxFileSize / (1024 * 1024)} MB";
+            return $"Dung lượng file tối đa là {_maxFileSize / (1024 * 1024)} MB";
         }
     }
 }

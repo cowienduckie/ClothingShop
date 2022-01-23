@@ -1,7 +1,7 @@
-﻿using ClothingShop.Entity.Entities;
-using ClothingShop.Entity.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ClothingShop.Entity.Entities;
+using ClothingShop.Entity.Models;
 
 namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 {
@@ -9,7 +9,8 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
     {
         Task<AllProductModels> GetAllProduct();
 
-        PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? category, int? pageNumber, int? pageSize);
+        PaginationModel<ProductViewModel> GetProductList(string name, string sort, int? category, int? pageNumber,
+            int? pageSize);
 
         Task<ProductDetailModel> GetProductDetails(int? id);
 
@@ -97,7 +98,7 @@ namespace ClothingShop.BusinessLogic.Repositories.Interfaces
 
         Task<List<ReportBillingResultModel>> GetAllBillingReport(ReportBillingModel model);
 
-        Task<int>  GetCurrentCartAmount(string UserId);
+        Task<int> GetCurrentCartAmount(string UserId);
 
         PaginationModel<Notification> GetNotificationList(string UserId, int? pageNumber, int? pageSize);
 

@@ -4,10 +4,10 @@ namespace ClothingShop.Entity.Models
 {
     public class ProductViewModel
     {
-        [Display(Name = "ID")]
-        public int ProductId { get; set; }
+        [Display(Name = "ID")] public int ProductId { get; set; }
 
-        [StringLength(50), Required]
+        [StringLength(50)]
+        [Required]
         [Display(Name = "Tên sản phẩm")]
         public string Name { get; set; }
 
@@ -19,7 +19,6 @@ namespace ClothingShop.Entity.Models
         [Display(Name = "Giá")]
         public int Price { get; set; }
 
-        [Display(Name = "Số lượng")]
-        public int Stock { get; set; }
+        [Display(Name = "Số lượng")] public int Stock { get; set; }
     }
 }

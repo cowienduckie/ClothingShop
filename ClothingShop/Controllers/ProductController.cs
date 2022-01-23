@@ -1,24 +1,24 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using System;
+using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly INotyfService _notyf;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
-        private readonly INotyfService _notyf;
 
         public ProductController(IShopRepository shopRepository,
-                                 UserManager<Users> userManager,
-                                 INotyfService notyf)
+            UserManager<Users> userManager,
+            INotyfService notyf)
         {
             _shopRepository = shopRepository;
             _userManager = userManager;
@@ -207,10 +207,7 @@ namespace ClothingShop.Controllers
                     Cart = await _shopRepository.GetCart(cartId)
                 };
 
-                if (model.Cart.Voucher != null)
-                {
-                    model.DiscountCode = model.Cart.Voucher.Discount.Code;
-                }
+                if (model.Cart.Voucher != null) model.DiscountCode = model.Cart.Voucher.Discount.Code;
 
                 return View(model);
             }

@@ -1,28 +1,28 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using System;
+using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using ClothingShop.Entity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<Users> _signInManager;
-        private readonly UserManager<Users> _userManager;
+        private readonly INotyfService _notyf;
         private readonly RoleManager<Roles> _roleManager;
         private readonly IShopRepository _shopRepository;
-        private readonly INotyfService _notyf;
+        private readonly SignInManager<Users> _signInManager;
+        private readonly UserManager<Users> _userManager;
 
         public AccountController(SignInManager<Users> signInManager,
-                                 UserManager<Users> userManager,
-                                 RoleManager<Roles> roleManager,
-                                 IShopRepository shopRepository,
-                                 INotyfService notyf)
+            UserManager<Users> userManager,
+            RoleManager<Roles> roleManager,
+            IShopRepository shopRepository,
+            INotyfService notyf)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -58,18 +58,17 @@ namespace ClothingShop.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(model);
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false).ConfigureAwait(false);
+            var result = await _signInManager
+                .PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).ConfigureAwait(false);
             if (result.Succeeded)
             {
                 _notyf.Success("Đăng nhập thành công");
                 return RedirectToLocal(returnUrl);
             }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                _notyf.Error("Đăng nhập thất bại");
-                return View(model);
-            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            _notyf.Error("Đăng nhập thất bại");
+            return View(model);
         }
 
         //Register
@@ -95,7 +94,7 @@ namespace ClothingShop.Controllers
 
             try
             {
-                Users user = new Users
+                var user = new Users
                 {
                     UserName = model.UserName,
                     Email = model.Email,
@@ -105,14 +104,14 @@ namespace ClothingShop.Controllers
                     TotalPoint = 0
                 };
 
-                IdentityResult result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
+                var result = await _userManager.CreateAsync(user, model.Password).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
-                    Roles role = await _roleManager.FindByNameAsync("User").ConfigureAwait(false);
+                    var role = await _roleManager.FindByNameAsync("User").ConfigureAwait(false);
 
                     if (role != null)
                     {
-                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
+                        var roleResult = await _userManager.AddToRoleAsync(user, role.Name).ConfigureAwait(false);
                         if (roleResult.Succeeded)
                         {
                             _notyf.Success("Đăng ký thành công");
@@ -146,13 +145,8 @@ namespace ClothingShop.Controllers
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
-            {
                 return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

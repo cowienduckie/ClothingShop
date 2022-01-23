@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,7 +14,8 @@ namespace ClothingShop.Entity.Entities
 
         public int MinimumPoint { get; set; }
 
-        [Range(0, 100), Required]
+        [Range(0, 100)]
+        [Required]
         [Column(TypeName = "decimal(4, 2)")]
         public decimal ConvertPointPercentage { get; set; }
 

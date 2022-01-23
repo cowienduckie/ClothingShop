@@ -1,24 +1,24 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using System;
+using System.Threading.Tasks;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using ClothingShop.BusinessLogic.Repositories.Interfaces;
 using ClothingShop.Entity.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace ClothingShop.Controllers
 {
     [Authorize]
     public class OrderController : Controller
     {
+        private readonly INotyfService _notyf;
         private readonly IShopRepository _shopRepository;
         private readonly UserManager<Users> _userManager;
-        private readonly INotyfService _notyf;
 
         public OrderController(IShopRepository shopRepository,
-                               UserManager<Users> userManager,
-                               INotyfService notyf)
+            UserManager<Users> userManager,
+            INotyfService notyf)
         {
             _shopRepository = shopRepository;
             _userManager = userManager;

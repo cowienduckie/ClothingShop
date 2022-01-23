@@ -3,22 +3,26 @@
 @{ ViewData["Title"] = "Thêm sản phẩm"; }
 
 <h1>THÊM SẢN PHẨM</h1>
-<hr />
-<br />
+<hr/>
+<br/>
 <form asp-action="CreateProduct" method="post"
       enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row">
         <div class="col-md-3">
-            <h5><strong>ẢNH ĐẠI DIỆN</strong></h5>
-            <hr />
-            <img src="@Url.Content(Model.Image)" class="img-fluid border" id="avatar-img" />
-            <hr />
+            <h5>
+                <strong>ẢNH ĐẠI DIỆN</strong>
+            </h5>
+            <hr/>
+            <img src="@Url.Content(Model.Image)" class="img-fluid border" id="avatar-img"/>
+            <hr/>
             <div class="custom-file">
                 <label asp-for="UploadImage" class="control-label custom-file-label" id="upload-img-label"
-                       style="overflow: hidden; height: 95%;">Chọn ảnh</label>
+                       style="height: 95%; overflow: hidden;">
+                    Chọn ảnh
+                </label>
                 <input asp-for="UploadImage" class="form-control custom-file-input" id="upload-img"
-                       accept="image/*" />
+                       accept="image/*"/>
                 <div id="img-detail" style="word-wrap: break-word;"></div>
                 <span asp-validation-for="UploadImage" class="text-danger"></span>
             </div>
@@ -26,16 +30,18 @@
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><strong>THÔNG SỐ</strong></h5>
-                    <hr />
+                    <h5>
+                        <strong>THÔNG SỐ</strong>
+                    </h5>
+                    <hr/>
                     <div class="form-group">
                         <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
+                        <input asp-for="Name" class="form-control"/>
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Price" class="control-label"></label>
-                        <input asp-for="Price" class="form-control" />
+                        <input asp-for="Price" class="form-control"/>
                         <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -45,10 +51,12 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h5><strong>DANH MỤC PHÂN LOẠI</strong></h5>
-                    <hr />
+                    <h5>
+                        <strong>DANH MỤC PHÂN LOẠI</strong>
+                    </h5>
+                    <hr/>
                     <div class="row">
-                        @for (int i = 0; i < Model.Categories.Count; ++i)
+                        @for (var i = 0; i < Model.Categories.Count; ++i)
                         {
                             <div class="col-md-6">
                                 <div class="form-group form-check">
@@ -61,10 +69,12 @@
                             </div>
                         }
                     </div>
-                    <br />
-                    <h5><strong>MÀU SẮC - KÍCH CỠ</strong></h5>
-                    <hr />
-                    <br />
+                    <br/>
+                    <h5>
+                        <strong>MÀU SẮC - KÍCH CỠ</strong>
+                    </h5>
+                    <hr/>
+                    <br/>
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#exampleModalScrollable">
                         Chọn số lượng
@@ -85,39 +95,39 @@
                                 <div class="modal-body">
                                     <table class="table table-hover table-bordered">
                                         <thead>
-                                            <tr>
-                                                <th scope="col" style="text-align:center"></th>
-                                                @foreach (var size in Model.Sizes)
-                                                {
-                                                    <th scope="col" style="text-align:center">@(size.Value)</th>
-                                                }
-                                            </tr>
+                                        <tr>
+                                            <th scope="col" style="text-align: center"></th>
+                                            @foreach (var size in Model.Sizes)
+                                            {
+                                                <th scope="col" style="text-align: center">@(size.Value)</th>
+                                            }
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            @{var count = 0;}
-                                            @foreach (var color in Model.Colors)
-                                            {
-                                                <tr>
-                                                    <th scope="row" style="text-align:center" class="text-wrap">
-                                                        @(color.Value)<br />
-                                                        <i class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @color.ColorHexCode"> </i>
-                                                    </th>
-                                                    @{
-                                                        @for (int i = count; i < count + Model.Sizes.Count; ++i)
-                                                        {
-                                                            <td scope="col" style="text-align:center">
-                                                                <div class="form-group">
-                                                                    <input asp-for="@Model.Items[i].Quantity" class="form-control" />
-                                                                    <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
-                                                                </div>
-                                                            </td>
-                                                            @Html.HiddenFor(m => Model.Items[i].ColorId)
-                                                            @Html.HiddenFor(m => Model.Items[i].SizeId)
-                                                        }
-                                                        count += Model.Sizes.Count;
+                                        @{ var count = 0; }
+                                        @foreach (var color in Model.Colors)
+                                        {
+                                            <tr>
+                                                <th scope="row" style="text-align: center" class="text-wrap">
+                                                    @(color.Value)<br/>
+                                                    <i class="btn btn-outline-dark btn-circle btn-lg" style="background-color: @color.ColorHexCode"> </i>
+                                                </th>
+                                                @{
+                                                    @for (var i = count; i < count + Model.Sizes.Count; ++i)
+                                                    {
+                                                        <td scope="col" style="text-align: center">
+                                                            <div class="form-group">
+                                                                <input asp-for="@Model.Items[i].Quantity" class="form-control"/>
+                                                                <span asp-validation-for="@Model.Items[i].Quantity" class="text-danger"></span>
+                                                            </div>
+                                                        </td>
+                                                        @Html.HiddenFor(m => Model.Items[i].ColorId)
+                                                        @Html.HiddenFor(m => Model.Items[i].SizeId)
                                                     }
-                                                </tr>
-                                            }
+                                                    count += Model.Sizes.Count;
+                                                }
+                                            </tr>
+                                        }
                                         </tbody>
                                     </table>
                                 </div>
@@ -131,7 +141,7 @@
             </div>
         </div>
     </div>
-    <hr />
+    <hr/>
     @Html.HiddenFor(m => m.Image)
     <div class="row justify-content-center">
         <div class="col-md-2">
@@ -151,29 +161,29 @@
                 crossorigin="anonymous"></script>
         <!--Change file's label by file name-->
         <script>
-            $('#upload-img').on("change", function () {
-                var fileName = this.files[0].name;
-                var extension = fileName.substr(fileName.lastIndexOf('.'));
-                //Calculate file size
-                var _size = this.files[0].size;
-                var fSExt = new Array('Bytes', 'KB', 'MB', 'GB'),
-                    i = 0; while (_size > 900) { _size /= 1024; i++; }
-                var exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[i];
-                //Update
-                $(this).prev('#upload-img-label').html(fileName);
-                $(this).next('#img-detail').html(   "Tên file: " + fileName + "<br />" +
-                                                    "Đuôi mở rộng: " + extension + "<br />" +
-                                                    "Kích cỡ: " + exactSize);
-                var validExtension = new Array('.jpg', '.jpeg', '.png');
-                if (jQuery.inArray(extension, validExtension) != -1)
-                {
-                    document.getElementById('avatar-img').src = window.URL.createObjectURL(this.files[0]);
-                }
-                else
-                {
-                    document.getElementById('avatar-img').src = "/assets/NoPreviewImage.png";
-                }
-            });
+            $('#upload-img').on("change",
+                function() {
+                    const fileName = this.files[0].name;
+                    const extension = fileName.substr(fileName.lastIndexOf('.'));
+                    //Calculate file size
+                    var _size = this.files[0].size;
+                    const fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+                    var i = 0;
+                    while (_size > 900) {
+                        _size /= 1024;
+                        i++;
+                    }
+                    const exactSize = (Math.round(_size * 100) / 100) + ' ' + fSExt[i];
+                    //Update
+                    $(this).prev('#upload-img-label').html(fileName);
+                    $(this).next('#img-detail').html(`Tên file: ${fileName}<br />Đuôi mở rộng: ${extension}<br />Kích cỡ: ${exactSize}`);
+                    const validExtension = new Array('.jpg', '.jpeg', '.png');
+                    if (jQuery.inArray(extension, validExtension) != -1) {
+                        document.getElementById('avatar-img').src = window.URL.createObjectURL(this.files[0]);
+                    } else {
+                        document.getElementById('avatar-img').src = "/assets/NoPreviewImage.png";
+                    }
+                });
         </script>
     }
 }

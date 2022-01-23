@@ -1,18 +1,22 @@
-﻿@model ClothingShop.Entity.Entities.Cart;
+﻿@model Cart;
 
 @{
     ViewData["Title"] = "Giỏ hàng";
 }
-<br />
-<h3><i class="fa fa-shopping-cart" aria-hidden="true"></i> <strong>GIỎ HÀNG CỦA BẠN</strong></h3>
-<br />
+<br/>
+<h3>
+    <i class="fa fa-shopping-cart" aria-hidden="true"></i> <strong>GIỎ HÀNG CỦA BẠN</strong>
+</h3>
+<br/>
 @if (Model.CartItems.Count == 0)
 {
     <div class="row">
         <div class="col-md-12 text-center">
-            <img src="~/assets/cart-icon.png" width="150" height="150" class="img-fluid"><br /><br />
-            <h3><strong>Giỏ hàng của bạn đang trống</strong></h3><br />
-            <h4>Hãy thêm những món đồ bạn yêu thích :)</h4> <br />
+            <img src="~/assets/cart-icon.png" width="150" height="150" class="img-fluid"><br/><br/>
+            <h3>
+                <strong>Giỏ hàng của bạn đang trống</strong>
+            </h3><br/>
+            <h4>Hãy thêm những món đồ bạn yêu thích :)</h4> <br/>
             <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Tiếp tục mua sắm</a>
         </div>
     </div>
@@ -23,55 +27,57 @@ else
         <div class="col-md-9">
             <table class="table table-bordered table-hover table-striped">
                 <thead>
-                    <tr>
-                        <th class="align-middle" scope="col" style="text-align:center">Sản phẩm</th>
-                        <th class="align-middle" scope="col" style="text-align:center">Số lượng</th>
-                        <th class="align-middle" scope="col" style="text-align:center">Giá</th>
-                        <th scope="col" style="text-align:center"></th>
-                    </tr>
+                <tr>
+                    <th class="align-middle" scope="col" style="text-align: center">Sản phẩm</th>
+                    <th class="align-middle" scope="col" style="text-align: center">Số lượng</th>
+                    <th class="align-middle" scope="col" style="text-align: center">Giá</th>
+                    <th scope="col" style="text-align: center"></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.CartItems)
-                    {
-                        <tr>
-                            <td class="align-middle">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="mb-2 mt-3">
-                                            <strong>@item.SKU.Product.Name.Trim().ToUpper()</strong><br />
-                                        </p>
-                                        <p>
-                                            Màu: @item.SKU.Color.Value<br />
-                                            Kích cỡ: @item.SKU.Size.Value<br />
-                                            Giá: @(String.Format("{0:#,#VND}", item.SKU.Product.Price))
-                                        </p>
-                                    </div>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img src="@Url.Content(item.SKU.Product.Image)" class="img-fluid border"/>
                                 </div>
-                            </td>
-                            <td class="align-middle" align="center">@item.Quantity</td>
-                            <td class="align-middle" align="center">@(String.Format("{0:#,#VND;;0VND}", item.Quantity * item.SKU.Product.Price))</td>
-                            <td class="align-middle" align="center">
-                                <a class="btn btn-sm btn-secondary"
-                                   asp-controller="Product"
-                                   asp-action="RemoveFromCart"
-                                   asp-route-ItemId="@item.CartItemId"
-                                   data-toggle="tooltip" data-placement="bottom" title="Xóa">
-                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
+                                <div class="col-md-8">
+                                    <p class="mb-2 mt-3">
+                                        <strong>@item.SKU.Product.Name.Trim().ToUpper()</strong><br/>
+                                    </p>
+                                    <p>
+                                        Màu: @item.SKU.Color.Value<br/>
+                                        Kích cỡ: @item.SKU.Size.Value<br/>
+                                        Giá: @(string.Format("{0:#,#VND}", item.SKU.Product.Price))
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="align-middle" align="center">@item.Quantity</td>
+                        <td class="align-middle" align="center">@(string.Format("{0:#,#VND;;0VND}", item.Quantity * item.SKU.Product.Price))</td>
+                        <td class="align-middle" align="center">
+                            <a class="btn btn-sm btn-secondary"
+                               asp-controller="Product"
+                               asp-action="RemoveFromCart"
+                               asp-route-ItemId="@item.CartItemId"
+                               data-toggle="tooltip" data-placement="bottom" title="Xóa">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
         <div class="col-md-3">
             <div class="card bg-light">
                 <div class="card-body">
-                    <h5 class="text-center"><strong>ƯU ĐÃI</strong></h5>
-                    <hr />
+                    <h5 class="text-center">
+                        <strong>ƯU ĐÃI</strong>
+                    </h5>
+                    <hr/>
                     <div class="form-group">
                         @if (Model.VoucherId != null)
                         {
@@ -81,12 +87,12 @@ else
                         else
                         {
                             <input class="form-control" type="text" id="discount-code" name="discount-code"
-                                   placeholder="Nhập mã ưu đãi" />
+                                   placeholder="Nhập mã ưu đãi"/>
                         }
                     </div>
                     <a id="voucher-list-btn"
                        class="btn btn-block btn-light text-left"
-                       style="cursor:pointer">
+                       style="cursor: pointer">
                         Ví ưu đãi của bạn &#8250;
                     </a>
                 </div>
@@ -116,11 +122,13 @@ else
             </div>
             @if (Model.VoucherId != null)
             {
-                <br />
+                <br/>
                 <div class="card bg-light">
                     <div class="card-body">
                         <div>
-                            <h6 class="d-inline"><strong>@Model.Voucher.Discount.Name.ToUpper()</strong></h6>
+                            <h6 class="d-inline">
+                                <strong>@Model.Voucher.Discount.Name.ToUpper()</strong>
+                            </h6>
                             <a class="close d-inline align-top"
                                aria-label="Close"
                                asp-controller="Membership"
@@ -128,7 +136,7 @@ else
                                 <span aria-hidden="true">&times;</span>
                             </a>
                         </div>
-                        <hr />
+                        <hr/>
                         <dl class="row">
                             <dt class="col-md-7">
                                 @Html.DisplayNameFor(m => Model.Voucher.Discount.Code)
@@ -146,41 +154,43 @@ else
                     </div>
                 </div>
             }
-            <br />
+            <br/>
             <div class="card bg-light">
                 <div class="card-body">
-                    <h5 class="text-center"><strong>ĐƠN HÀNG</strong></h5>
-                    <hr />
+                    <h5 class="text-center">
+                        <strong>ĐƠN HÀNG</strong>
+                    </h5>
+                    <hr/>
                     <table class="table table-borderless">
                         <tbody>
-                            <tr>
-                                <td>
-                                </td>
-                                <td class="text-right">
-                                    @(String.Format("{0:#,#VND;;0VND}", Model.OriginalPrice))
-                                </td>
-                            </tr>
-                            <tr class="text-danger">
-                                <td>
-                                    -
-                                </td>
-                                <td class="text-right">
-                                    @(String.Format("{0:#,#VND;;0VND}", Model.Discount))
-                                </td>
-                            </tr>
-                            <tr class="border-top">
-                                <td>
-                                    <strong>Tổng</strong>
-                                </td>
-                                <td class="text-right">
-                                    @(String.Format("{0:#,#VND;;0VND}", Model.TotalPrice))
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td class="text-right">
+                                @(string.Format("{0:#,#VND;;0VND}", Model.OriginalPrice))
+                            </td>
+                        </tr>
+                        <tr class="text-danger">
+                            <td>
+                                -
+                            </td>
+                            <td class="text-right">
+                                @(string.Format("{0:#,#VND;;0VND}", Model.Discount))
+                            </td>
+                        </tr>
+                        <tr class="border-top">
+                            <td>
+                                <strong>Tổng</strong>
+                            </td>
+                            <td class="text-right">
+                                @(string.Format("{0:#,#VND;;0VND}", Model.TotalPrice))
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <br />
+            <br/>
             <a class="btn btn-block btn-danger"
                asp-controller="Product"
                asp-action="CheckOut">
@@ -199,16 +209,17 @@ else
 {
     <script>
         // Voucher list modal
-        $('#voucher-list-btn').click(function () {
-            var url = $('#voucher-list-modal').data('url');
+        $('#voucher-list-btn').click(function() {
+            const url = $('#voucher-list-modal').data('url');
 
             console.log(url);
 
-            $.get(url, function (data) {
-                $('#voucher-list-body').html(data);
+            $.get(url,
+                function(data) {
+                    $('#voucher-list-body').html(data);
 
-                $('#voucher-list-modal').modal('show');
-            });
+                    $('#voucher-list-modal').modal('show');
+                });
         });
     </script>
 }
