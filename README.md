@@ -15,7 +15,7 @@ Project sử dụng một số công cụ sau cho việc lập trình và quản
 - [ASP.NET Core MVC] - Công cụ chính để xây dựng phần mềm ở cả Back-end và Front-end
 - [Microsoft SQL Server] - Sử dụng cho toàn bộ cơ sở dữ liệu
 - [Microsoft Azure] - Hỗ trợ hosting cho Cơ sở dữ liệu, Webapp, build code từ Github
-- [Boostrap] - Framework hỗ trợ về mặt giao diện người dùng
+- [Bootstrap] - Framework hỗ trợ về mặt giao diện người dùng
 - [Identity Framework] - Framework hỗ trợ phân quyền
 - [Entity Framework] - Framework hỗ trợ ánh xạ, truy xuất cơ sở dữ liệu
 - [EPPlus] - Công cụ hỗ trợ xử lý file Excel
@@ -59,7 +59,7 @@ Update-database
 [ASP.NET Core MVC]: <https://dotnet.microsoft.com/en-us/download/dotnet/3.1>
 [Microsoft SQL Server]: <https://www.microsoft.com/en-US/sql-server/sql-server-downloads>
 [Microsoft Azure]: <https://azure.microsoft.com/en-us/>
-[Boostrap]: <https://getbootstrap.com/>
+[Bootstrap]: <https://getbootstrap.com/>
 [Identity Framework]: <https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-6.0&tabs=visual-studio>
 [Entity Framework]: <https://entityframework.net/>
 [EPPlus]: <https://www.epplussoftware.com/>
